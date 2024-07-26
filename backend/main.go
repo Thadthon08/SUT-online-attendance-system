@@ -16,6 +16,7 @@ func main() {
 
     // Initialize the database
     config.InitDatabase()
+		r.Use(CORSMiddleware())
 
     // Public routes
     r.POST("/signup", controllers.Signup)

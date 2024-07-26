@@ -95,5 +95,7 @@ func Login(c *gin.Context) {
         return
     }
 
-    c.JSON(http.StatusOK, gin.H{"token": tokenString})
+		tokenResponse := map[string]string{"token": tokenString, "email": creds.Email, "name": user.Name}
+
+    c.JSON(http.StatusOK, gin.H{"token": tokenResponse})
 }
