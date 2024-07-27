@@ -1,9 +1,10 @@
 import { LoginInterface } from "../interface/ILogin";
 import { UserInterface } from "../interface/IUser";
+import { LoginResponseInterface } from "../interface/ILoginRespon";
 
 const apiURL = "http://localhost:8080";
 
-async function SignIn(login: LoginInterface): Promise<UserInterface> {
+async function SignIn(login: LoginInterface): Promise<LoginResponseInterface> {
   const response = await fetch(`${apiURL}/login`, {
     method: "POST",
     headers: {

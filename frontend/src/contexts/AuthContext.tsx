@@ -1,8 +1,9 @@
 import React, { createContext, useState, ReactNode, useContext } from "react";
+import { LoginResponseInterface } from "../interface/ILoginRespon";
 
 interface AuthContextData {
   isSigned: boolean;
-  signIn(): void;
+  signIn(token: LoginResponseInterface): void;
   signOut(): void;
 }
 
@@ -13,13 +14,19 @@ interface AuthProviderProps {
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [isSigned, setIsSigned] = useState(false);
-
-  function signIn() {
+  const [isSigned, setIsSigned] = useState(() => {
+    const token = localStorage.getItem("token");
+    return !!token;
+  });
+  function signIn(token: LoginResponseInterface) {
+    localStorage.setItem("email", JSON.stringify(token.token.email));
+    localStorage.setItem("name", JSON.stringify(token.token.name));
+    localStorage.setItem("token", JSON.stringify(token.token.token));
     setIsSigned(true);
   }
 
   function signOut() {
+    localStorage.clear();
     setIsSigned(false);
   }
 

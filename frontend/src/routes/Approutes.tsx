@@ -1,33 +1,31 @@
-// src/App.tsx
-import React from "react";
+import React, { useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
 } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 import Home from "../components/pages/Home";
 import Login from "../components/auth/Login";
-import { useAuth } from "../contexts/AuthContext";
-import { AuthProvider } from "../contexts/AuthContext";
+import Error from "../components/pages/Error";
 
-const App: React.FC = () => {
+export default function AppRoutes() {
   const { isSigned } = useAuth();
 
   return (
-    <AuthProvider>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Navigate to="/login" />} />
-          <Route path="/login" element={<Login />} />
-          <Route
-            path="/home"
-            element={isSigned ? <Home /> : <Navigate to="/login" />}
-          />
-        </Routes>
-      </Router>
-    </AuthProvider>
+    <Router>
+      <Routes>
+        <Route
+          path="/"
+          element={isSigned ? <Home /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/login"
+          element={!isSigned ? <Login /> : <Navigate to="/" />}
+        />
+        <Route path="*" element={<Error />} />
+      </Routes>
+    </Router>
   );
-};
-
-export default App;
+}

@@ -1,67 +1,23 @@
-import React, { useEffect } from "react";
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Checkbox, Form, Input } from "antd";
-import { SignIn } from "../../services/api";
-import { LoginResponseInterface } from "../../interface/ILoginRespon";
+import React from "react";
+import LoginForm from "./LoginForm";
+import "./style.css";
 
-const App: React.FC = () => {
-  const onFinish = (values: any) => {
-    console.log("Received values of form: ", values);
-    SignIn(values).then((res) => {
-      if (res) {
-        console.log(res);
-      }
-    });
-  };
-
-  useEffect(() => {
-    document.title = "Login";
-  }, []);
-
+export default function Login() {
   return (
-    <Form
-      name="normal_login"
-      className="login-form"
-      initialValues={{ remember: true }}
-      onFinish={onFinish}
-    >
-      <Form.Item
-        name="email"
-        rules={[{ required: true, message: "Please input your Email!" }]}
-      >
-        <Input
-          prefix={<UserOutlined className="site-form-item-icon" />}
-          placeholder="Email"
-        />
-      </Form.Item>
-      <Form.Item
-        name="password"
-        rules={[{ required: true, message: "Please input your Password!" }]}
-      >
-        <Input
-          prefix={<LockOutlined className="site-form-item-icon" />}
-          type="password"
-          placeholder="Password"
-        />
-      </Form.Item>
-      <Form.Item>
-        <Form.Item name="remember" valuePropName="checked" noStyle>
-          <Checkbox>Remember me</Checkbox>
-        </Form.Item>
-
-        <a className="login-form-forgot" href="">
-          Forgot password
-        </a>
-      </Form.Item>
-
-      <Form.Item>
-        <Button type="primary" htmlType="submit" className="login-form-button">
-          Log in
-        </Button>
-        Or <a href="">register now!</a>
-      </Form.Item>
-    </Form>
+    <div className="bg-image">
+      <div className="md:container md:mx-auto  h-lvh flex items-center justify-center">
+        <div className=" w-1/2 min-w-80 max-w-2xl">
+          <h1
+            className="text-2xl font-medium text-center p-4 text-white"
+            style={{ backgroundColor: "rgb(51, 51, 51)" }}
+          >
+            SUT Attendence
+          </h1>
+          <div className="p-5 bg-slate-50">
+            <LoginForm />
+          </div>
+        </div>
+      </div>
+    </div>
   );
-};
-
-export default App;
+}
