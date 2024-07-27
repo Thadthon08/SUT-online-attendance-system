@@ -20,10 +20,6 @@ const App: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    document.title = "Login";
-  }, []);
-
   return (
     <Form
       name="normal_login"
