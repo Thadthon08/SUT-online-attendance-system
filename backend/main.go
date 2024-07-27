@@ -21,8 +21,18 @@ func main() {
     // Public routes
     r.POST("/signup", controllers.Signup)
     r.POST("/login", controllers.Login)
-    
-    r.GET("/users", controllers.GetUsers)
+
+
+    // Teachers
+    r.GET("/teacher", controllers.GetTeacher)
+    r.GET("/teachers/:id", controllers.GetSubjectByTd)
+
+		// Subjects
+    r.POST("/subjects", controllers.CreateSubject)
+    r.GET("/subjects", controllers.GetSubjects)
+    r.GET("/subjects/:id", controllers.GetSubjectByTd)
+
+		r.POST("/assign", controllers.CreateTeacherSubject)
 
     // Protected routes
     // auth := r.Group("/auth")

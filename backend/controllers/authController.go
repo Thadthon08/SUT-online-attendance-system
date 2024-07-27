@@ -1,4 +1,3 @@
-// controllers/authController.go
 package controllers
 
 import (
@@ -16,13 +15,17 @@ import (
 var jwtKey = []byte("my_secret_key")
 
 type Credentials struct {
-		Name 	   string `json:"name"`
-    Email    string `json:"email" valid:"email,required"`
+	TeacherID	   string `json:"teacher_id" valid:"required"`
+    FirstName   string `json:"firstname"`
+    LastName    string `json:"lastname"`
+    PhoneNumber string `json:"phone_number"`
+    Email    string `json:"email" valid:"email"`
     Password string `json:"password" valid:"required,stringlength(6|50)"`
+    ProfilePic string `json:"profile_pic"`
 }
 
 type Claims struct {
-    Email string `json:"email"`
+    TeacherID string `json:"teacher_id"`
     jwt.StandardClaims
 }
 
@@ -46,13 +49,13 @@ func Signup(c *gin.Context) {
         return
     }
 
-    user := models.User{Name: creds.Name, Email: creds.Email, Password: string(hashedPassword)}
-    if err := config.DB.Create(&user).Error; err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{"error": "User already exists"})
+    teacher := models.Teacher{TeacherID: creds.TeacherID, FirstName:creds.FirstName, LastName: creds.LastName, PhoneNumber: creds.PhoneNumber, Email: creds.Email, Password: string(hashedPassword), ProfilePic: creds.ProfilePic}
+    if err := config.DB.Create(&teacher).Error; err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Teacher already exists"})
         return
     }
 
-    c.JSON(http.StatusOK, gin.H{"message": "User created successfully"})
+    c.JSON(http.StatusOK, gin.H{"message": "teacher created successfully"})
 }
 
 func Login(c *gin.Context) {
@@ -69,20 +72,20 @@ func Login(c *gin.Context) {
         return
     }
 
-    var user models.User
-    if err := config.DB.Where("email = ?", creds.Email).First(&user).Error; err != nil {
+    var teacher models.Teacher
+    if err := config.DB.Where("teacher_id = ?", creds.TeacherID).First(&teacher).Error; err != nil {
         c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
         return
     }
 
-    if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(creds.Password)); err != nil {
+    if err := bcrypt.CompareHashAndPassword([]byte(teacher.Password), []byte(creds.Password)); err != nil {
         c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
         return
     }
 
     expirationTime := time.Now().Add(24 * time.Hour)
     claims := &Claims{
-        Email: creds.Email,
+        TeacherID: creds.TeacherID,
         StandardClaims: jwt.StandardClaims{
             ExpiresAt: expirationTime.Unix(),
         },
@@ -95,7 +98,7 @@ func Login(c *gin.Context) {
         return
     }
 
-		tokenResponse := map[string]string{"token": tokenString, "email": creds.Email, "name": user.Name}
+		tokenResponse := map[string]string{"token": tokenString, "teacher_id": creds.TeacherID, "firstname": teacher.FirstName, "lastname": teacher.LastName, "email": teacher.Email, "phone_number": teacher.PhoneNumber, "profile_pic": teacher.ProfilePic} 
 
     c.JSON(http.StatusOK, gin.H{"token": tokenResponse})
 }

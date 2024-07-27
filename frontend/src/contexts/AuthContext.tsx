@@ -19,8 +19,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
     return !!token;
   });
   function signIn(token: LoginResponseInterface) {
+    localStorage.setItem("firstname", JSON.stringify(token.token.firstname));
+    localStorage.setItem("lastname", JSON.stringify(token.token.lastname));
+    localStorage.setItem(
+      "phone_number",
+      JSON.stringify(token.token.phone_number)
+    );
+    localStorage.setItem(
+      "profile_pic",
+      JSON.stringify(token.token.profile_pic)
+    );
     localStorage.setItem("email", JSON.stringify(token.token.email));
-    localStorage.setItem("name", JSON.stringify(token.token.name));
     localStorage.setItem("token", JSON.stringify(token.token.token));
     setIsSigned(true);
   }

@@ -21,5 +21,5 @@ func InitDatabase() {
     }
 
     // Migrate the schema
-    DB.AutoMigrate(&models.User{})
+     DB.AutoMigrate(&models.Teacher{}, &models.Subject{},  &models.TeacherSubject{})
 }

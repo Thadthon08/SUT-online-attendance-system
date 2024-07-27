@@ -28,12 +28,12 @@ const App: React.FC = () => {
       onFinish={onFinish}
     >
       <Form.Item
-        name="email"
-        rules={[{ required: true, message: "Please input your Email!" }]}
+        name="teacher_id"
+        rules={[{ required: true, message: "Please input your Id!" }]}
       >
         <Input
           prefix={<UserOutlined className="site-form-item-icon" />}
-          placeholder="Email"
+          placeholder="Id"
         />
       </Form.Item>
       <Form.Item

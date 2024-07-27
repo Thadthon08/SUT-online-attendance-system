@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -9,6 +8,7 @@ import { useAuth } from "../contexts/AuthContext";
 import Home from "../components/pages/Home";
 import Login from "../components/auth/Login";
 import Error from "../components/pages/Error";
+import Dashboard from "../components/pages/Dashboard";
 
 export default function AppRoutes() {
   const { isSigned } = useAuth();
@@ -18,7 +18,7 @@ export default function AppRoutes() {
       <Routes>
         <Route
           path="/"
-          element={isSigned ? <Home /> : <Navigate to="/login" />}
+          element={isSigned ? <Dashboard /> : <Navigate to="/login" />}
         />
         <Route
           path="/login"
