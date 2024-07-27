@@ -19,6 +19,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     return !!token;
   });
   function signIn(token: LoginResponseInterface) {
+    localStorage.setItem("teacher_id", JSON.stringify(token.token.teacher_id));
     localStorage.setItem("firstname", JSON.stringify(token.token.firstname));
     localStorage.setItem("lastname", JSON.stringify(token.token.lastname));
     localStorage.setItem(

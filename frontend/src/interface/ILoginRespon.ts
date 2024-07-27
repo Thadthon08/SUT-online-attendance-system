@@ -5,7 +5,7 @@ export interface LoginResponseInterface {
 export interface Token {
   email: string;
   firstname: string;
-  id: string;
+  teacher_id: string;
   lastname: string;
   phone_number: string;
   profile_pic: string;
