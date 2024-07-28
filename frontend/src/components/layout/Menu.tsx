@@ -1,16 +1,23 @@
-import React from 'react';
-import { Box, Drawer, DrawerContent, useDisclosure } from '@chakra-ui/react';
-import SidebarContent from './SidebarContent';
-import MobileNav from './MobileNav';
-import { Outlet } from 'react-router-dom';
+import React from "react";
+import { Box, Drawer, DrawerContent, useDisclosure } from "@chakra-ui/react";
+import SidebarContent from "./SidebarContent";
+import MobileNav from "./MobileNav";
+import { Outlet } from "react-router-dom";
 
 export default function DLayout() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  function removeQuotes(str: any) {
+    return str.replace(/"/g, "");
+  }
+  const teacherId =
+    removeQuotes(localStorage.getItem("teacher_id")) ?? undefined;
   return (
     <Box minH="100vh" bg={"rgb(242, 101, 34)"}>
       <SidebarContent
         onClose={() => onClose}
         display={{ base: "none", md: "block" }}
+        teacherId={teacherId.toString()}
       />
       <Drawer
         autoFocus={false}
@@ -22,12 +29,12 @@ export default function DLayout() {
         size="full"
       >
         <DrawerContent>
-          <SidebarContent onClose={onClose} />
+          <SidebarContent onClose={onClose} teacherId={teacherId} />
         </DrawerContent>
       </Drawer>
       {/* mobilenav */}
       <MobileNav onOpen={onOpen} />
-      <Box ml={{ base: 0, md: 60 }} p="4" bg={"gray.100"} h={"100vh"}>
+      <Box ml={{ base: 0, md: 80 }} p="4" bg={"gray.100"} h={"100vh"}>
         <Outlet />
       </Box>
     </Box>

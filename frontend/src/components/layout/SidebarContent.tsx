@@ -1,15 +1,58 @@
-import React from "react";
-import { Box, CloseButton, Flex, Text, BoxProps } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import {
+  Box,
+  CloseButton,
+  Flex,
+  Text,
+  BoxProps,
+  Spinner,
+  Alert,
+  AlertIcon,
+} from "@chakra-ui/react";
 import { useLocation } from "react-router-dom";
-import { LinkItems } from "./LinkItems";
 import NavItem from "./NavItem";
+import { LuGraduationCap } from "react-icons/lu";
+import { getSubjectsByTid } from "../../services/api";
+import { Subject } from "../../interface/ITeacherSubject";
 
 interface SidebarProps extends BoxProps {
   onClose: () => void;
+  teacherId: string;
 }
 
-const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
+const SidebarContent = ({ onClose, teacherId, ...rest }: SidebarProps) => {
+  const [subjects, setSubjects] = useState<Subject[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const location = useLocation();
+
+  useEffect(() => {
+    const fetchSubjects = async () => {
+      try {
+        const data = await getSubjectsByTid({ teacher_id: teacherId });
+        setSubjects(data);
+      } catch (error: any) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSubjects();
+  }, [teacherId]);
+
+  if (loading) {
+    return <Spinner />;
+  }
+
+  if (error) {
+    return (
+      <Alert status="error">
+        <AlertIcon />
+        {error}
+      </Alert>
+    );
+  }
 
   return (
     <Box
@@ -17,7 +60,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       bg={"white"}
       borderRight="1px"
       borderRightColor={"gray.200"}
-      w={{ base: "full", md: 60 }}
+      w={{ base: "full", md: 80 }}
       pos="fixed"
       h="full"
       {...rest}
@@ -28,14 +71,19 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         </Text>
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
-      {LinkItems.map((link) => (
+      {subjects.map((subject) => (
         <NavItem
-          key={link.name}
-          icon={link.icon}
-          href={link.href}
-          active={location.pathname === link.href ? "active" : ""}
+          key={subject.subject_id}
+          icon={LuGraduationCap}
+          href={`/subject/?subject_id=${subject.subject_id}`}
+          _active={
+            location.pathname + location.search ===
+            `/subject/?subject_id=${subject.subject_id}`
+              ? "active"
+              : ""
+          }
         >
-          {link.name}
+          {subject.subject_id} {subject.subject_name}
         </NavItem>
       ))}
     </Box>

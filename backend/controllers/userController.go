@@ -26,3 +26,23 @@ func GetTeacherById(c *gin.Context) {
     }
     c.JSON(http.StatusOK, teacher)
 }
+
+
+func GetTeacherSubjects(c *gin.Context) {
+    teacherID := c.Param("id")
+    var subjects []models.Subject
+
+    err := config.DB.
+        Model(&models.Subject{}).
+        Joins("JOIN teacher_subjects ON teacher_subjects.subject_id = subjects.subject_id").
+        Where("teacher_subjects.teacher_id = ?", teacherID).
+        Preload("Teachers").
+        Find(&subjects).Error
+
+    if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+        return
+    }
+
+    c.JSON(http.StatusOK, subjects)
+}

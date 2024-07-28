@@ -8,5 +8,5 @@ type Teacher struct {
 	Email       string    `json:"email" gorm:"unique"`
 	Password    string    `json:"-"`
 	ProfilePic  string    `json:"profile_pic"`
-	Subjects    []Subject `gorm:"many2many:teacher_subjects;" json:"subjects"`
+	Subjects    []Subject `gorm:"many2many:teacher_subjects;foreignKey:TeacherID;joinForeignKey:TeacherID;References:SubjectID;joinReferences:SubjectID" json:"subjects"`
 }

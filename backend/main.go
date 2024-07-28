@@ -25,7 +25,7 @@ func main() {
 
     // Teachers
     r.GET("/teacher", controllers.GetTeacher)
-    r.GET("/teachers/:id", controllers.GetSubjectByTd)
+    r.GET("/teachers/:id/subjects", controllers.GetTeacherSubjects)
 
 		// Subjects
     r.POST("/subjects", controllers.CreateSubject)

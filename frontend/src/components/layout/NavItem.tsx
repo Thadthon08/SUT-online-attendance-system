@@ -1,16 +1,18 @@
 import React, { ReactNode } from "react";
-import { Flex, Icon, Link, FlexProps } from "@chakra-ui/react";
+import { Flex, Icon, FlexProps, Link } from "@chakra-ui/react";
 import { IconType } from "react-icons";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 interface NavItemProps extends FlexProps {
   icon: IconType;
   children: ReactNode;
   href: string;
-  active?: string;
 }
 
-const NavItem = ({ icon, children, href, active, ...rest }: NavItemProps) => {
+const NavItem = ({ icon, children, href, ...rest }: NavItemProps) => {
+  const location = useLocation();
+  const isActive = location.pathname + location.search === href;
+
   return (
     <Link
       as={NavLink}
@@ -19,15 +21,16 @@ const NavItem = ({ icon, children, href, active, ...rest }: NavItemProps) => {
       _focus={{ boxShadow: "none" }}
     >
       <Flex
-        className={active}
         align="center"
         p="4"
         mx="4"
         borderRadius="lg"
         role="group"
         cursor="pointer"
+        bg={isActive ? "black" : "transparent"}
+        color={isActive ? "white" : "inherit"}
         _hover={{
-          bg: "cyan.400",
+          bg: "black",
           color: "white",
         }}
         {...rest}
@@ -35,7 +38,7 @@ const NavItem = ({ icon, children, href, active, ...rest }: NavItemProps) => {
         {icon && (
           <Icon
             mr="4"
-            fontSize="16"
+            fontSize="20"
             _groupHover={{
               color: "white",
             }}

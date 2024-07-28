@@ -36,7 +36,7 @@ export default function AppRoutes() {
       <Routes>
         <Route element={<PrivateRoute isSigned={isSigned} />}>
           <Route path="/" element={<Dashboard />} />
-          <Route path="/home" element={<Home />} />
+          <Route path="/subject" element={<Home />} />
         </Route>
         <Route element={<PublicRoute isSigned={isSigned} />}>
           <Route path="/login" element={<Login />} />
