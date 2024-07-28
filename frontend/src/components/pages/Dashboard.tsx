@@ -30,6 +30,7 @@ export default function Dashboard() {
       try {
         const data = await getSubjectsByTid({ teacher_id: teacherId });
         setSubjects(data);
+        console.log(data);
       } catch (error: any) {
         setError(error.message);
       } finally {
