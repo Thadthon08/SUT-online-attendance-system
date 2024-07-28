@@ -43,8 +43,15 @@ const SubjectDetail: React.FC = () => {
   return (
     <Box p={4} bg="gray.50" minHeight="100vh">
       <Stack spacing={8}>
-        <Box bg="white" p={6} borderRadius="md" boxShadow="md">
-          <Heading as="h1" size="lg" mb={4}>
+        <Box 
+          borderRadius="md" 
+          boxShadow="md"       
+          bgImage="url('https://img2.pic.in.th/pic/content.jpg')"
+          bgPosition="bottom center "
+          bgRepeat="no-repeat"
+          bgSize="cover"
+          >
+          <Heading as="h1" size="lg" mb={4} color="#4F1787">
           {subject_id} {subjects?.subject_name}
           </Heading>
           <Text fontSize="lg" mb={2}>
