@@ -10,27 +10,25 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { Subject } from "../../interface/ITeacherSubject";
-import { getSubjectsByTid } from "../../services/api";
+import { getSubjectsByid } from "../../services/api";
 
-function removeQuotes(str: any) {
-  return str ? str.replace(/"/g, "") : "";
-}
 
 const SubjectDetail: React.FC = () => {
-  const { subject_id } = useParams<{ subject_id: string }>();
+  const { subject_id = '' } = useParams<{ subject_id: string | undefined }>();
   const navigate = useNavigate();
   const isMobile = useBreakpointValue({ base: true, md: false });
-  const [subjects, setSubjects] = useState<Subject[]>([]);
+  const [subjects, setSubjects] = useState<Subject>();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const teacherId = removeQuotes(localStorage.getItem("teacher_id"));
+
 
 
   useEffect(() => {
     const fetchSubjects = async () => {
       try {
-        const data = await getSubjectsByTid({ teacher_id: teacherId });
+        const data = await getSubjectsByid({ subject_id: subject_id  });
         setSubjects(data);
+        console.log(subjects)
       } catch (error: any) {
         setError(error.message);
       } finally {
@@ -39,7 +37,7 @@ const SubjectDetail: React.FC = () => {
     };
 
     fetchSubjects();
-  }, [teacherId]);
+  }, [subject_id]);
 
 
   return (
@@ -47,7 +45,7 @@ const SubjectDetail: React.FC = () => {
       <Stack spacing={8}>
         <Box bg="white" p={6} borderRadius="md" boxShadow="md">
           <Heading as="h1" size="lg" mb={4}>
-          {subject_id} {subjects[0].subject_name}
+          {subject_id} {subjects?.subject_name}
           </Heading>
           <Text fontSize="lg" mb={2}>
             Subject ID: {subject_id}

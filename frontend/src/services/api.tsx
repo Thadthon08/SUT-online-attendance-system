@@ -38,7 +38,7 @@ async function getSubjectsByTid({ teacher_id }: { teacher_id: string }) {
     throw error;
   }
 }
-async function getSubjectsById({ subject_id }: { subject_id: string }) {
+async function getSubjectsByid({ subject_id }: { subject_id: string }) {
   try {
     const response = await fetch(`${apiURL}/subjects/${subject_id}`, {
       method: "GET",
@@ -60,4 +60,4 @@ async function getSubjectsById({ subject_id }: { subject_id: string }) {
   }
 }
 
-export { SignIn, getSubjectsByTid,getSubjectsById};
+export { SignIn, getSubjectsByTid,getSubjectsByid};
