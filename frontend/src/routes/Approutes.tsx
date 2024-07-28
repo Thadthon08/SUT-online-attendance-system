@@ -1,4 +1,3 @@
-import React from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -11,13 +10,12 @@ import Login from "../components/auth/Login";
 import Error from "../components/pages/Error";
 import Dashboard from "../components/pages/Dashboard";
 import DLayout from "../components/layout/Menu";
-import Home from "../components/pages/Home";
+import SubjectDetail from "../components/pages/SubjectDetail";
 
 const PrivateRoute = ({ isSigned }: { isSigned: boolean }) => {
   return isSigned ? (
     <>
       <DLayout />
-      <Outlet />
     </>
   ) : (
     <Navigate to="/login" />
@@ -36,7 +34,7 @@ export default function AppRoutes() {
       <Routes>
         <Route element={<PrivateRoute isSigned={isSigned} />}>
           <Route path="/" element={<Dashboard />} />
-          <Route path="/subject" element={<Home />} />
+          <Route path="/subject/:subject_id" element={<SubjectDetail />} />
         </Route>
         <Route element={<PublicRoute isSigned={isSigned} />}>
           <Route path="/login" element={<Login />} />

@@ -11,7 +11,7 @@ interface NavItemProps extends FlexProps {
 
 const NavItem = ({ icon, children, href, ...rest }: NavItemProps) => {
   const location = useLocation();
-  const isActive = location.pathname + location.search === href;
+  const isActive = location.pathname === href;
 
   return (
     <Link
@@ -22,9 +22,9 @@ const NavItem = ({ icon, children, href, ...rest }: NavItemProps) => {
     >
       <Flex
         align="center"
-        p="4"
-        mx="4"
-        borderRadius="lg"
+        p="15px"
+        mx="1"
+        borderRadius="md"
         role="group"
         cursor="pointer"
         bg={isActive ? "black" : "transparent"}
@@ -38,7 +38,7 @@ const NavItem = ({ icon, children, href, ...rest }: NavItemProps) => {
         {icon && (
           <Icon
             mr="4"
-            fontSize="20"
+            fontSize="16"
             _groupHover={{
               color: "white",
             }}

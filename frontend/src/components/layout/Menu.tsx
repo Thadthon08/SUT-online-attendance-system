@@ -3,6 +3,7 @@ import { Box, Drawer, DrawerContent, useDisclosure } from "@chakra-ui/react";
 import SidebarContent from "./SidebarContent";
 import MobileNav from "./MobileNav";
 import { Outlet } from "react-router-dom";
+import CarouselComponent from "./Carousel";
 
 export default function DLayout() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -34,7 +35,8 @@ export default function DLayout() {
       </Drawer>
       {/* mobilenav */}
       <MobileNav onOpen={onOpen} />
-      <Box ml={{ base: 0, md: 80 }} p="4" bg={"gray.100"} h={"100vh"}>
+      <Box ml={{ base: 0, md: "260px" }} bg={"rgb(243, 246, 255)"} h={"100vh"}>
+        <CarouselComponent />
         <Outlet />
       </Box>
     </Box>
