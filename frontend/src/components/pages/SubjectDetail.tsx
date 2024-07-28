@@ -37,7 +37,7 @@ const SubjectDetail: React.FC = () => {
   }, [subject_id]);
 
   return (
-    <Box p={4} bg="gray.50" minHeight="100vh">
+    <Box p={4} bg="gray.50" minHeight="100vh" className="no-copy-no-select">
       <Stack spacing={8}>
         <Box position="relative" p={6} borderRadius="md" boxShadow="md">
           <Box

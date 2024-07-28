@@ -61,6 +61,7 @@ const SidebarContent = ({ onClose, teacherId, ...rest }: SidebarProps) => {
       w={{ base: "full", md: "260px" }}
       pos="fixed"
       h="full"
+      className="no-copy-no-select"
       {...rest}
     >
       <Flex h="20" alignItems="center" justifyContent="space-between">

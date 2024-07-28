@@ -1,15 +1,24 @@
-"use client";
+import { Box, Heading, Text, Button, Flex } from "@chakra-ui/react";
+import { useNavigate } from "react-router";
 
-import { Box, Heading, Text, Button } from "@chakra-ui/react";
+function PageNotFound() {
+  const navigate = useNavigate();
 
-export default function NotFound() {
   return (
-    <Box textAlign="center" py={10} px={6}>
+    <Flex
+      height="100vh"
+      alignItems="center"
+      justifyContent="center"
+      flexDirection="column"
+      textAlign="center"
+      py={10}
+      px={6}
+    >
       <Heading
         display="inline-block"
         as="h2"
         size="2xl"
-        bgGradient="linear(to-r, teal.400, teal.600)"
+        bgGradient="linear(to-r, rgba(242, 101, 34,400), rgb(242, 101, 34,600))"
         backgroundClip="text"
       >
         404
@@ -18,17 +27,19 @@ export default function NotFound() {
         Page Not Found
       </Text>
       <Text color={"gray.500"} mb={6}>
-        The page you&apos;re looking for does not seem to exist
+        The page you're looking for does not seem to exist
       </Text>
-
       <Button
-        colorScheme="teal"
-        bgGradient="linear(to-r, teal.400, teal.500, teal.600)"
+        colorScheme="blackAlpha"
+        bgGradient="linear(to-r, rgba(242, 101, 34,400),rgba(242, 101, 34,500), rgb(242, 101, 34,600))"
         color="white"
         variant="solid"
+        onClick={() => navigate("/")}
       >
         Go to Home
       </Button>
-    </Box>
+    </Flex>
   );
 }
+
+export default PageNotFound;
