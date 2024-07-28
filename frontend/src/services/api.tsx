@@ -38,5 +38,26 @@ async function getSubjectsByTid({ teacher_id }: { teacher_id: string }) {
     throw error;
   }
 }
+async function getSubjectsById({ subject_id }: { subject_id: string }) {
+  try {
+    const response = await fetch(`${apiURL}/subjects/${subject_id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-export { SignIn, getSubjectsByTid };
+    if (!response.ok) {
+      throw new Error(`Error: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch subjects", error);
+    throw error;
+  }
+}
+
+export { SignIn, getSubjectsByTid,getSubjectsById};
