@@ -16,7 +16,7 @@ import { getSubjectsByTid } from "../../services/api";
 import { Subject } from "../../interface/ITeacherSubject";
 
 function removeQuotes(str: any) {
-  return str.replace(/"/g, "");
+  return str ? str.replace(/"/g, "") : "";
 }
 
 export default function Dashboard() {

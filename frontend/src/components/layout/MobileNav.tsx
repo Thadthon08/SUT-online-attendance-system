@@ -25,7 +25,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
   const { signOut } = useAuth();
 
   function removeQuotes(str: any) {
-    return str.replace(/"/g, "");
+    return str ? str.replace(/"/g, "") : "";
   }
 
   const user = {

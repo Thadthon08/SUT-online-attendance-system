@@ -7,6 +7,7 @@ interface NavItemProps extends FlexProps {
   icon: IconType;
   children: ReactNode;
   href: string;
+  
 }
 
 const NavItem = ({ icon, children, href, ...rest }: NavItemProps) => {
