@@ -44,8 +44,6 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
       height="20"
       alignItems="center"
       bg={"rgb(242, 101, 34)"}
-      borderBottomWidth="1px"
-      borderBottomColor={"gray.200"}
       justifyContent={{ base: "space-between", md: "flex-end" }}
       {...rest}
     >
@@ -67,7 +65,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
         SUT Attendence
       </Text>
 
-      <HStack spacing={{ base: "0", md: "6" }}>
+      <HStack spacing={{ base: "0", md: "6" }} zIndex={10}>
         <Flex alignItems={"center"}>
           <Menu>
             <MenuButton

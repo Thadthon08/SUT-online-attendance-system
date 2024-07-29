@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Checkbox, Form, Input } from "antd";
+import { Button, Checkbox, Form, Input, message } from "antd";
 import { SignIn } from "../../services/api";
 import { useAuth } from "../../contexts/AuthContext";
 import { LoginResponseInterface } from "../../interface/ILoginRespon";
 
-const App: React.FC = () => {
+const LoginForm: React.FC = () => {
   const context = useAuth();
 
   const onFinish = async (values: any) => {
@@ -13,10 +13,10 @@ const App: React.FC = () => {
       const res: LoginResponseInterface = await SignIn(values);
       if (res.token.token) {
         context.signIn(res);
-        console.log("Login successful:", res);
+        message.success("Login successful");
       }
     } catch (error) {
-      console.error("Login failed:", error);
+      message.error("Login failed. Please try again.");
     }
   };
 
@@ -29,11 +29,11 @@ const App: React.FC = () => {
     >
       <Form.Item
         name="teacher_id"
-        rules={[{ required: true, message: "Please input your Id!" }]}
+        rules={[{ required: true, message: "Please input your Teacher Id!" }]}
       >
         <Input
           prefix={<UserOutlined className="site-form-item-icon" />}
-          placeholder="Id"
+          placeholder="Teacher Id"
         />
       </Form.Item>
       <Form.Item
@@ -60,7 +60,7 @@ const App: React.FC = () => {
         <Button
           type="primary"
           htmlType="submit"
-          className="login-form-button w-full"
+          className="login-form-button w-full p-4"
           style={{ backgroundColor: "rgb(242, 101, 34)" }}
         >
           Log in
@@ -70,4 +70,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+export default LoginForm;

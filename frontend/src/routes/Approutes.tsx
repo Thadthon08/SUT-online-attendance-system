@@ -11,6 +11,7 @@ import Error from "../components/pages/Error";
 import Dashboard from "../components/pages/Dashboard";
 import DLayout from "../components/layout/Menu";
 import SubjectDetail from "../components/pages/SubjectDetail";
+import CreateRoom from "../components/pages/CreateRoom";
 
 const PrivateRoute = ({ isSigned }: { isSigned: boolean }) => {
   return isSigned ? (
@@ -35,6 +36,7 @@ export default function AppRoutes() {
         <Route element={<PrivateRoute isSigned={isSigned} />}>
           <Route path="/" element={<Dashboard />} />
           <Route path="/subject/:subject_id" element={<SubjectDetail />} />
+          <Route path="/create-room/:subject_id" element={<CreateRoom />} />
         </Route>
         <Route element={<PublicRoute isSigned={isSigned} />}>
           <Route path="/login" element={<Login />} />

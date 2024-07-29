@@ -14,6 +14,7 @@ import {
 import { Link } from "react-router-dom";
 import { getSubjectsByTid } from "../../services/api";
 import { Subject } from "../../interface/ITeacherSubject";
+import CarouselComponent from "../layout/Carousel";
 
 function removeQuotes(str: any) {
   return str ? str.replace(/"/g, "") : "";
@@ -42,114 +43,120 @@ export default function Dashboard() {
   }, [teacherId]);
 
   return (
-    <Box p={4}>
-      <Container maxW={{ base: "100%", md: "container.lg" }}>
-        {loading ? (
-          <Grid
-            templateColumns={{
-              base: "1fr",
-              md: "repeat(2, 1fr)",
-              lg: "repeat(3, 1fr)",
-            }}
-            gap={6}
-          >
-            {Array.from({ length: 3 }).map((_, index) => (
-              <GridItem key={index}>
-                <Skeleton height="300px" />
-              </GridItem>
-            ))}
-          </Grid>
-        ) : error ? (
-          <Alert status="error" mb={4}>
-            <AlertIcon />
-            {error}
-          </Alert>
-        ) : (
-          <Grid
-            templateColumns={{
-              base: "1fr",
-              md: "repeat(2, 1fr)",
-              lg: "repeat(3, 1fr)",
-            }}
-            gap={6}
-          >
-            {subjects.map(({ subject_id, subject_name, teachers }) => (
-              <GridItem key={subject_id} w="100%">
-                <Link to={`/subject/${subject_id}`}>
-                  <Box
-                    bg="white"
-                    borderRadius="md"
-                    shadow="md"
-                    _hover={{
-                      shadow: "lg",
-                      transform: "scale(1.05)",
-                      backgroundColor: "#f0f0f0",
-                    }}
-                    transition="0.3s"
-                  >
-                    <Image
-                      src="https://via.placeholder.com/300"
-                      alt={subject_name}
-                      borderTopRadius="md"
-                      height="150px"
-                      width="100%"
-                      objectFit="cover"
-                    />
-                    <Box p={4}>
-                      <Text fontSize="xl" fontWeight="bold">
-                        {subject_name}
-                      </Text>
-                      <Text mt={2}>Subject ID: {subject_id}</Text>
-                      <Box
-                        mt={4}
-                        borderTop="1px solid"
-                        borderColor="gray.200"
-                        pt={2}
-                      >
-                        {teachers && teachers.length > 0 ? (
-                          teachers.map(
-                            ({
-                              teacher_id,
-                              firstname,
-                              lastname,
-                              profile_pic,
-                            }) => (
-                              <Flex key={teacher_id} align="center" mt={2}>
-                                <Image
-                                  borderRadius="full"
-                                  boxSize="40px"
-                                  src={
-                                    profile_pic ||
-                                    "https://via.placeholder.com/150"
-                                  }
-                                  alt={firstname}
-                                  mr={4}
-                                />
-                                <Box>
-                                  <Text fontSize="md" fontWeight="bold">
-                                    {firstname} {lastname}
-                                  </Text>
-                                  <Text fontSize="sm">
-                                    Teacher ID: {teacher_id}
-                                  </Text>
-                                </Box>
-                              </Flex>
+    <>
+      <CarouselComponent />
+      <Box p={4}>
+        <Container
+          maxW={{ base: "100%", md: "container.lg" }}
+          className="no-copy-no-select"
+        >
+          {loading ? (
+            <Grid
+              templateColumns={{
+                base: "1fr",
+                md: "repeat(2, 1fr)",
+                lg: "repeat(3, 1fr)",
+              }}
+              gap={6}
+            >
+              {Array.from({ length: 3 }).map((_, index) => (
+                <GridItem key={index}>
+                  <Skeleton height="300px" />
+                </GridItem>
+              ))}
+            </Grid>
+          ) : error ? (
+            <Alert status="error" mb={4}>
+              <AlertIcon />
+              {error}
+            </Alert>
+          ) : (
+            <Grid
+              templateColumns={{
+                base: "1fr",
+                md: "repeat(2, 1fr)",
+                lg: "repeat(3, 1fr)",
+              }}
+              gap={6}
+            >
+              {subjects.map(({ subject_id, subject_name, teachers }) => (
+                <GridItem key={subject_id} w="100%">
+                  <Link to={`/subject/${subject_id}`}>
+                    <Box
+                      bg="white"
+                      borderRadius="md"
+                      shadow="md"
+                      _hover={{
+                        shadow: "lg",
+                        transform: "scale(1.05)",
+                        backgroundColor: "#f0f0f0",
+                      }}
+                      transition="0.3s"
+                    >
+                      <Image
+                        src="https://via.placeholder.com/300"
+                        alt={subject_name}
+                        borderTopRadius="md"
+                        height="150px"
+                        width="100%"
+                        objectFit="cover"
+                      />
+                      <Box p={4}>
+                        <Text fontSize="xl" fontWeight="bold">
+                          {subject_name}
+                        </Text>
+                        <Text mt={2}>Subject ID: {subject_id}</Text>
+                        <Box
+                          mt={4}
+                          borderTop="1px solid"
+                          borderColor="gray.200"
+                          pt={2}
+                        >
+                          {teachers && teachers.length > 0 ? (
+                            teachers.map(
+                              ({
+                                teacher_id,
+                                firstname,
+                                lastname,
+                                profile_pic,
+                              }) => (
+                                <Flex key={teacher_id} align="center" mt={2}>
+                                  <Image
+                                    borderRadius="full"
+                                    boxSize="40px"
+                                    src={
+                                      profile_pic ||
+                                      "https://via.placeholder.com/150"
+                                    }
+                                    alt={firstname}
+                                    mr={4}
+                                  />
+                                  <Box>
+                                    <Text fontSize="md" fontWeight="bold">
+                                      {firstname} {lastname}
+                                    </Text>
+                                    <Text fontSize="sm">
+                                      Teacher ID: {teacher_id}
+                                    </Text>
+                                  </Box>
+                                </Flex>
+                              )
                             )
-                          )
-                        ) : (
-                          <Text fontSize="sm" color="gray.500">
-                            No teachers assigned.
-                          </Text>
-                        )}
+                          ) : (
+                            <Text fontSize="sm" color="gray.500">
+                              No teachers assigned.
+                            </Text>
+                          )}
+                        </Box>
                       </Box>
                     </Box>
-                  </Box>
-                </Link>
-              </GridItem>
-            ))}
-          </Grid>
-        )}
-      </Container>
-    </Box>
+                  </Link>
+                </GridItem>
+              ))}
+            </Grid>
+          )}
+        </Container>
+      </Box>
+    </>
   );
 }
