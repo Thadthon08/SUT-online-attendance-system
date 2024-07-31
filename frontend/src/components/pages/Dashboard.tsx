@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Grid,
@@ -16,15 +16,11 @@ import { getSubjectsByTid } from "../../services/api";
 import { Subject } from "../../interface/ITeacherSubject";
 import CarouselComponent from "../layout/Carousel";
 
-function removeQuotes(str: any) {
-  return str ? str.replace(/"/g, "") : "";
-}
-
 export default function Dashboard() {
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const teacherId = removeQuotes(localStorage.getItem("teacher_id"));
+  const teacherId = localStorage.getItem("teacher_id")?.replace(/"/g, "") || "";
 
   useEffect(() => {
     const fetchSubjects = async () => {

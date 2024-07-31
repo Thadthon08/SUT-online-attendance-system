@@ -12,7 +12,6 @@ import {
   MenuItem,
   MenuList,
   FlexProps,
-  useColorModeValue,
 } from "@chakra-ui/react";
 import { FiMenu, FiChevronDown } from "react-icons/fi";
 import { useAuth } from "../../contexts/AuthContext";

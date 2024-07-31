@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Box,
   useDisclosure,
@@ -13,11 +12,7 @@ import { Outlet } from "react-router-dom";
 export default function DLayout() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  function removeQuotes(str: any) {
-    return str.replace(/"/g, "");
-  }
-  const teacherId =
-    removeQuotes(localStorage.getItem("teacher_id")) ?? undefined;
+  const teacherId = localStorage.getItem("teacher_id")?.replace(/"/g, "") || "";
 
   return (
     <Box minH="100vh" bg={"rgb(242, 101, 34)"}>

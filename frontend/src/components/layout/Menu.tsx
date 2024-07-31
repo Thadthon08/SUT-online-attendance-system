@@ -1,9 +1,7 @@
-import React from "react";
 import { Box, Drawer, DrawerContent, useDisclosure } from "@chakra-ui/react";
 import SidebarContent from "./SidebarContent";
 import MobileNav from "./MobileNav";
 import { Outlet } from "react-router-dom";
-import CarouselComponent from "./Carousel";
 
 export default function DLayout() {
   const { isOpen, onOpen, onClose } = useDisclosure();

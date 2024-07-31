@@ -26,7 +26,7 @@ export default function CreateRoom() {
         <Card
           title="Check-In Room Details"
           bordered={false}
-          headStyle={{ fontWeight: "bold", fontSize: "18px", color: "#002766" }}
+          styles={{ header: { color: "red" } }}
           style={{
             width: "100%",
             maxWidth: "600px",

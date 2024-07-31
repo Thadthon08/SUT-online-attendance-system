@@ -1,6 +1,7 @@
 import React from "react";
 import LoginForm from "./LoginForm";
 import "./style.css";
+import ConfigProvider from "antd/es/config-provider";
 
 export default function Login() {
   return (
@@ -14,7 +15,22 @@ export default function Login() {
             SUT Attendence
           </h1>
           <div className="p-5 bg-slate-50">
-            <LoginForm />
+            <ConfigProvider
+              theme={{
+                token: {
+                  fontFamily:
+                    "Noto Sans, 'Noto Sans Thai', 'Prompt', sans-serif",
+                  colorBgContainer: "f4f4f4",
+                },
+                components: {
+                  Input: {
+                    colorBorder: "rgb(51, 51, 51)",
+                  },
+                },
+              }}
+            >
+              <LoginForm />
+            </ConfigProvider>
           </div>
         </div>
       </div>

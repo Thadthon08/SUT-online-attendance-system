@@ -1,15 +1,23 @@
-import React from "react";
-import { Form, Input, Button, DatePicker, Select } from "antd";
+import { Form, Input, Button, DatePicker } from "antd";
 import moment from "moment";
-
-const { Option } = Select;
+import { useGeolocation } from "react-use";
+import { useParams } from "react-router-dom";
 
 const CheckInRoomForm = () => {
+  const { subject_id = "" } = useParams<{ subject_id: string | undefined }>();
+  const teacherId = localStorage.getItem("teacher_id")?.replace(/"/g, "") || "";
+  const state = useGeolocation();
   const [form] = Form.useForm();
 
   const onFinish = (values: any) => {
+    const { latitude, longitude } = state;
+    const creatAt = values.createdTime.format("YYYY-MM-DD HH:mm:ss");
     console.log("Form values:", values);
-    // Here you would handle form submission, e.g., send data to your backend.
+    console.log("Geolocation:", latitude);
+    console.log("Geolocation:", longitude);
+    console.log("subject_id:", subject_id);
+    console.log("teacher_id:", teacherId);
+    console.log("created_at:", creatAt);
   };
 
   return (
@@ -18,8 +26,9 @@ const CheckInRoomForm = () => {
       layout="vertical"
       onFinish={onFinish}
       initialValues={{
-        status: "open",
         createdTime: moment(),
+        subjectID: subject_id,
+        teacherID: teacherId,
       }}
     >
       <Form.Item
@@ -36,50 +45,13 @@ const CheckInRoomForm = () => {
       >
         <Input />
       </Form.Item>
-      <Form.Item
-        name="latitude"
-        label="Latitude"
-        rules={[{ required: true, message: "Please input the latitude!" }]}
-      >
-        <Input type="number" step="any" />
-      </Form.Item>
-      <Form.Item
-        name="longitude"
-        label="Longitude"
-        rules={[{ required: true, message: "Please input the longitude!" }]}
-      >
-        <Input type="number" step="any" />
-      </Form.Item>
+
       <Form.Item
         name="createdTime"
         label="Created Time"
         rules={[{ required: true, message: "Please input the created time!" }]}
       >
         <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
-      </Form.Item>
-      <Form.Item
-        name="endTime"
-        label="End Time"
-        rules={[{ required: true, message: "Please input the end time!" }]}
-      >
-        <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
-      </Form.Item>
-      <Form.Item
-        name="status"
-        label="Status"
-        rules={[{ required: true, message: "Please select the status!" }]}
-      >
-        <Select>
-          <Option value="open">Open</Option>
-          <Option value="closed">Closed</Option>
-        </Select>
-      </Form.Item>
-      <Form.Item
-        name="qrCode"
-        label="QR Code"
-        rules={[{ required: true, message: "Please input the QR code!" }]}
-      >
-        <Input />
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit">
