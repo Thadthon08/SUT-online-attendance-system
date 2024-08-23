@@ -11,7 +11,7 @@ import {
   Skeleton,
   VStack,
 } from "@chakra-ui/react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import NavItem from "./NavItem";
 import { LuGraduationCap } from "react-icons/lu";
 import { getSubjectsByTid } from "../../services/api";
@@ -43,15 +43,6 @@ const SidebarContent = ({ onClose, teacherId, ...rest }: SidebarProps) => {
 
     fetchSubjects();
   }, [teacherId]);
-
-  if (error) {
-    return (
-      <Alert status="error">
-        <AlertIcon />
-        {error}
-      </Alert>
-    );
-  }
 
   return (
     <Box
@@ -91,26 +82,36 @@ const SidebarContent = ({ onClose, teacherId, ...rest }: SidebarProps) => {
         วิชาที่สอน
       </Text>
       <VStack spacing={4} align="start" px={4}>
-        {loading
+        {loading || error
           ? Array.from({ length: 5 }).map((_, index) => (
               <Skeleton key={index} height="20px" width="full" />
             ))
-          : subjects.map((subject) => (
-              <NavItem
-                key={subject.subject_id}
-                fontSize={"0.8rem"}
-                fontWeight={"medium"}
-                icon={LuGraduationCap}
-                href={`/subject/${subject.subject_id}`}
-                _active={
-                  location.pathname === `/subject/${subject.subject_id}`
-                    ? "active"
-                    : ""
-                }
-              >
-                {subject.subject_id} {subject.subject_name}
-              </NavItem>
-            ))}
+          : subjects.map((subject) => {
+              const href = `/subject/${subject.subject_id}`;
+              const isActive =
+                location.pathname.includes(`/subject/${subject.subject_id}`) ||
+                location.pathname.includes(
+                  `/create-room/${subject.subject_id}`
+                );
+
+              return (
+                <NavItem
+                  key={subject.subject_id}
+                  fontSize={"0.8rem"}
+                  fontWeight={"medium"}
+                  icon={LuGraduationCap}
+                  href={href}
+                  bg={isActive ? "black" : "transparent"}
+                  color={isActive ? "white" : "inherit"}
+                  _hover={{
+                    bg: "black",
+                    color: "white",
+                  }}
+                >
+                  {subject.subject_id} {subject.subject_name}
+                </NavItem>
+              );
+            })}
       </VStack>
     </Box>
   );

@@ -41,12 +41,12 @@ export default function Dashboard() {
   return (
     <>
       <CarouselComponent />
-      <Box p={4}>
+      <Box p={4} mt={5}>
         <Container
           maxW={{ base: "100%", md: "container.lg" }}
           className="no-copy-no-select"
         >
-          {loading ? (
+          {loading || error ? (
             <Grid
               templateColumns={{
                 base: "1fr",
@@ -61,11 +61,6 @@ export default function Dashboard() {
                 </GridItem>
               ))}
             </Grid>
-          ) : error ? (
-            <Alert status="error" mb={4}>
-              <AlertIcon />
-              {error}
-            </Alert>
           ) : (
             <Grid
               templateColumns={{

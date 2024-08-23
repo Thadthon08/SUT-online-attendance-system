@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import Login from "../components/auth/Login";
-import Error from "../components/pages/Error";
+import Error from "../components/pages/PageNotFound";
 import Dashboard from "../components/pages/Dashboard";
 import DLayout from "../components/layout/Menu";
 import SubjectDetail from "../components/pages/SubjectDetail";

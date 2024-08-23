@@ -10,6 +10,7 @@ import {
   Skeleton,
   SkeletonText,
 } from "@chakra-ui/react";
+import { FaChalkboardTeacher, FaHistory } from "react-icons/fa"; // Import icons
 import { Subject } from "../../interface/ITeacherSubject";
 import { getSubjectsByid } from "../../services/api";
 import CarouselComponent from "../layout/Carousel";
@@ -36,7 +37,7 @@ const SubjectDetail: React.FC = () => {
     fetchSubjects();
   }, [subject_id]);
 
-  if (loading) {
+  if (loading || error) {
     return (
       <>
         <CarouselComponent />
@@ -57,21 +58,42 @@ const SubjectDetail: React.FC = () => {
     );
   }
 
-  if (error) {
-    return (
-      <>
-        <CarouselComponent />
-        <Box p={4} bg="gray.50" minHeight="100vh" className="no-copy-no-select">
-          <Stack spacing={8} textAlign="center">
-            <Heading as="h1" size="lg" mb={4} color="red.500">
-              Error
-            </Heading>
-            <Text fontSize="lg">{error}</Text>
-          </Stack>
-        </Box>
-      </>
-    );
-  }
+  // Reusable ActionGridItem Component
+  const ActionGridItem: React.FC<{
+    onClick: () => void;
+    text: string;
+    icon: JSX.Element;
+  }> = ({ onClick, text, icon }) => (
+    <GridItem
+      w="100%"
+      h="250px"
+      bg="rgb(51, 51, 51)"
+      borderRadius="md"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      flexDirection="column"
+      _hover={{
+        bg: "rgba(51, 51, 51,0.9)",
+        cursor: "pointer",
+        boxShadow: "lg",
+      }}
+      boxShadow="md"
+      onClick={onClick}
+      transition="all 0.3s ease"
+    >
+      {icon}
+      <Text
+        fontSize="2xl"
+        color="white"
+        fontWeight="bold"
+        textAlign="center"
+        mt={4}
+      >
+        {text}
+      </Text>
+    </GridItem>
+  );
 
   return (
     <>
@@ -103,72 +125,29 @@ const SubjectDetail: React.FC = () => {
               <Text fontSize="lg" mb={2} fontWeight={"500"}>
                 Instructor:{" "}
                 {subjects?.teachers
-                  ?.map((teacher) => teacher.firstname)
-                  .join(" ")}{" "}
-                {subjects?.teachers
-                  ?.map((teacher) => teacher.lastname)
-                  .join(" ")}
+                  ?.map((teacher) => `${teacher.firstname} ${teacher.lastname}`)
+                  .join(", ") || "N/A"}
               </Text>
               <Text fontSize="lg" mb={2} fontWeight={"500"}>
                 Email:{" "}
-                {subjects?.teachers?.map((teacher) => teacher.email).join(" ")}
+                {subjects?.teachers
+                  ?.map((teacher) => teacher.email)
+                  .join(" ") || "N/A"}
               </Text>
             </Box>
           </Box>
 
           <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }} gap={6}>
-            <GridItem
-              w="100%"
-              h="250px"
-              bg="rgb(51, 51, 51)"
-              borderRadius="md"
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              _hover={{
-                bg: "rgba(51, 51, 51,0.9)",
-                cursor: "pointer",
-                boxShadow: "lg",
-              }}
-              boxShadow="md"
+            <ActionGridItem
               onClick={() => navigate(`/create-room/${subject_id}`)}
-              transition="all 0.3s ease"
-            >
-              <Text
-                fontSize="2xl"
-                color="white"
-                fontWeight="bold"
-                textAlign="center"
-              >
-                Create Attendance Room
-              </Text>
-            </GridItem>
-            <GridItem
-              w="100%"
-              h="250px"
-              bg="rgb(51, 51, 51)"
-              borderRadius="md"
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              _hover={{
-                bg: "rgba(51, 51, 51,0.9)",
-                cursor: "pointer",
-                boxShadow: "lg",
-              }}
-              boxShadow="md"
+              text="Create Attendance Room"
+              icon={<FaChalkboardTeacher size="3rem" color="white" />}
+            />
+            <ActionGridItem
               onClick={() => navigate(`/room-history/${subject_id}`)}
-              transition="all 0.3s ease"
-            >
-              <Text
-                fontSize="2xl"
-                color="white"
-                fontWeight="bold"
-                textAlign="center"
-              >
-                View Attendance History
-              </Text>
-            </GridItem>
+              text="View Attendance History"
+              icon={<FaHistory size="3rem" color="white" />}
+            />
           </Grid>
         </Stack>
       </Box>
