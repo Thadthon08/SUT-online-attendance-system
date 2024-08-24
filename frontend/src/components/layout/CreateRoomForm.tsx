@@ -18,7 +18,8 @@ import timezone from "dayjs/plugin/timezone";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import LocationMap from "./LocationMap"; // Import LocationMap
-import { Skeleton } from "@chakra-ui/react";
+import { getSubjectsByid } from "../../services/api";
+import { Subject } from "../../interface/ITeacherSubject";
 
 dayjs.extend(customParseFormat);
 dayjs.extend(localeData);
@@ -29,8 +30,6 @@ const { Title } = Typography;
 
 const CreateRoomForm = () => {
   const { subject_id = "" } = useParams<{ subject_id: string }>();
-  const subject_name = "วิชาการเขียนโปรแกรม"; // Hardcoded subject name
-  const teacherId = localStorage.getItem("teacher_id")?.replace(/"/g, "") || "";
   const [form] = Form.useForm();
 
   const [roomName, setRoomName] = useState("");
@@ -42,6 +41,16 @@ const CreateRoomForm = () => {
   } | null>(null);
   const [center, setCenter] = useState<[number, number]>([14.0766, 100.6036]); // Default center
   const [error, setError] = useState<string | null>(null);
+  const [subjects, setSubjects] = useState<Subject>();
+
+  const fetchSubjects = async () => {
+    try {
+      const data = await getSubjectsByid({ subject_id: subject_id });
+      setSubjects(data);
+    } catch (error: any) {
+      setError(error.message);
+    }
+  };
 
   useEffect(() => {
     if (subject_id) {
@@ -54,21 +63,18 @@ const CreateRoomForm = () => {
       const newRoomName = `${subject_id} เช็คชื่อวันที่ ${formattedDate}`;
       setRoomName(newRoomName);
 
-      // อัปเดตค่าของฟอร์มเมื่อ roomName เปลี่ยนแปลง
       form.setFieldsValue({
         roomName: newRoomName,
       });
+
+      form.setFieldsValue({
+        createdTime: dayjs().locale("en"), // Use Gregorian calendar
+        endTime: dayjs().add(2, "minute"),
+        subjectID: subject_id,
+        teacherID: subjects?.teachers?.[0].teacher_id,
+      });
     }
 
-    // Set initial form values
-    form.setFieldsValue({
-      createdTime: dayjs().locale("en"), // Use Gregorian calendar
-      endTime: dayjs().add(2, "minute"),
-      subjectID: subject_id,
-      teacherID: teacherId,
-    });
-
-    // Request geolocation
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const newLocation = {
@@ -85,7 +91,20 @@ const CreateRoomForm = () => {
         );
       }
     );
-  }, [subject_id, form, endTime, teacherId]);
+
+    fetchSubjects();
+  }, [subject_id, form]);
+
+  useEffect(() => {
+    if (subjects) {
+      form.setFieldsValue({
+        subjectName: subjects.subject_name,
+        teacherID: subjects.teachers?.[0].teacher_id,
+      });
+      console.log("Subject Name:", subjects.subject_name);
+      console.log("Teacher ID:", subjects.teachers?.[0].teacher_id);
+    }
+  }, [subjects, form]);
 
   const onFinish = (values: any) => {
     const formattedStartTime = values.createdTime.format("YYYY-MM-DD HH:mm:ss");
@@ -96,12 +115,11 @@ const CreateRoomForm = () => {
     console.log("Formatted End Time:", formattedEndTime);
     console.log("Geolocation:", location?.latitude, location?.longitude);
     console.log("subject_id:", subject_id);
-    console.log("subject_name:", subject_name);
-    console.log("teacher_id:", teacherId);
+    console.log("subject_name:", subjects?.subject_name);
+    console.log("teacher_id:", subjects?.teachers?.[0].teacher_id);
     console.log("room_name:", roomName);
   };
 
-  // Limit the date range to the present and future only, and up to 1 year in the future
   const disablePastDates = (current: any) => {
     return (
       current &&
@@ -109,7 +127,6 @@ const CreateRoomForm = () => {
     );
   };
 
-  // Disable past hours and minutes for the current day
   const disablePastTimes = (current: any) => {
     const currentHour = dayjs().hour();
     const currentMinute = dayjs().minute();
@@ -157,24 +174,22 @@ const CreateRoomForm = () => {
           createdTime: startTime, // Set current time
           endTime: endTime,
           subjectID: subject_id,
-          subjectName: subject_name,
+          subjectName: subjects?.subject_name,
           roomName: roomName,
-          teacherID: teacherId,
+          teacherID: subjects?.teachers?.[0].teacher_id,
         }}
       >
         <Row gutter={[16, 16]}>
-          {/* Subject Name (Read Only) */}
           <Col span={24}>
             <Form.Item
               name="subjectName"
               rules={[{ required: true }]}
               label="ชื่อวิชา"
             >
-              <Input value={subject_name} readOnly />
+              <Input value={subjects?.subject_name} readOnly />
             </Form.Item>
           </Col>
 
-          {/* Subject ID (Read Only) */}
           <Col span={24}>
             <Form.Item
               name="subjectID"
@@ -185,7 +200,6 @@ const CreateRoomForm = () => {
             </Form.Item>
           </Col>
 
-          {/* Room Name (Editable) */}
           <Col span={24}>
             <Form.Item
               name="roomName"
@@ -199,7 +213,6 @@ const CreateRoomForm = () => {
             </Form.Item>
           </Col>
 
-          {/* Start Time Picker */}
           <Col span={12}>
             <Form.Item
               name="createdTime"
@@ -223,7 +236,6 @@ const CreateRoomForm = () => {
             </Form.Item>
           </Col>
 
-          {/* End Time Picker */}
           <Col span={12}>
             <Form.Item
               name="endTime"
@@ -242,7 +254,6 @@ const CreateRoomForm = () => {
             </Form.Item>
           </Col>
 
-          {/* Map Display */}
           <Col span={24}>
             <Form.Item label="ตำแหน่งปัจจุบัน">
               {!location ? (
@@ -255,7 +266,6 @@ const CreateRoomForm = () => {
             </Form.Item>
           </Col>
 
-          {/* Submit Button */}
           <Col span={24}>
             <Form.Item>
               <Button

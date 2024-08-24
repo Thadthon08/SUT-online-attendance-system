@@ -1,5 +1,5 @@
 import { Layout, Typography, Card } from "antd";
-import CheckInRoomForm from "../layout/CreateRoomForm";
+import CreateRoomForm from "../layout/CreateRoomForm";
 
 const { Header, Content } = Layout;
 const { Title } = Typography;
@@ -33,7 +33,7 @@ export default function CreateRoom() {
           padding: "40px",
         }}
       >
-        <CheckInRoomForm />
+        <CreateRoomForm />
       </Content>
     </Layout>
   );
