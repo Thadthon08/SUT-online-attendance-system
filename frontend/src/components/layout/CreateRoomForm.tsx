@@ -7,6 +7,8 @@ import {
   Card,
   Row,
   Col,
+  Spin,
+  Alert,
 } from "antd";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
@@ -244,7 +246,9 @@ const CreateRoomForm = () => {
           <Col span={24}>
             <Form.Item label="ตำแหน่งปัจจุบัน">
               {!location ? (
-                <Skeleton height={200} width="full" />
+                <Spin tip="กำลังดึงข้อมูลพิกัดที่อยู่ปัจจุบัน กรุณารอสักครู่...">
+                  <Alert style={{ height: "150px" }} type="info" />
+                </Spin>
               ) : (
                 <LocationMap center={center} />
               )}

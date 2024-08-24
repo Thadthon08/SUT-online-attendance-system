@@ -1,9 +1,10 @@
 package controllers
 
 import (
+	"myproject/config"
+	"myproject/models"
 	"net/http"
-    "myproject/config"
-    "myproject/models"  
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,6 +21,21 @@ func CreateTeacherSubject(c *gin.Context) {
 		return
 	}
 
+	// ตรวจสอบว่า TeacherID นั้นมีอยู่ในฐานข้อมูลหรือไม่
+	var teacher models.Teacher
+	if err := config.DB.First(&teacher, "teacher_id = ?", input.TeacherID).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Teacher not found"})
+		return
+	}
+
+	// ตรวจสอบว่า SubjectID นั้นมีอยู่ในฐานข้อมูลหรือไม่
+	var subject models.Subject
+	if err := config.DB.First(&subject, "subject_id = ?", input.SubjectID).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Subject not found"})
+		return
+	}
+
+	// สร้างความสัมพันธ์ใหม่ระหว่างครูและวิชา
 	teacherSubject := models.TeacherSubject{
 		TeacherID: input.TeacherID,
 		SubjectID: input.SubjectID,

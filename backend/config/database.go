@@ -16,10 +16,21 @@ func InitDatabase() {
     DB, err = gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
     if err != nil {
         log.Fatal("Failed to connect to database:", err)
-    }else{
+    } else {
         log.Println("Database connection successful")
     }
 
     // Migrate the schema
-     DB.AutoMigrate(&models.Teacher{}, &models.Subject{},  &models.TeacherSubject{})
+    err = DB.AutoMigrate(
+        &models.Teacher{},
+        &models.Subject{},
+        &models.TeacherSubject{},
+        &models.AttendanceRoom{},
+        &models.Attendance{},
+        &models.Student{},
+    )
+    if err != nil {
+        log.Fatal("Failed to migrate database schema:", err)
+    }
 }
+

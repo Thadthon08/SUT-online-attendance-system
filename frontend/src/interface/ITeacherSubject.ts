@@ -12,6 +12,7 @@ export interface Teacher {
 
 export interface Subject {
   subject_id: string;
+  subject_pic: string;
   subject_name: string;
   teachers: Teacher[] | null;
 }

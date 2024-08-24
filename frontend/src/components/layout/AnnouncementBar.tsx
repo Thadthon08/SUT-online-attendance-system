@@ -24,8 +24,9 @@ const AnnouncementBar: React.FC = () => {
           </Box>
           <Box flex="1" overflow="hidden">
             <Marquee gradient={false} speed={50} className="text-lg">
-              I can be a React component, multiple React components, or just
-              some text.
+              ขณะนี้ระบบเช็คชื่อออนไลน์กำลังอยู่ในช่วงการทดสอบ
+              โปรดอดทนรอขณะระบบดำเนินการ ระบบอาจมีการเปลี่ยนแปลงข้อมูลได้
+              ขอบคุณครับ/ค่ะ
             </Marquee>
           </Box>
         </Flex>
