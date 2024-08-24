@@ -4,8 +4,6 @@ import {
   Grid,
   GridItem,
   Skeleton,
-  Alert,
-  AlertIcon,
   Text,
   Image,
   Container,
