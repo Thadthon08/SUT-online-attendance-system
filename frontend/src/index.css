@@ -10,3 +10,12 @@
   -o-user-select: none;
   -webkit-touch-callout: none; /* Disable callout menu on iOS */
 }
+/* CSS */
+.ant-picker-now-btn {
+  content: ": เลือกเวลาปัจจุบัน";
+}
+
+.ant-picker-now-btn::after {
+  content: ": เลือกเวลาปัจจุบัน";
+  display: inline-block;
+}

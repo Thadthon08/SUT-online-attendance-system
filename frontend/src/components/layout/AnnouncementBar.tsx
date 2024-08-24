@@ -6,17 +6,19 @@ import { Box, Flex } from "@chakra-ui/react";
 const AnnouncementBar: React.FC = () => {
   return (
     <Alert
+      className="no-copy-no-select"
       message={
         <Flex alignItems="center" width="100%" p={1}>
           <Box
-            p={3}
+            p={2}
             borderWidth="1px"
             borderColor="gray.300"
             borderRadius="md"
             bg="black"
             color="white"
+            fontSize={["sm", "md"]}
             fontWeight="bold"
-            mr={1}
+            mr={2}
           >
             ประกาศ
           </Box>

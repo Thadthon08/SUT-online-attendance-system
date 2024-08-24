@@ -102,6 +102,7 @@ const SidebarContent = ({ onClose, teacherId, ...rest }: SidebarProps) => {
                   icon={LuGraduationCap}
                   href={href}
                   bg={isActive ? "black" : "transparent"}
+                  transition={"all 0.3s ease"}
                   color={isActive ? "white" : "inherit"}
                   _hover={{
                     bg: "black",

@@ -1,5 +1,5 @@
 import { Layout, Typography, Card } from "antd";
-import CheckInRoomForm from "../layout/FormCreate";
+import CheckInRoomForm from "../layout/CreateRoomForm";
 
 const { Header, Content } = Layout;
 const { Title } = Typography;
@@ -7,7 +7,15 @@ const { Title } = Typography;
 export default function CreateRoom() {
   return (
     <Layout style={{ minHeight: "100vh", backgroundColor: "#f0f2f5" }}>
-      <Header style={{ background: "#002766", padding: "0 20px" }}>
+      {/* Header Section */}
+      <Header
+        style={{
+          background: "#000000",
+          padding: "0 20px",
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
         <Title
           level={2}
           style={{ color: "white", lineHeight: "64px", margin: 0 }}
@@ -15,6 +23,8 @@ export default function CreateRoom() {
           Create Check-In Room
         </Title>
       </Header>
+
+      {/* Content Section */}
       <Content
         style={{
           display: "flex",
@@ -23,19 +33,7 @@ export default function CreateRoom() {
           padding: "40px",
         }}
       >
-        <Card
-          title="Check-In Room Details"
-          bordered={false}
-          styles={{ header: { color: "red" } }}
-          style={{
-            width: "100%",
-            maxWidth: "600px",
-            boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-            backgroundColor: "white",
-          }}
-        >
-          <CheckInRoomForm />
-        </Card>
+        <CheckInRoomForm />
       </Content>
     </Layout>
   );
