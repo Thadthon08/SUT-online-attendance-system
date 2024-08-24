@@ -34,6 +34,8 @@ func main() {
 
 		r.POST("/assign", controllers.CreateTeacherSubject)
 
+		r.POST("/attendance", controllers.CreateAttendanceRoom)
+
     // Protected routes
     // auth := r.Group("/auth")
     // auth.Use(middleware.AuthMiddleware())
