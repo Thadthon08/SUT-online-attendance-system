@@ -34,7 +34,7 @@ export default function DLayout() {
       </Drawer>
       {/* mobilenav */}
       <MobileNav onOpen={onOpen} />
-      <Box ml={{ base: 0, md: "260px" }} bg={"rgb(243, 246, 255)"} h={"100vh"}>
+      <Box ml={{ base: 0, md: "300px" }} bg={"rgb(243, 246, 255)"} h={"100vh"}>
         <Outlet />
       </Box>
     </Box>

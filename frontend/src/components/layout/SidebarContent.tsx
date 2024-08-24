@@ -49,7 +49,7 @@ const SidebarContent = ({ onClose, teacherId, ...rest }: SidebarProps) => {
       transition="3s ease"
       bg={"white"}
       boxShadow={{ base: "none", md: "xl" }}
-      w={{ base: "full", md: "260px" }}
+      w={{ base: "full", md: "300px" }}
       pos="fixed"
       h="full"
       className="no-copy-no-select"
@@ -77,7 +77,7 @@ const SidebarContent = ({ onClose, teacherId, ...rest }: SidebarProps) => {
         marginTop={8}
         marginLeft={4}
         marginBottom={5}
-        fontSize={"xl"}
+        fontSize={"2xl"}
       >
         วิชาที่สอน
       </Text>
@@ -97,7 +97,7 @@ const SidebarContent = ({ onClose, teacherId, ...rest }: SidebarProps) => {
               return (
                 <NavItem
                   key={subject.subject_id}
-                  fontSize={"0.8rem"}
+                  fontSize={"0.9rem"}
                   fontWeight={"medium"}
                   icon={LuGraduationCap}
                   href={href}
