@@ -10,14 +10,13 @@ import {
 } from "../../utils/notifications";
 
 const LoginForm: React.FC = () => {
-  const { signIn } = useAuth();
+  const context = useAuth();
 
   const onFinish = async (values: any) => {
     try {
       const res: LoginResponseInterface = await SignIn(values);
-      if (res.token) {
-        const { teacherData, token } = res;
-        signIn(teacherData, token);
+      if (res.token.token) {
+        context.signIn(res);
         showSuccessNotification(
           "Login Successful",
           "You have successfully logged in."
