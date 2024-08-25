@@ -1,57 +1,71 @@
-import React, { createContext, useState, ReactNode, useContext } from "react";
-import { LoginResponseInterface } from "../interface/ILoginRespon";
+import React, {
+  createContext,
+  useState,
+  ReactNode,
+  useContext,
+  useCallback,
+  useMemo,
+} from "react";
+import { TeacherData } from "../interface/ITeacher";
 
 interface AuthContextData {
   isSigned: boolean;
-  signIn(token: LoginResponseInterface): void;
-  signOut(): void;
+  teacherData: TeacherData | null;
+  signIn: (teacherData: TeacherData, token: string) => void;
+  signOut: () => void;
 }
 
 interface AuthProviderProps {
   children: ReactNode;
 }
 
-const AuthContext = createContext<AuthContextData>({} as AuthContextData);
+const AuthContext = createContext<AuthContextData | undefined>(undefined);
 
-export function AuthProvider({ children }: AuthProviderProps) {
-  const [isSigned, setIsSigned] = useState(() => {
-    const token = localStorage.getItem("token");
-    return !!token;
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const [isSigned, setIsSigned] = useState<boolean>(() => {
+    return !!localStorage.getItem("token");
   });
-  function signIn(token: LoginResponseInterface) {
-    localStorage.setItem("teacher_id", JSON.stringify(token.token.teacher_id));
-    localStorage.setItem("firstname", JSON.stringify(token.token.firstname));
-    localStorage.setItem("lastname", JSON.stringify(token.token.lastname));
-    localStorage.setItem(
-      "phone_number",
-      JSON.stringify(token.token.phone_number)
-    );
-    localStorage.setItem(
-      "profile_pic",
-      JSON.stringify(token.token.profile_pic)
-    );
-    localStorage.setItem("email", JSON.stringify(token.token.email));
-    localStorage.setItem("token", JSON.stringify(token.token.token));
-    setIsSigned(true);
-  }
 
-  function signOut() {
-    localStorage.clear();
+  const [teacherData, setTeacherData] = useState<TeacherData | null>(() => {
+    const savedData = localStorage.getItem("teacherData");
+    return savedData ? JSON.parse(savedData) : null;
+  });
+
+  const signIn = useCallback((data: TeacherData, token: string) => {
+    setTeacherData(data);
+    localStorage.setItem("token", token);
+    localStorage.setItem("teacherData", JSON.stringify(data));
+    setIsSigned(true);
+  }, []);
+
+  const signOut = useCallback(() => {
+    setTeacherData(null);
+    localStorage.removeItem("token");
+    localStorage.removeItem("teacherData");
     setIsSigned(false);
-  }
+  }, []);
+
+  const contextValue = useMemo(
+    () => ({
+      isSigned,
+      teacherData,
+      signIn,
+      signOut,
+    }),
+    [isSigned, teacherData, signIn, signOut]
+  );
 
   return (
-    <AuthContext.Provider value={{ isSigned, signIn, signOut }}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
-}
+};
 
-export function useAuth() {
+export const useAuth = (): AuthContextData => {
   const context = useContext(AuthContext);
-  if (!context) {
+
+  if (context === undefined) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
 
   return context;
-}
+};

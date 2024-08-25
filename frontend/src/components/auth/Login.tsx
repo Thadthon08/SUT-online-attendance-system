@@ -1,4 +1,3 @@
-import React from "react";
 import LoginForm from "./LoginForm";
 import "./style.css";
 import ConfigProvider from "antd/es/config-provider";

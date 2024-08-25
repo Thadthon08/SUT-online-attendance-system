@@ -1,13 +1,6 @@
-export interface LoginResponseInterface {
-  token: Token;
-}
+import { TeacherData } from "./ITeacher";
 
-export interface Token {
-  email: string;
-  firstname: string;
-  teacher_id: string;
-  lastname: string;
-  phone_number: string;
-  profile_pic: string;
+export interface LoginResponseInterface {
   token: string;
+  teacherData: TeacherData;
 }

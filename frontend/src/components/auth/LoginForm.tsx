@@ -1,19 +1,23 @@
 import React from "react";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Checkbox, Form, Input, message } from "antd";
+import { Button, Checkbox, Form, Input } from "antd";
 import { SignIn } from "../../services/api";
 import { useAuth } from "../../contexts/AuthContext";
 import { LoginResponseInterface } from "../../interface/ILoginRespon";
-import { showErrorNotification, showSuccessNotification } from "../../utils/notifications";
+import {
+  showErrorNotification,
+  showSuccessNotification,
+} from "../../utils/notifications";
 
 const LoginForm: React.FC = () => {
-  const context = useAuth();
+  const { signIn } = useAuth();
 
   const onFinish = async (values: any) => {
     try {
       const res: LoginResponseInterface = await SignIn(values);
-      if (res.token.token) {
-        context.signIn(res);
+      if (res.token) {
+        const { teacherData, token } = res;
+        signIn(teacherData, token);
         showSuccessNotification(
           "Login Successful",
           "You have successfully logged in."
