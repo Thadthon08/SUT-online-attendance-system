@@ -9,6 +9,7 @@ import {
   Col,
   Spin,
   Alert,
+  notification,
 } from "antd";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
@@ -16,10 +17,11 @@ import localeData from "dayjs/plugin/localeData";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import LocationMap from "./LocationMap"; // Import LocationMap
-import { getSubjectsByid } from "../../services/api";
+import { getSubjectsByid, CreateAttendance } from "../../services/api"; // Import the API functions
 import { Subject } from "../../interface/ITeacherSubject";
+import { AttendanceRoom } from "../../interface/IAttendanceRoom"; // Import AttendanceRoom type
 
 dayjs.extend(customParseFormat);
 dayjs.extend(localeData);
@@ -71,7 +73,7 @@ const CreateRoomForm = () => {
         createdTime: dayjs().locale("en"), // Use Gregorian calendar
         endTime: dayjs().add(2, "minute"),
         subjectID: subject_id,
-        teacherID: subjects?.teachers?.[0].teacher_id,
+        teacherID: subjects?.teachers?.[0]?.teacher_id,
       });
     }
 
@@ -99,25 +101,58 @@ const CreateRoomForm = () => {
     if (subjects) {
       form.setFieldsValue({
         subjectName: subjects.subject_name,
-        teacherID: subjects.teachers?.[0].teacher_id,
+        teacherID: subjects.teachers?.[0]?.teacher_id,
       });
       console.log("Subject Name:", subjects.subject_name);
-      console.log("Teacher ID:", subjects.teachers?.[0].teacher_id);
+      console.log("Teacher ID:", subjects.teachers?.[0]?.teacher_id);
     }
   }, [subjects, form]);
 
-  const onFinish = (values: any) => {
-    const formattedStartTime = values.createdTime.format("YYYY-MM-DD HH:mm:ss");
-    const formattedEndTime = values.endTime.format("YYYY-MM-DD HH:mm:ss");
+  const onFinish = async (values: any) => {
+    if (!location || !location.latitude || !location.longitude) {
+      notification.error({
+        message: "ไม่สามารถสร้างห้องได้",
+        description: "กรุณาตรวจสอบว่าระบบสามารถดึงข้อมูลพิกัดที่ตั้งได้สำเร็จ",
+        placement: "topRight",
+      });
+      return;
+    }
 
-    console.log("Form values:", values);
-    console.log("Formatted Start Time:", formattedStartTime);
-    console.log("Formatted End Time:", formattedEndTime);
-    console.log("Geolocation:", location?.latitude, location?.longitude);
-    console.log("subject_id:", subject_id);
-    console.log("subject_name:", subjects?.subject_name);
-    console.log("teacher_id:", subjects?.teachers?.[0].teacher_id);
-    console.log("room_name:", roomName);
+    const formattedStartTime = values.createdTime.tz("Asia/Bangkok").format();
+    const formattedEndTime = values.endTime.tz("Asia/Bangkok").format();
+
+    const attendanceData: AttendanceRoom = {
+      subject_id: values.subjectID,
+      room_name: values.roomName,
+      start_time: formattedStartTime,
+      end_time: formattedEndTime,
+      location_lat: location.latitude,
+      location_lon: location.longitude,
+    };
+
+    try {
+      const result = await CreateAttendance(attendanceData);
+
+      if (result.status) {
+        notification.success({
+          message: "สร้างห้องเช็คชื่อสำเร็จ",
+          description: result.message,
+          placement: "topRight",
+        });
+      } else {
+        notification.error({
+          message: "เกิดข้อผิดพลาด",
+          description: result.message,
+          placement: "topRight",
+        });
+      }
+    } catch (error) {
+      notification.error({
+        message: "เกิดข้อผิดพลาด",
+        description: "ไม่สามารถสร้างห้องเช็คชื่อได้",
+        placement: "topRight",
+      });
+    }
   };
 
   const disablePastDates = (current: any) => {
@@ -152,12 +187,13 @@ const CreateRoomForm = () => {
   return (
     <Card
       style={{
-        maxWidth: "850px",
         margin: "50px auto",
         padding: "20px",
         borderRadius: "10px",
         boxShadow: "0px 8px 10px 1px rgba(0,0,0,0.5)",
         border: "0.35rem solid #000000",
+        width: "100%",
+        maxWidth: "800px",
       }}
     >
       <Title
@@ -176,7 +212,7 @@ const CreateRoomForm = () => {
           subjectID: subject_id,
           subjectName: subjects?.subject_name,
           roomName: roomName,
-          teacherID: subjects?.teachers?.[0].teacher_id,
+          teacherID: subjects?.teachers?.[0]?.teacher_id,
         }}
       >
         <Row gutter={[16, 16]}>
@@ -213,7 +249,11 @@ const CreateRoomForm = () => {
             </Form.Item>
           </Col>
 
-          <Col span={12}>
+          <Col
+            xs={24} // Full width on extra-small screens
+            sm={24} // Full width on small screens
+            md={12} // Half width on medium and larger screens
+          >
             <Form.Item
               name="createdTime"
               label="เวลาเริ่มเช็คชื่อ"
@@ -225,7 +265,7 @@ const CreateRoomForm = () => {
                 value={startTime}
                 onChange={(value) => setStartTime(value)}
                 style={{ width: "100%" }}
-                disabledDate={disablePastDates} // Limit date range
+                disabledDate={disablePastDates}
                 disabledTime={disablePastTimes}
                 onOpenChange={(open) => {
                   if (open) {
@@ -236,7 +276,11 @@ const CreateRoomForm = () => {
             </Form.Item>
           </Col>
 
-          <Col span={12}>
+          <Col
+            xs={24} // Full width on extra-small screens
+            sm={24} // Full width on small screens
+            md={12} // Half width on medium and larger screens
+          >
             <Form.Item
               name="endTime"
               label="เวลาสิ้นสุดเช็คชื่อ"
@@ -246,10 +290,10 @@ const CreateRoomForm = () => {
                 showTime
                 format="YYYY-MM-DD HH:mm:ss"
                 value={endTime}
-                disabledDate={disablePastDates}
-                disabledTime={disablePastTimes}
                 onChange={(value) => setEndTime(value)}
                 style={{ width: "100%" }}
+                disabledDate={disablePastDates}
+                disabledTime={disablePastTimes}
               />
             </Form.Item>
           </Col>

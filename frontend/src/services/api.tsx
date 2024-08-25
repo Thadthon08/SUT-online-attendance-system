@@ -1,3 +1,4 @@
+import { AttendanceRoom } from "../interface/IAttendanceRoom";
 import { LoginInterface } from "../interface/ILogin";
 import { LoginResponseInterface } from "../interface/ILoginRespon";
 
@@ -59,5 +60,27 @@ async function getSubjectsByid({ subject_id }: { subject_id: string }) {
     throw error;
   }
 }
+async function CreateAttendance(data: AttendanceRoom) {
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  };
 
-export { SignIn, getSubjectsByTid,getSubjectsByid};
+  try {
+    const response = await fetch(`${apiURL}/attendance`, requestOptions);
+    const res = await response.json();
+
+    if (res.status === "success") {
+      return { status: true, message: res.data };
+    } else {
+      return { status: false, message: res.error };
+    }
+  } catch (error: any) {
+    return { status: false, message: error.message || "An error occurred" };
+  }
+}
+
+export { SignIn, getSubjectsByTid, getSubjectsByid, CreateAttendance };

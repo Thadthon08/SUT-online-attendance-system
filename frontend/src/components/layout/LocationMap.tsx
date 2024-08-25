@@ -1,7 +1,7 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 
-const LocationMap = ({ center } : any) => {
+const LocationMap = ({ center }: any) => {
   // Create a custom icon for the marker
   const customMarker = new L.Icon({
     iconUrl: "https://leafletjs.com/examples/custom-icons/leaf-green.png",
@@ -17,7 +17,13 @@ const LocationMap = ({ center } : any) => {
     <MapContainer
       center={center}
       zoom={13}
-      style={{ height: "300px", borderRadius: "8px" }}
+      style={{
+        height: "300px",
+        width: "100%",
+        maxWidth: "100%",
+        borderRadius: "8px",
+      }}
+      className="map-container"
     >
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
       <Marker position={center} icon={customMarker}>
