@@ -4,6 +4,7 @@ import { Button, Checkbox, Form, Input, message } from "antd";
 import { SignIn } from "../../services/api";
 import { useAuth } from "../../contexts/AuthContext";
 import { LoginResponseInterface } from "../../interface/ILoginRespon";
+import { showErrorNotification, showSuccessNotification } from "../../utils/notifications";
 
 const LoginForm: React.FC = () => {
   const context = useAuth();
@@ -13,10 +14,13 @@ const LoginForm: React.FC = () => {
       const res: LoginResponseInterface = await SignIn(values);
       if (res.token.token) {
         context.signIn(res);
-        message.success("Login successful");
+        showSuccessNotification(
+          "Login Successful",
+          "You have successfully logged in."
+        );
       }
     } catch (error) {
-      message.error("Login failed. Please try again.");
+      showErrorNotification("Login Failed", "Login failed. Please try again.");
     }
   };
 
