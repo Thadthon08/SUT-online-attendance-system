@@ -1,7 +1,7 @@
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 import { Flex, Icon, FlexProps, Link } from "@chakra-ui/react";
 import { IconType } from "react-icons";
-import { NavLink, useLocation, useParams } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 interface NavItemProps extends FlexProps {
   icon: IconType;

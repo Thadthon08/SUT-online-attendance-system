@@ -17,7 +17,7 @@ import localeData from "dayjs/plugin/localeData";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import LocationMap from "./LocationMap";
 import { CreateAttendance } from "../../services/api";
 import { AttendanceRoom } from "../../interface/IAttendanceRoom";
@@ -43,6 +43,7 @@ const CreateRoomForm = () => {
   const [roomName, setRoomName] = useState("");
   const [startTime, setStartTime] = useState(dayjs());
   const [endTime, setEndTime] = useState(dayjs().add(1, "hour"));
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (subject_id) {
@@ -88,6 +89,8 @@ const CreateRoomForm = () => {
       const result = await CreateAttendance(attendanceData);
       if (result.status) {
         showSuccessNotification("สร้างห้องเช็คชื่อสำเร็จ", result.message);
+        navigate(`/attendence/${subject_id}/${result.data.room_id}`);
+        console.log(result.data);
       } else {
         showErrorNotification("เกิดข้อผิดพลาด", result.message);
       }

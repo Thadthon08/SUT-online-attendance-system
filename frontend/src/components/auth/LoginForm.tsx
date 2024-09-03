@@ -4,6 +4,7 @@ import { Button, Checkbox, Form, Input } from "antd";
 import { SignIn } from "../../services/api";
 import { useAuth } from "../../contexts/AuthContext";
 import { LoginResponseInterface } from "../../interface/ILoginRespon";
+import { LoginInterface } from "../../interface/ILogin";
 import {
   showErrorNotification,
   showSuccessNotification,
@@ -12,7 +13,7 @@ import {
 const LoginForm: React.FC = () => {
   const context = useAuth();
 
-  const onFinish = async (values: any) => {
+  const onFinish = async (values: LoginInterface) => {
     try {
       const res: LoginResponseInterface = await SignIn(values);
       if (res.token.token) {

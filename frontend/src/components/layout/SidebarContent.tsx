@@ -5,9 +5,6 @@ import {
   Flex,
   Text,
   BoxProps,
-  Spinner,
-  Alert,
-  AlertIcon,
   Skeleton,
   VStack,
 } from "@chakra-ui/react";

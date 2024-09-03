@@ -74,7 +74,7 @@ async function CreateAttendance(data: AttendanceRoom) {
     const res = await response.json();
 
     if (res.status === "success") {
-      return { status: true, message: res.data };
+      return { status: true, message: res.message, data: res.data };
     } else {
       return { status: false, message: res.error };
     }

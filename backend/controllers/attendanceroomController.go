@@ -31,6 +31,7 @@ func CreateAttendanceRoom(c *gin.Context) {
 	// ตอบกลับเมื่อบันทึกข้อมูลสำเร็จ
 	c.JSON(http.StatusOK, gin.H{
 		"status":  "success",
-		"message": "AttendanceRoom created successfully",
+		"message": "Attendance room has been created",
+		"data":    attendanceRoom,
 	})
 }
