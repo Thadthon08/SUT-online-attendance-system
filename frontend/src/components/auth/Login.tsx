@@ -11,7 +11,7 @@ export default function Login() {
             className="text-2xl font-medium text-center p-4 text-white"
             style={{ backgroundColor: "rgb(51, 51, 51)" }}
           >
-            SUT Attendence
+            SUT attendance
           </h1>
           <div className="p-5 bg-slate-50">
             <ConfigProvider

@@ -35,7 +35,7 @@ dayjs.extend(timezone);
 
 const { Title } = Typography;
 
-const CreateRoomForm = () => {
+const CreateRoomForm: React.FC = () => {
   const { subject_id = "" } = useParams<{ subject_id: string }>();
   const [form] = Form.useForm();
   const { subjects } = useFetchSubjects(subject_id);
@@ -89,7 +89,7 @@ const CreateRoomForm = () => {
       const result = await CreateAttendance(attendanceData);
       if (result.status) {
         showSuccessNotification("สร้างห้องเช็คชื่อสำเร็จ", result.message);
-        navigate(`/attendence/${subject_id}/${result.data.room_id}`);
+        navigate(`/attendance/${subject_id}/${result.data.room_id}`);
         console.log(result.data);
       } else {
         showErrorNotification("เกิดข้อผิดพลาด", result.message);

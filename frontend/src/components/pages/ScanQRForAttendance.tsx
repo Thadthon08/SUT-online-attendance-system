@@ -1,18 +1,19 @@
 import React, { useState, useRef, useEffect } from "react";
 import QRCode from "react-qr-code";
 import { toPng } from "html-to-image";
-import "./QrCodeGenerator.css"; // นำเข้าไฟล์ CSS สำหรับการตกแต่ง
+import "./QrCodeGenerator.css";
 
-function QrCodeGenerator() {
+function QrCodeGenerator(): JSX.Element {
+  const [subjectId, setSubjectId] = useState("523315");
+  const [roomId, setRoomId] = useState("50");
   const [url, setUrl] = useState("");
   const qrCodeRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const currentUrl = window.location.href;
-    setUrl(currentUrl);
-  }, []);
+    const attendanceUrl = `http://localhost:5173/attendance/student/${subjectId}/${roomId}`;
+    setUrl(attendanceUrl);
+  }, [subjectId, roomId]);
 
-  // ฟังก์ชันเพื่อดาวน์โหลด QR Code เป็นภาพ
   const handleDownloadQRCode = async () => {
     if (qrCodeRef.current === null) {
       return;
@@ -34,13 +35,10 @@ function QrCodeGenerator() {
       <div className="qrcode__box">
         <h1 className="qrcode__title">QR Code Generator</h1>
         <div className="qrcode__input-container">
-          <input
-            type="text"
-            placeholder="Enter a URL"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            className="qrcode__url-input"
-          />
+          <p>
+            <strong>Path:</strong>
+            {url}
+          </p>
         </div>
         {url && (
           <div className="qrcode__output">

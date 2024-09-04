@@ -6,27 +6,17 @@ interface CarouselItemProps {
   handleImageLoad: () => void;
 }
 
-const contentStyle: React.CSSProperties = {
-  margin: 0,
-  height: "300px",
-  color: "#fff",
-  lineHeight: "300px",
-  textAlign: "center",
-  background: "#364d79",
-};
-
 const CarouselItem: React.FC<CarouselItemProps> = ({
   loading,
   handleImageLoad,
 }) => {
   return (
-    <div style={contentStyle}>
-      {loading && <Skeleton.Image style={{ width: "100%", height: "300px" }} />}
+    <div className="bg-[#364d79] text-white flex items-center justify-center w-full h-[300px] 2xl:h-[468px]">
+      {loading && <Skeleton.Image className="w-full h-full" />}
       <img
         src="https://placehold.co/300x300"
-        className="w-full h-full object-cover"
+        className={`w-full h-full object-cover ${loading ? "hidden" : ""}`}
         onLoad={handleImageLoad}
-        style={loading ? { display: "none" } : {}}
         alt="carousel slide"
       />
     </div>

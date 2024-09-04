@@ -39,7 +39,7 @@ export default function Dashboard() {
   return (
     <>
       <CarouselComponent />
-      <Box p={4} mt={5}>
+      <Box p={4} mt={5} bgColor={"gray.50"} height={"auto"}>
         <Container
           maxW={{ base: "100%", md: "container.lg" }}
           className="no-copy-no-select"

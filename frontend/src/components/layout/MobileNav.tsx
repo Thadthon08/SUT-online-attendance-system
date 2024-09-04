@@ -61,7 +61,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
         fontWeight="bold"
         color={"white"}
       >
-        SUT Attendence
+        SUT attendance
       </Text>
 
       <HStack spacing={{ base: "0", md: "6" }} zIndex={10}>
