@@ -89,7 +89,10 @@ const CreateRoomForm: React.FC = () => {
       const result = await CreateAttendance(attendanceData);
       if (result.status) {
         showSuccessNotification("สร้างห้องเช็คชื่อสำเร็จ", result.message);
-        navigate(`/attendance/${subject_id}/${result.data.room_id}`);
+        navigate(
+          `/attendance?subject_id=${subject_id}&room_id=${result.data.room_id}`
+        );
+
         console.log(result.data);
       } else {
         showErrorNotification("เกิดข้อผิดพลาด", result.message);

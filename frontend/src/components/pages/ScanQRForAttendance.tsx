@@ -2,10 +2,12 @@ import React, { useState, useRef, useEffect } from "react";
 import QRCode from "react-qr-code";
 import { toPng } from "html-to-image";
 import "./QrCodeGenerator.css";
+import { useSearchParams } from "react-router-dom";
 
 function QrCodeGenerator(): JSX.Element {
-  const [subjectId, setSubjectId] = useState("523315");
-  const [roomId, setRoomId] = useState("50");
+  const [searchParams] = useSearchParams();
+  const subjectId = searchParams.get("subject_id");
+  const roomId = searchParams.get("room_id");
   const [url, setUrl] = useState("");
   const qrCodeRef = useRef<HTMLDivElement | null>(null);
 

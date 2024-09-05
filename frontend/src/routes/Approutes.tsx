@@ -16,34 +16,41 @@ import ScanQRForAttendance from "../components/pages/ScanQRForAttendance";
 import StudentAttendance from "../components/pages/StudentAttendance";
 import NavbarStudent from "../components/layout/StudentLayout/Navbar";
 import StudentLogin from "../components/auth/student/StudentLogin";
-import StudentInfoForm from "../components/auth/student/StudentInfoForm";
+import StudentInfoForm from "../components/auth/student/StudentInfoLine";
+import AttendanceRoom from "../components/pages/StudentPage/AttendanceRoom";
 
+// ฟังก์ชันเพื่อตรวจสอบว่านักศึกษาล็อกอินหรือไม่
+const isStudentLoggedIn = () => {
+  const token = localStorage.getItem("line_access_token"); // ตรวจสอบการมี token
+  return !!token; // หากมี token คืนค่า true; หากไม่คืนค่า false
+};
+
+// เส้นทางล็อกอินส่วนตัวของอาจารย์
 const PrivateRoute = ({ isSigned }: { isSigned: boolean }) => {
-  return isSigned ? (
+  return isSigned ? <DLayout /> : <Navigate to="/login" />;
+};
+
+// เส้นทางล็อกอินส่วนตัวของนักเรียน
+const PrivateRouteForStudent = () => {
+  const isSignedForStudent = isStudentLoggedIn(); // ใช้ฟังก์ชันเพื่อตรวจสอบการล็อกอินของนักเรียน
+
+  return isSignedForStudent ? (
     <>
-      <DLayout />
+      <NavbarStudent /> {/* แสดง Layout ของนักเรียน */}
+      <Outlet /> {/* Render child components if signed in */}
     </>
   ) : (
-    <Navigate to="/login" />
+    <Navigate to="/student/login" replace /> // Redirect to student login page if not signed in
   );
 };
 
-const PrivateRouteForStudent = ({ isSigned }: { isSigned: boolean }) => {
-  return isSigned ? (
-    <>
-      <NavbarStudent />
-    </>
-  ) : (
-    <Navigate to="/student/login" /> // ปรับเปลี่ยนเส้นทางไปที่หน้าล็อกอินของนักเรียน
-  );
-};
-
+// เส้นทาง Public สำหรับผู้ใช้ทั่วไป
 const PublicRoute = ({ isSigned }: { isSigned: boolean }) => {
   return !isSigned ? <Outlet /> : <Navigate to="/" />;
 };
 
 export default function AppRoutes() {
-  const { isSigned } = useAuth();
+  const { isSigned } = useAuth(); // ตรวจสอบการล็อกอินของอาจารย์
 
   return (
     <Router>
@@ -53,14 +60,11 @@ export default function AppRoutes() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/subject/:subject_id" element={<SubjectDetail />} />
           <Route path="/create-room/:subject_id" element={<CreateRoom />} />
-          <Route
-            path="/attendance/:subject_id/:room_id"
-            element={<ScanQRForAttendance />}
-          />
+          <Route path="/attendance" element={<ScanQRForAttendance />} />
         </Route>
 
         {/* เส้นทางสำหรับนักเรียน */}
-        <Route element={<PrivateRouteForStudent isSigned={isSigned} />}>
+        <Route element={<PrivateRouteForStudent />}>
           <Route
             path="/attendance/student/:subject_id/:room_id"
             element={<StudentAttendance />}
@@ -71,8 +75,7 @@ export default function AppRoutes() {
         <Route element={<PublicRoute isSigned={isSigned} />}>
           <Route path="/login" element={<Login />} />
           <Route path="/student/login" element={<StudentLogin />} />
-          <Route path="/student/info" element={<StudentInfoForm />} />{" "}
-          {/* ฟอร์มกรอกข้อมูลนักศึกษา */}
+          <Route path="/student/line" element={<AttendanceRoom />} />
         </Route>
 
         {/* เส้นทางเมื่อไม่พบหน้า */}

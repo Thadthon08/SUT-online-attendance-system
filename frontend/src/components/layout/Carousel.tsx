@@ -13,7 +13,7 @@ export default function CarouselComponent() {
   return (
     <>
       <AnnouncementBar />
-      <Carousel arrows infinite={false} className="mb-6">
+      <Carousel arrows infinite={false}>
         {[...Array(4)].map((_, index) => (
           <CarouselItem
             key={index}
