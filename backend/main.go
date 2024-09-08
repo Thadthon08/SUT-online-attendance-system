@@ -3,7 +3,7 @@ package main
 import (
 	"myproject/config"
 	"myproject/controllers"
-	"os" // เพิ่มเพื่อใช้งาน Environment Variables
+	"os" 
 	"github.com/gin-gonic/gin"
 )
 
@@ -29,14 +29,12 @@ func main() {
 
     r.POST("/assign", controllers.CreateTeacherSubject)
 
-<<<<<<< Updated upstream
-		r.POST("/attendance", controllers.CreateAttendanceRoom)
-	//Atendancestudent
-	r.POST("/attendance/student", controllers.CreateAttendance)
 
-=======
-    r.POST("/attendance", controllers.CreateAttendanceRoom)
->>>>>>> Stashed changes
+
+		r.POST("/attendance", controllers.CreateAttendanceRoom)
+		r.POST("/attendance/student", controllers.CreateAttendance)
+
+
 
     // Protected routes
     // auth := r.Group("/auth")
