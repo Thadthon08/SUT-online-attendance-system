@@ -35,6 +35,9 @@ func main() {
 		r.POST("/assign", controllers.CreateTeacherSubject)
 
 		r.POST("/attendance", controllers.CreateAttendanceRoom)
+	//Atendancestudent
+	r.POST("/attendance/student", controllers.CreateAttendance)
+
 
     // Protected routes
     // auth := r.Group("/auth")

@@ -1,6 +1,8 @@
 import { AttendanceRoom } from "../interface/IAttendanceRoom";
+import { AttendanceBystudent } from "../interface/IAttendance";
 import { LoginInterface } from "../interface/ILogin";
 import { LoginResponseInterface } from "../interface/ILoginRespon";
+
 
 const apiURL = "http://localhost:8080";
 
@@ -82,5 +84,27 @@ async function CreateAttendance(data: AttendanceRoom) {
     return { status: false, message: error.message || "An error occurred" };
   }
 }
+async function CreateAttendanceByStudent(data: AttendanceBystudent) {
+  const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  };
 
-export { SignIn, getSubjectsByTid, getSubjectsByid, CreateAttendance };
+  try {
+    const response = await fetch(`${apiURL}/attendance/student`, requestOptions);
+    const res = await response.json();
+
+    if (response.ok) {
+      return { status: true, message: res.data };
+    } else {
+      return { status: false, message: res.message };
+    }
+  } catch (error) {
+    console.error("Fetch error:", error);
+    return { status: false, message: "An unexpected error occurred" };
+  }
+}
+
+
+export { SignIn, getSubjectsByTid, getSubjectsByid, CreateAttendance , CreateAttendanceByStudent};

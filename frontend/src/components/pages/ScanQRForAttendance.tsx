@@ -2,19 +2,27 @@ import React, { useState, useRef, useEffect } from "react";
 import QRCode from "react-qr-code";
 import { toPng } from "html-to-image";
 import "./QrCodeGenerator.css";
-import { useSearchParams } from "react-router-dom";
 
 function QrCodeGenerator(): JSX.Element {
-  const [searchParams] = useSearchParams();
-  const subjectId = searchParams.get("subject_id");
-  const roomId = searchParams.get("room_id");
-  const [url, setUrl] = useState("");
+  const [subjectId, setSubjectId] = useState<string | null>(null);
+  const [roomId, setRoomId] = useState<string | null>(null);
+  const [url, setUrl] = useState<string>("");
   const qrCodeRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const attendanceUrl = `http://localhost:5173/attendance/student/${subjectId}/${roomId}`;
-    setUrl(attendanceUrl);
-  }, [subjectId, roomId]);
+    // Use URLSearchParams to get query parameters from the current URL
+    const queryParams = new URLSearchParams(window.location.search);
+    const subjectIdFromQuery = queryParams.get("subject_id");
+    const roomIdFromQuery = queryParams.get("room_id");
+
+    setSubjectId(subjectIdFromQuery);
+    setRoomId(roomIdFromQuery);
+
+    if (subjectIdFromQuery && roomIdFromQuery) {
+      const attendanceUrl = `http://localhost:5173/attendance/student/${subjectIdFromQuery}/${roomIdFromQuery}`;
+      setUrl(attendanceUrl);
+    }
+  }, []);
 
   const handleDownloadQRCode = async () => {
     if (qrCodeRef.current === null) {
@@ -38,8 +46,7 @@ function QrCodeGenerator(): JSX.Element {
         <h1 className="qrcode__title">QR Code Generator</h1>
         <div className="qrcode__input-container">
           <p>
-            <strong>Path:</strong>
-            {url}
+            <strong>Path:</strong> {url}
           </p>
         </div>
         {url && (

@@ -1,24 +1,36 @@
 import React, { useEffect, useState } from "react";
 import liff from "@line/liff";
 import { ArrowRight } from "lucide-react";
+import { useParams } from "react-router-dom";
 
 const StudentLogin: React.FC = () => {
-  const LIFF_ID = "2006252489-XlDxGl4V"; // ตรวจสอบว่า LIFF_ID ถูกต้อง
+  const LIFF_ID = "2006252489-XlDxGl4V"; // ?????????? LIFF_ID ???????
   const [profile, setProfile] = useState<any>(null);
   const [redirectPath, setRedirectPath] = useState<string>("");
   const [subjectId, setSubjectId] = useState<string | null>(null);
   const [roomId, setRoomId] = useState<string | null>(null);
 
+  const { subject_id, room_id } = useParams<{ subject_id: string; room_id: string }>();
+
+
+
+
+
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const state = urlParams.get("state") || ""; // ดึงค่า state จาก Query Parameter
-    setRedirectPath(state); // เก็บ Path เดิมใน state
+    const state = urlParams.get("state") || ""; // ?????? state ??? Query Parameter
+    setRedirectPath(state); // ???? Path ?????? state
 
-    // ดึงค่า subject_id และ room_id จาก query parameters
-    const subjectIdFromQuery = urlParams.get("subject_id");
-    const roomIdFromQuery = urlParams.get("room_id");
-    setSubjectId(subjectIdFromQuery);
-    setRoomId(roomIdFromQuery);
+    // ?????? subject_id ??? room_id ??? query parameters
+       // Log ค่า subjectId และ roomId เพื่อดูว่าได้ถูกดึงมาอย่างถูกต้องหรือไม่
+       console.log("Subject ID:", subject_id);
+       console.log("Room ID:", room_id);
+   
+       // เก็บค่า subject_id และ room_id ลงใน localStorage
+       if (subject_id && room_id) {
+         localStorage.setItem("subject_id", subject_id);
+         localStorage.setItem("room_id", room_id);
+       }
 
     // Initialize LIFF SDK
     liff
@@ -38,10 +50,10 @@ const StudentLogin: React.FC = () => {
   const handleLineLogin = () => {
     if (!liff.isLoggedIn()) {
       try {
-        // เก็บค่า state ของ URL ที่ต้องการ redirect หลัง login สำเร็จ
+        // ??????? state ??? URL ?????????? redirect ???? login ??????
         const currentUrl = window.location.href;
-        const redirectUri = "https://localhost:5173/student/line"; // ใช้ HTTPS และตรงกับที่ลงทะเบียนไว้
-        // ส่ง state เป็น currentUrl พร้อมกับ redirectUri
+        const redirectUri = "https://localhost:5173/student/line"; // ??? HTTPS ????????????????????????
+        // ??? state ???? currentUrl ???????? redirectUri
         liff.login({
           redirectUri: `${redirectUri}?state=${encodeURIComponent(currentUrl)}`,
         });
@@ -64,15 +76,15 @@ const StudentLogin: React.FC = () => {
         const accessToken = liff.getAccessToken();
         if (accessToken) {
           localStorage.setItem("line_access_token", accessToken);
-          setProfile(profile); // เก็บข้อมูลโปรไฟล์ใน state
+          setProfile(profile); // ??????????????????? state
 
-          // ตรวจสอบว่ามี subject_id และ room_id หรือไม่
+          // ???????????? subject_id ??? room_id ???????
           let redirectUrl = "/student/line";
           if (subjectId && roomId) {
             redirectUrl = `/student/line?subject_id=${subjectId}&room_id=${roomId}`;
           }
 
-          window.location.href = redirectUrl; // Redirect ไปที่ URL ใหม่ที่มี query parameters
+          window.location.href = redirectUrl; // Redirect ????? URL ????????? query parameters
         }
       } catch (error) {
         console.error("Error fetching profile:", error);
@@ -83,7 +95,7 @@ const StudentLogin: React.FC = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-400 via-blue-500 to-purple-600">
-      {profile ? ( // ตรวจสอบว่ามีข้อมูลโปรไฟล์หรือไม่
+      {profile ? ( // ????????????????????????????????
         <div className="bg-white p-8 rounded-3xl shadow-2xl w-96 transform hover:scale-105 transition-all duration-300 ease-in-out">
           <h1 className="text-4xl font-bold text-center mb-8 text-gray-800">
             Welcome, {profile.displayName}!
@@ -99,7 +111,7 @@ const StudentLogin: React.FC = () => {
             You are now logged in with LINE.
           </p>
           <button
-            onClick={() => liff.logout()} // ปุ่มสำหรับ Logout
+            onClick={() => liff.logout()} // ?????????? Logout
             className="group relative w-full py-3 px-5 bg-red-500 text-white rounded-full shadow-lg hover:bg-red-600 transition-all duration-300 ease-in-out overflow-hidden"
             aria-label="Logout"
           >
