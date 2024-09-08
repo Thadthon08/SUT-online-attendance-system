@@ -4,30 +4,24 @@ import { ArrowRight } from "lucide-react";
 import { useParams } from "react-router-dom";
 
 const StudentLogin: React.FC = () => {
-  const LIFF_ID = "2006284334-K9zezm23"; // ?????????? LIFF_ID ???????
+  const LIFF_ID = "2006252489-XlDxGl4V"; // LIFF ID ของคุณ
   const [profile, setProfile] = useState<any>(null);
 
-
-  const { subject_id, room_id } = useParams<{ subject_id: string; room_id: string }>();
-
-
-
-
+  const { subject_id, room_id } = useParams<{
+    subject_id: string;
+    room_id: string;
+  }>();
 
   useEffect(() => {
-    
+    // ตรวจสอบว่า subject_id และ room_id ถูกต้องหรือไม่
+    console.log("Subject ID:", subject_id);
+    console.log("Room ID:", room_id);
 
-
-    // ?????? subject_id ??? room_id ??? query parameters
-       // Log ค่า subjectId และ roomId เพื่อดูว่าได้ถูกดึงมาอย่างถูกต้องหรือไม่
-       console.log("Subject ID:", subject_id);
-       console.log("Room ID:", room_id);
-   
-       // เก็บค่า subject_id และ room_id ลงใน localStorage
-       if (subject_id && room_id) {
-         localStorage.setItem("subject_id", subject_id);
-         localStorage.setItem("room_id", room_id);
-       }
+    // เก็บค่า subject_id และ room_id ลงใน localStorage
+    if (subject_id && room_id) {
+      localStorage.setItem("subject_id", subject_id);
+      localStorage.setItem("room_id", room_id);
+    }
 
     // Initialize LIFF SDK
     liff
@@ -35,7 +29,9 @@ const StudentLogin: React.FC = () => {
       .then(() => {
         console.log("LIFF initialized successfully");
         if (liff.isLoggedIn()) {
-          fetchUserProfile(); // Fetch user profile if already logged in
+          fetchUserProfile(); // ถ้าล็อกอินแล้ว ให้ดึงข้อมูลโปรไฟล์ผู้ใช้
+        } else {
+          handleLineLogin(); // ถ้ายังไม่ล็อกอิน ให้เรียกฟังก์ชัน login
         }
       })
       .catch((err) => {
@@ -47,13 +43,7 @@ const StudentLogin: React.FC = () => {
   const handleLineLogin = () => {
     if (!liff.isLoggedIn()) {
       try {
-        // ??????? state ??? URL ?????????? redirect ???? login ??????
-        const currentUrl = window.location.href;
-        const redirectUri = "https://sutattendance.netlify.app/student/line"; // ??? HTTPS ????????????????????????
-        // ??? state ???? currentUrl ???????? redirectUri
-        liff.login({
-          redirectUri: `${redirectUri}?state=${encodeURIComponent(currentUrl)}`,
-        });
+        liff.login();
       } catch (error) {
         console.error("Error logging in with LINE:", error);
         alert(
@@ -61,7 +51,7 @@ const StudentLogin: React.FC = () => {
         );
       }
     } else {
-      fetchUserProfile(); // Fetch user profile if already logged in
+      fetchUserProfile(); // ถ้าล็อกอินแล้ว ให้ดึงข้อมูลโปรไฟล์ผู้ใช้
     }
   };
 
@@ -69,13 +59,11 @@ const StudentLogin: React.FC = () => {
     if (liff.isLoggedIn()) {
       try {
         const profile = await liff.getProfile();
-        console.log(profile); // Display profile information
+        console.log(profile); // แสดงข้อมูลโปรไฟล์ผู้ใช้
         const accessToken = liff.getAccessToken();
         if (accessToken) {
           localStorage.setItem("line_access_token", accessToken);
-          setProfile(profile); // ??????????????????? state
-
-
+          setProfile(profile); // เก็บข้อมูลโปรไฟล์ผู้ใช้ใน state
         }
       } catch (error) {
         console.error("Error fetching profile:", error);
@@ -86,7 +74,7 @@ const StudentLogin: React.FC = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-400 via-blue-500 to-purple-600">
-      {profile ? ( // ????????????????????????????????
+      {profile ? ( // แสดงข้อมูลโปรไฟล์เมื่อผู้ใช้ล็อกอินแล้ว
         <div className="bg-white p-8 rounded-3xl shadow-2xl w-96 transform hover:scale-105 transition-all duration-300 ease-in-out">
           <h1 className="text-4xl font-bold text-center mb-8 text-gray-800">
             Welcome, {profile.displayName}!
@@ -102,7 +90,7 @@ const StudentLogin: React.FC = () => {
             You are now logged in with LINE.
           </p>
           <button
-            onClick={() => liff.logout()} // ?????????? Logout
+            onClick={() => liff.logout()} // ฟังก์ชัน Logout
             className="group relative w-full py-3 px-5 bg-red-500 text-white rounded-full shadow-lg hover:bg-red-600 transition-all duration-300 ease-in-out overflow-hidden"
             aria-label="Logout"
           >
@@ -121,7 +109,7 @@ const StudentLogin: React.FC = () => {
             Log in to access your student dashboard
           </p>
           <button
-            onClick={handleLineLogin} // Login starts when this button is clicked
+            onClick={handleLineLogin} // ฟังก์ชัน Login
             className="group relative w-full py-3 px-5 bg-green-500 text-white rounded-full shadow-lg hover:bg-green-600 transition-all duration-300 ease-in-out overflow-hidden"
             aria-label="Login with LINE"
           >

@@ -20,7 +20,9 @@ import AttendanceRoom from "../components/pages/StudentPage/AttendanceRoom";
 // Function to check if the student is logged in based on codeVerifier
 const isStudentLoggedIn = () => {
   // Retrieve the LIFF login temporary data from localStorage
-  const liffLoginTmp = localStorage.getItem('LIFF_STORE:2006252489-XlDxGl4V:loginTmp');
+  const liffLoginTmp = localStorage.getItem(
+    "LIFF_STORE:2006252489-XlDxGl4V:loginTmp"
+  );
 
   if (!liffLoginTmp) return false; // Return false if login data is not available
 
@@ -31,13 +33,13 @@ const isStudentLoggedIn = () => {
     // Check if the codeVerifier exists and is valid
     return !!codeVerifier; // Return true if codeVerifier exists; otherwise false
   } catch (error) {
-    console.error('Failed to parse LIFF login temporary data:', error);
+    console.error("Failed to parse LIFF login temporary data:", error);
     return false; // Return false in case of any parsing errors
   }
 };
 
 // Private route for teachers
-const PrivateRoute = ({ isSigned }:{isSigned:boolean}) => {
+const PrivateRoute = ({ isSigned }: { isSigned: boolean }) => {
   return isSigned ? <DLayout /> : <Navigate to="/login" />;
 };
 
@@ -56,7 +58,7 @@ const PrivateRouteForStudent = () => {
 };
 
 // Public route for users
-const PublicRoute = ({ isSigned }:{isSigned:boolean}) => {
+const PublicRoute = ({ isSigned }: { isSigned: boolean }) => {
   return !isSigned ? <Outlet /> : <Navigate to="/" />;
 };
 
@@ -76,6 +78,7 @@ export default function AppRoutes() {
 
         {/* Routes for students */}
         <Route element={<PrivateRouteForStudent />}>
+          <Route path="/student/login/callback" element={<AttendanceRoom />} />
           <Route path="/student/line" element={<AttendanceRoom />} />
           <Route
             path="/attendance/student/:subject_id/:room_id"
