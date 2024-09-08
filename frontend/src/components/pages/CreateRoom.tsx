@@ -1,4 +1,4 @@
-import { Layout, Typography, Card } from "antd";
+import { Layout, Typography  } from "antd";
 import CreateRoomForm from "../layout/CreateRoomForm";
 
 const { Header, Content } = Layout;

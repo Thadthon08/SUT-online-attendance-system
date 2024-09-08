@@ -29,14 +29,10 @@ func main() {
 
     r.POST("/assign", controllers.CreateTeacherSubject)
 
-<<<<<<< Updated upstream
 		r.POST("/attendance", controllers.CreateAttendanceRoom)
 	//Atendancestudent
 	r.POST("/attendance/student", controllers.CreateAttendance)
 
-=======
-    r.POST("/attendance", controllers.CreateAttendanceRoom)
->>>>>>> Stashed changes
 
     // Protected routes
     // auth := r.Group("/auth")

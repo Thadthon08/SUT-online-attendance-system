@@ -1,11 +1,9 @@
-import React, { useState, useRef, useEffect } from "react";
+import  { useState, useRef, useEffect } from "react";
 import QRCode from "react-qr-code";
 import { toPng } from "html-to-image";
 import "./QrCodeGenerator.css";
 
 function QrCodeGenerator(): JSX.Element {
-  const [subjectId, setSubjectId] = useState<string | null>(null);
-  const [roomId, setRoomId] = useState<string | null>(null);
   const [url, setUrl] = useState<string>("");
   const qrCodeRef = useRef<HTMLDivElement | null>(null);
 
@@ -15,11 +13,10 @@ function QrCodeGenerator(): JSX.Element {
     const subjectIdFromQuery = queryParams.get("subject_id");
     const roomIdFromQuery = queryParams.get("room_id");
 
-    setSubjectId(subjectIdFromQuery);
-    setRoomId(roomIdFromQuery);
+
 
     if (subjectIdFromQuery && roomIdFromQuery) {
-      const attendanceUrl = `http://localhost:5173/attendance/student/${subjectIdFromQuery}/${roomIdFromQuery}`;
+      const attendanceUrl = `https://sutattendance.netlify.app/attendance/student/${subjectIdFromQuery}/${roomIdFromQuery}`;
       setUrl(attendanceUrl);
     }
   }, []);

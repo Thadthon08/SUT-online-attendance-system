@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Carousel, Skeleton } from "antd";
+import  { useState } from "react";
+import { Carousel } from "antd";
 import AnnouncementBar from "./AnnouncementBar";
 import CarouselItem from "./CarouselItem";
 

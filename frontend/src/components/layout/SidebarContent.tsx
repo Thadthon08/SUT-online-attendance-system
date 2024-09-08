@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import {
   Box,
   CloseButton,
@@ -8,7 +8,7 @@ import {
   Skeleton,
   VStack,
 } from "@chakra-ui/react";
-import { useNavigate, useLocation, useParams } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import NavItem from "./NavItem";
 import { LuGraduationCap } from "react-icons/lu";
 import { getSubjectsByTid } from "../../services/api";

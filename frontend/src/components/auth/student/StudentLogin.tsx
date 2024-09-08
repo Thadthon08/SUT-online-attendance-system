@@ -4,11 +4,9 @@ import { ArrowRight } from "lucide-react";
 import { useParams } from "react-router-dom";
 
 const StudentLogin: React.FC = () => {
-  const LIFF_ID = "2006252489-XlDxGl4V"; // ?????????? LIFF_ID ???????
+  const LIFF_ID = "2006284334-K9zezm23"; // ?????????? LIFF_ID ???????
   const [profile, setProfile] = useState<any>(null);
-  const [redirectPath, setRedirectPath] = useState<string>("");
-  const [subjectId, setSubjectId] = useState<string | null>(null);
-  const [roomId, setRoomId] = useState<string | null>(null);
+
 
   const { subject_id, room_id } = useParams<{ subject_id: string; room_id: string }>();
 
@@ -17,9 +15,8 @@ const StudentLogin: React.FC = () => {
 
 
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const state = urlParams.get("state") || ""; // ?????? state ??? Query Parameter
-    setRedirectPath(state); // ???? Path ?????? state
+    
+
 
     // ?????? subject_id ??? room_id ??? query parameters
        // Log ค่า subjectId และ roomId เพื่อดูว่าได้ถูกดึงมาอย่างถูกต้องหรือไม่
@@ -52,7 +49,7 @@ const StudentLogin: React.FC = () => {
       try {
         // ??????? state ??? URL ?????????? redirect ???? login ??????
         const currentUrl = window.location.href;
-        const redirectUri = "https://localhost:5173/student/line"; // ??? HTTPS ????????????????????????
+        const redirectUri = "https://sutattendance.netlify.app/student/line"; // ??? HTTPS ????????????????????????
         // ??? state ???? currentUrl ???????? redirectUri
         liff.login({
           redirectUri: `${redirectUri}?state=${encodeURIComponent(currentUrl)}`,
@@ -78,13 +75,7 @@ const StudentLogin: React.FC = () => {
           localStorage.setItem("line_access_token", accessToken);
           setProfile(profile); // ??????????????????? state
 
-          // ???????????? subject_id ??? room_id ???????
-          let redirectUrl = "/student/line";
-          if (subjectId && roomId) {
-            redirectUrl = `/student/line?subject_id=${subjectId}&room_id=${roomId}`;
-          }
 
-          window.location.href = redirectUrl; // Redirect ????? URL ????????? query parameters
         }
       } catch (error) {
         console.error("Error fetching profile:", error);

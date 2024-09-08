@@ -13,10 +13,8 @@ import DLayout from "../components/layout/Menu";
 import SubjectDetail from "../components/pages/SubjectDetail";
 import CreateRoom from "../components/pages/CreateRoom";
 import ScanQRForAttendance from "../components/pages/ScanQRForAttendance";
-import StudentAttendance from "../components/pages/StudentAttendance";
 import NavbarStudent from "../components/layout/StudentLayout/Navbar";
 import StudentLogin from "../components/auth/student/StudentLogin";
-import StudentInfoForm from "../components/auth/student/StudentInfoLine";
 import AttendanceRoom from "../components/pages/StudentPage/AttendanceRoom";
 
 // Function to check if the student is logged in based on codeVerifier
@@ -81,7 +79,7 @@ export default function AppRoutes() {
           <Route path="/student/line" element={<AttendanceRoom />} />
           <Route
             path="/attendance/student/:subject_id/:room_id"
-            element={<StudentAttendance />}
+            element={<StudentLogin />}
           />
         </Route>
 

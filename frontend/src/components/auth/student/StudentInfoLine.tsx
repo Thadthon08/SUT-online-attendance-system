@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { Form, Input, Button } from "antd";
 
 const StudentInfoForm = () => {
@@ -33,7 +33,7 @@ const StudentInfoForm = () => {
     };
 
     // Send the student info to the backend
-    fetch("http://localhost:8080/student/save", {
+    fetch("https://sut-online-attendance-system.onrender.com//student/save", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -4,7 +4,7 @@ import { LoginInterface } from "../interface/ILogin";
 import { LoginResponseInterface } from "../interface/ILoginRespon";
 
 
-const apiURL = "http://localhost:8080";
+const apiURL = "https://sut-online-attendance-system.onrender.com";
 
 async function SignIn(login: LoginInterface): Promise<LoginResponseInterface> {
   const response = await fetch(`${apiURL}/login`, {

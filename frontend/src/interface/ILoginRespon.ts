@@ -1,4 +1,4 @@
-import { TeacherData } from "./ITeacher";
+
 
 export interface LoginResponseInterface {
   token: Token;

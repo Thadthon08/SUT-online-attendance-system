@@ -1,4 +1,4 @@
-import { Box, Heading, Text, Button, Flex } from "@chakra-ui/react";
+import {  Heading, Text, Button, Flex } from "@chakra-ui/react";
 import { useNavigate } from "react-router";
 
 function PageNotFound() {
