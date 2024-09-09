@@ -28,11 +28,6 @@ const StudentLogin: React.FC = () => {
       .init({ liffId: LIFF_ID })
       .then(() => {
         console.log("LIFF initialized successfully");
-        if (liff.isLoggedIn()) {
-          fetchUserProfile(); // ถ้าล็อกอินแล้ว ให้ดึงข้อมูลโปรไฟล์ผู้ใช้
-        } else {
-          handleLineLogin(); // ถ้ายังไม่ล็อกอิน ให้เรียกฟังก์ชัน login
-        }
       })
       .catch((err) => {
         console.error("LIFF Initialization failed", err);
@@ -59,11 +54,11 @@ const StudentLogin: React.FC = () => {
     if (liff.isLoggedIn()) {
       try {
         const profile = await liff.getProfile();
-        console.log(profile); // แสดงข้อมูลโปรไฟล์ผู้ใช้
+        console.log(profile);
         const accessToken = liff.getAccessToken();
         if (accessToken) {
           localStorage.setItem("line_access_token", accessToken);
-          setProfile(profile); // เก็บข้อมูลโปรไฟล์ผู้ใช้ใน state
+          setProfile(profile);
         }
       } catch (error) {
         console.error("Error fetching profile:", error);
@@ -74,7 +69,7 @@ const StudentLogin: React.FC = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-400 via-blue-500 to-purple-600">
-      {profile ? ( // แสดงข้อมูลโปรไฟล์เมื่อผู้ใช้ล็อกอินแล้ว
+      {profile ? (
         <div className="bg-white p-8 rounded-3xl shadow-2xl w-96 transform hover:scale-105 transition-all duration-300 ease-in-out">
           <h1 className="text-4xl font-bold text-center mb-8 text-gray-800">
             Welcome, {profile.displayName}!
@@ -90,7 +85,7 @@ const StudentLogin: React.FC = () => {
             You are now logged in with LINE.
           </p>
           <button
-            onClick={() => liff.logout()} // ฟังก์ชัน Logout
+            onClick={() => liff.logout()}
             className="group relative w-full py-3 px-5 bg-red-500 text-white rounded-full shadow-lg hover:bg-red-600 transition-all duration-300 ease-in-out overflow-hidden"
             aria-label="Logout"
           >
