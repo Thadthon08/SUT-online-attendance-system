@@ -16,7 +16,7 @@ function QrCodeGenerator(): JSX.Element {
 
 
     if (subjectIdFromQuery && roomIdFromQuery) {
-      const attendanceUrl = `https://sutattendance.netlify.app/attendance/student/${subjectIdFromQuery}/${roomIdFromQuery}`;
+      const attendanceUrl = `https://sut-online-attendance-system.vercel.app/attendance/student/${subjectIdFromQuery}/${roomIdFromQuery}`;
       setUrl(attendanceUrl);
     }
   }, []);

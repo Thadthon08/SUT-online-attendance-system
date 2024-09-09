@@ -80,16 +80,16 @@ export default function AppRoutes() {
         <Route element={<PrivateRouteForStudent />}>
           <Route path="/student/login/callback" element={<AttendanceRoom />} />
           <Route path="/student/line" element={<AttendanceRoom />} />
-          <Route
-            path="/attendance/student/:subject_id/:room_id"
-            element={<StudentLogin />}
-          />
         </Route>
 
         {/* Public routes */}
         <Route element={<PublicRoute isSigned={isSigned} />}>
           <Route path="/login" element={<Login />} />
           <Route path="/student/login" element={<StudentLogin />} />
+          <Route
+            path="/attendance/student/:subject_id/:room_id"
+            element={<StudentLogin />}
+          />
           {/* Add other public routes here */}
         </Route>
 
