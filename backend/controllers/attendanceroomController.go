@@ -35,3 +35,16 @@ func CreateAttendanceRoom(c *gin.Context) {
 		"data":    attendanceRoom,
 	})
 }
+func GetAttendanceRoom(c *gin.Context) {
+	roomID := c.Param("room_id")
+
+	var attendanceRoom models.AttendanceRoom
+	if err := config.DB.Preload("Subject").Preload("Attendances").First(&attendanceRoom, roomID).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "AttendanceRoom not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, attendanceRoom)
+}
+
+

@@ -105,6 +105,31 @@ async function CreateAttendanceByStudent(data: AttendanceBystudent) {
     return { status: false, message: "An unexpected error occurred" };
   }
 }
+  //GetAttendanceRoom
+async function GetAttendanceRoom(roomId: string) {
+  
+
+  const requestOptions = {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  };
+
+  try {
+    const response = await fetch(`${apiURL}/attendance/room/${roomId}`, requestOptions);
+
+    if (response.ok) {
+      const data = await response.json();
+      return { status: true, data };
+    } else {
+      const error = await response.json();
+      return { status: false, message: error.message || "Failed to fetch data" };
+    }
+  } catch (error) {
+    console.error("Fetch error:", error);
+    return { status: false, message: "An unexpected error occurred" };
+  }
+}
 
 
-export { SignIn, getSubjectsByTid, getSubjectsByid, CreateAttendance , CreateAttendanceByStudent};
+
+export { SignIn, getSubjectsByTid, getSubjectsByid, CreateAttendance , CreateAttendanceByStudent ,GetAttendanceRoom};
