@@ -1,10 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { CreateAttendanceByStudent } from "../../../services/api";
+import { AttendanceRoom as Attendance } from "../../../interface/IAttendanceRoom";
+import { CreateAttendanceByStudent, GetAttendanceRoom } from "../../../services/api"; // Assuming you have this API function
+
+// Haversine formula to calculate the distance between two points
+const haversine = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+  const R = 6371; // Earth radius in kilometers
+  const toRad = (x: number) => (x * Math.PI) / 180;
+
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  return R * c; // Distance in kilometers
+};
 
 const AttendanceRoom: React.FC = () => {
   const [subjectId, setSubjectId] = useState<string | null>(null);
   const [roomId, setRoomId] = useState<any | null>(null);
-
+  const [attendanceRoom, setAttendanceRoom] = useState<Attendance | null>(null);
+  const [distance, setDistance] = useState<number | null>(null);
   // Form state
   const [studentId, setStudentId] = useState("");
   const [firstname, setFirstname] = useState("");
@@ -17,11 +35,6 @@ const AttendanceRoom: React.FC = () => {
     const storedSubjectId = localStorage.getItem("subject_id");
     const storedRoomId = localStorage.getItem("room_id");
 
-    // Log values
-    console.log("Subject ID from localStorage:", storedSubjectId);
-    console.log("Room ID from localStorage:", storedRoomId);
-
-    // Update state
     setSubjectId(storedSubjectId);
     setRoomId(storedRoomId);
 
@@ -41,16 +54,29 @@ const AttendanceRoom: React.FC = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (subjectId && roomId) {
+      // Fetch AttendanceRoom data from backend
+      const fetchAttendanceRoom = async () => {
+        try {
+          const roomData = await GetAttendanceRoom(roomId); // Assume you have an API call like this
+          setAttendanceRoom(roomData.status ? roomData.data : null);
+          console.log(attendanceRoom)
+          
+        } catch (error) {
+          console.error("Error fetching attendance room:", error);
+        }
+      };
+  
+      fetchAttendanceRoom();
+    }
+  }, [subjectId, roomId, locationLat, locationLon]);
+  
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // Log form values
-    console.log("Student ID:", studentId);
-    console.log("Firstname:", firstname);
-    console.log("Lastname:", lastname);
-
-    // Prepare the data to be sent
-    const data: any = {
+    const data = {
       student_id: studentId,
       first_name: firstname,
       last_name: lastname,
@@ -59,27 +85,21 @@ const AttendanceRoom: React.FC = () => {
       location_lon: locationLon,
     };
 
-    console.log("data:", data);
-
     try {
       const result = await CreateAttendanceByStudent(data);
       if (result.status) {
         console.log("Attendance created successfully:", result.message);
-        // Optionally, handle successful submission (e.g., redirect or show a message)
       } else {
         console.error("Error creating attendance:", result.message);
-        // Optionally, handle errors (e.g., show an error message)
       }
     } catch (error) {
       console.error("Network error:", error);
-      // Optionally, handle network errors (e.g., show an error message)
     }
   };
 
   return (
     <div className="p-8 bg-white shadow-lg rounded-lg max-w-md mx-auto mt-20">
       <h1 className="text-2xl font-bold text-center mb-4">Attendance Room</h1>
-      {/* Display Subject ID and Room ID */}
       {subjectId && roomId ? (
         <div>
           <p className="text-lg text-center">
@@ -88,13 +108,17 @@ const AttendanceRoom: React.FC = () => {
           <p className="text-lg text-center">
             <strong>Room ID:</strong> {roomId}
           </p>
+          {distance !== null && (
+            <p className="text-lg text-center">
+              <strong>Distance to Room:</strong> {distance.toFixed(2)} km
+            </p>
+          )}
         </div>
       ) : (
         <p className="text-lg text-center text-red-500">
           Missing subject or room information.
         </p>
       )}
-      {/* Form for student details */}
       <form onSubmit={handleSubmit} className="mt-8">
         <div className="mb-4">
           <label htmlFor="student_id" className="block text-lg font-medium mb-2">Student ID</label>
