@@ -35,16 +35,18 @@ func CreateAttendanceRoom(c *gin.Context) {
 		"data":    attendanceRoom,
 	})
 }
+
 func GetAttendanceRoom(c *gin.Context) {
-	roomID := c.Param("room_id")
+	id := c.Param("id")  // เปลี่ยนจาก room_id เป็น id
 
 	var attendanceRoom models.AttendanceRoom
-	if err := config.DB.Preload("Subject").Preload("Attendances").First(&attendanceRoom, roomID).Error; err != nil {
+	if err := config.DB.Where("room_id = ?", id).Preload("Subject").Preload("Attendances").First(&attendanceRoom).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "AttendanceRoom not found"})
 		return
 	}
 
 	c.JSON(http.StatusOK, attendanceRoom)
 }
+
 
 
