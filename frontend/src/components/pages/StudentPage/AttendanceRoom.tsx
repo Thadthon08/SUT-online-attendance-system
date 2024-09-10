@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { AttendanceRoom as Attendance } from "../../../interface/IAttendanceRoom";
-import { CreateAttendanceByStudent, GetAttendanceRoom } from "../../../services/api"; // Assuming you have this API function
+import {
+  CreateAttendanceByStudent,
+  GetAttendanceRoom,
+} from "../../../services/api"; // Assuming you have this API function
 
 // Haversine formula to calculate the distance between two points
 const haversine = (lat1: number, lon1: number, lat2: number, lon2: number) => {
@@ -11,8 +14,10 @@ const haversine = (lat1: number, lon1: number, lat2: number, lon2: number) => {
   const dLon = toRad(lon2 - lon1);
   const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    Math.cos(toRad(lat1)) *
+      Math.cos(toRad(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
   return R * c; // Distance in kilometers
@@ -55,23 +60,18 @@ const AttendanceRoom: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (subjectId && roomId) {
-      // Fetch AttendanceRoom data from backend
-      const fetchAttendanceRoom = async () => {
-        try {
-          const roomData = await GetAttendanceRoom(roomId); // Assume you have an API call like this
-          setAttendanceRoom(roomData.status ? roomData.data : null);
-          console.log(attendanceRoom)
-          
-        } catch (error) {
-          console.error("Error fetching attendance room:", error);
-        }
-      };
-  
+    const fetchAttendanceRoom = async () => {
+      try {
+        const roomData = await GetAttendanceRoom(roomId); 
+        setAttendanceRoom(roomData.status ? roomData.data : null);
+        console.log(attendanceRoom);
+      } catch (error) {
+        console.error("Error fetching attendance room:", error);
+      }
+
       fetchAttendanceRoom();
-    }
+    };
   }, [subjectId, roomId, locationLat, locationLon]);
-  
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -121,7 +121,12 @@ const AttendanceRoom: React.FC = () => {
       )}
       <form onSubmit={handleSubmit} className="mt-8">
         <div className="mb-4">
-          <label htmlFor="student_id" className="block text-lg font-medium mb-2">Student ID</label>
+          <label
+            htmlFor="student_id"
+            className="block text-lg font-medium mb-2"
+          >
+            Student ID
+          </label>
           <input
             id="student_id"
             type="text"
@@ -132,7 +137,9 @@ const AttendanceRoom: React.FC = () => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="firstname" className="block text-lg font-medium mb-2">First Name</label>
+          <label htmlFor="firstname" className="block text-lg font-medium mb-2">
+            First Name
+          </label>
           <input
             id="firstname"
             type="text"
@@ -143,7 +150,9 @@ const AttendanceRoom: React.FC = () => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="lastname" className="block text-lg font-medium mb-2">Last Name</label>
+          <label htmlFor="lastname" className="block text-lg font-medium mb-2">
+            Last Name
+          </label>
           <input
             id="lastname"
             type="text"
