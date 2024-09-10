@@ -4,6 +4,7 @@ import (
 	"myproject/config"
 	"myproject/controllers"
 	"os" // เพิ่มเพื่อใช้งาน Environment Variables
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -31,7 +32,7 @@ func main() {
 
         //AtendancestudentRoom
 		r.POST("/attendance", controllers.CreateAttendanceRoom)
-        r.GET("/attendance/room", controllers.GetAttendanceRoom)
+        r.GET("/attendance/room/:id", controllers.GetAttendanceRoom)
 	//Atendancestudent
 	r.POST("/attendance/student", controllers.CreateAttendance)
 
