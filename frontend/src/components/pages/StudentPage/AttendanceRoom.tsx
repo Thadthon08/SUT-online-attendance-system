@@ -6,28 +6,28 @@ import {
 } from "../../../services/api"; // Assuming you have this API function
 
 // Haversine formula to calculate the distance between two points
-const haversine = (lat1: number, lon1: number, lat2: number, lon2: number) => {
-  const R = 6371; // Earth radius in kilometers
-  const toRad = (x: number) => (x * Math.PI) / 180;
+// const haversine = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+//   const R = 6371; // Earth radius in kilometers
+//   const toRad = (x: number) => (x * Math.PI) / 180;
 
-  const dLat = toRad(lat2 - lat1);
-  const dLon = toRad(lon2 - lon1);
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(toRad(lat1)) *
-      Math.cos(toRad(lat2)) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+//   const dLat = toRad(lat2 - lat1);
+//   const dLon = toRad(lon2 - lon1);
+//   const a =
+//     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+//     Math.cos(toRad(lat1)) *
+//       Math.cos(toRad(lat2)) *
+//       Math.sin(dLon / 2) *
+//       Math.sin(dLon / 2);
+//   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-  return R * c; // Distance in kilometers
-};
+//   return R * c; // Distance in kilometers
+// };
 
 const AttendanceRoom: React.FC = () => {
   const [subjectId, setSubjectId] = useState<string | null>(null);
   const [roomId, setRoomId] = useState<any | null>(null);
   const [attendanceRoom, setAttendanceRoom] = useState<Attendance | null>(null);
-  const [distance, setDistance] = useState<number | null>(null);
+  const [distance] = useState<number | null>(null);
   // Form state
   const [studentId, setStudentId] = useState("");
   const [firstname, setFirstname] = useState("");
