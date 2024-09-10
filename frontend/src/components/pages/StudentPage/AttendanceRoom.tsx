@@ -62,14 +62,14 @@ const AttendanceRoom: React.FC = () => {
   useEffect(() => {
     const fetchAttendanceRoom = async () => {
       try {
-        const roomData = await GetAttendanceRoom(roomId); 
-        setAttendanceRoom(roomData.status ? roomData.data : null);
-        console.log(attendanceRoom);
+        const roomData = await GetAttendanceRoom(roomId);
+        setAttendanceRoom(roomData ? roomData.data : null);
       } catch (error) {
         console.error("Error fetching attendance room:", error);
       }
 
       fetchAttendanceRoom();
+      console.log(attendanceRoom);
     };
   }, [subjectId, roomId, locationLat, locationLon]);
 
