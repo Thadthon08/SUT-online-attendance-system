@@ -54,6 +54,7 @@ const AttendanceRoom: React.FC = () => {
     };
 
     fetchAttendanceRoom();
+    console.log("attRoom :", attendanceRoom);
   }, [roomId, subjectId, locationLat, locationLon]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
