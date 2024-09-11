@@ -4,6 +4,7 @@ import {
   CreateAttendanceByStudent,
   GetAttendanceRoom,
 } from "../../../services/api";
+import { showErrorNotification, showSuccessNotification } from '../../../utils/notifications';
 
 const AttendanceRoom: React.FC = () => {
   const [subjectId, setSubjectId] = useState<string | null>(null);
@@ -98,15 +99,11 @@ const AttendanceRoom: React.FC = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
+  
     if (attendanceRoom) {
       const roomLat = attendanceRoom.location_lat;
       const roomLon = attendanceRoom.location_lon;
-      console.log("Room Lat:", roomLat);
-      console.log("Room Lon:", roomLon);
-      console.log("Location Lat:", locationLat);
-      console.log("Location Lon:", locationLon);
-
+  
       if (locationLat && locationLon) {
         const currentDistance = calculateDistance(
           locationLat,
@@ -114,18 +111,20 @@ const AttendanceRoom: React.FC = () => {
           roomLat,
           roomLon
         );
-
+  
         setDistance(currentDistance);
-
+  
         if (currentDistance > 1) {
-          console.log(
-            `Distance is greater than 1 km: ${currentDistance.toFixed(2)} km`
-          );
+          // Show error notification if distance is greater than 1 km
+          showErrorNotification("ระยะเกินกำหนด", `ระยะทางที่คุณอยู่คือ ${currentDistance.toFixed(2)} กม.`);
           return; // Exit if the distance is too great
+        } else {
+          // Show success notification if distance is within 1 km
+          showSuccessNotification("ลงชื่อสำเร็จ", `ระยะทางที่คุณอยู่คือ ${currentDistance.toFixed(2)} กม.`);
         }
       }
     }
-
+  
     const data: any = {
       student_id: studentId,
       first_name: firstname,
@@ -134,7 +133,7 @@ const AttendanceRoom: React.FC = () => {
       location_lat: locationLat,
       location_lon: locationLon,
     };
-
+  
     try {
       const result = await CreateAttendanceByStudent(data);
       if (result.status) {
@@ -146,7 +145,7 @@ const AttendanceRoom: React.FC = () => {
       console.error("Network error:", error);
     }
   };
-
+  
   return (
     <div className="p-8 bg-white shadow-lg rounded-lg max-w-md mx-auto mt-20">
       <h1 className="text-2xl font-bold text-center mb-4">Attendance Room</h1>
