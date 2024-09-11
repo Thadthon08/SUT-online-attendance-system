@@ -9,13 +9,14 @@ const AttendanceRoom: React.FC = () => {
   const [subjectId, setSubjectId] = useState<string | null>(null);
   const [roomId, setRoomId] = useState<any | null>(null);
   const [attendanceRoom, setAttendanceRoom] = useState<Attendance | null>(null);
-  const [distance] = useState<number | null>(null);
+  const [distance, setDistance] = useState<number | null>(null);
+
   // Form state
   const [studentId, setStudentId] = useState("");
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
-  const [locationLat, setLocationLat] = useState<number>(0);
-  const [locationLon, setLocationLon] = useState<number>(0);
+  const [locationLat, setLocationLat] = useState<number>();
+  const [locationLon, setLocationLon] = useState<number>();
 
   useEffect(() => {
     const storedSubjectId = localStorage.getItem("subject_id");
@@ -54,13 +55,78 @@ const AttendanceRoom: React.FC = () => {
     };
 
     fetchAttendanceRoom();
-    console.log("attRoom :", attendanceRoom);
-  }, [roomId, subjectId, locationLat, locationLon]);
+  }, [roomId, subjectId]);
+
+  useEffect(() => {
+    if (attendanceRoom) {
+      const roomLat = attendanceRoom.location_lat;
+      const roomLon = attendanceRoom.location_lon;
+
+      if (locationLat && locationLon) {
+        const currentDistance = calculateDistance(
+          locationLat,
+          locationLon,
+          roomLat,
+          roomLon
+        );
+
+        setDistance(currentDistance);
+        console.log("Calculated Distance: ", currentDistance);
+      }
+    }
+  }, [attendanceRoom, locationLat, locationLon]);
+
+  const calculateDistance = (
+    lat1: number,
+    lon1: number,
+    lat2: number,
+    lon2: number
+  ) => {
+    const R = 6371; // Radius of the earth in km
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) *
+        Math.cos(lat2 * (Math.PI / 180)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c; // Distance in km
+    return distance;
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const data = {
+    if (attendanceRoom) {
+      const roomLat = attendanceRoom.location_lat;
+      const roomLon = attendanceRoom.location_lon;
+      console.log("Room Lat:", roomLat);
+      console.log("Room Lon:", roomLon);
+      console.log("Location Lat:", locationLat);
+      console.log("Location Lon:", locationLon);
+
+      if (locationLat && locationLon) {
+        const currentDistance = calculateDistance(
+          locationLat,
+          locationLon,
+          roomLat,
+          roomLon
+        );
+
+        setDistance(currentDistance);
+
+        if (currentDistance > 1) {
+          console.log(
+            `Distance is greater than 1 km: ${currentDistance.toFixed(2)} km`
+          );
+          return; // Exit if the distance is too great
+        }
+      }
+    }
+
+    const data: any = {
       student_id: studentId,
       first_name: firstname,
       last_name: lastname,
