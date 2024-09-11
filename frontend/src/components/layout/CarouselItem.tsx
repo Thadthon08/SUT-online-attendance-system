@@ -4,17 +4,19 @@ import { Skeleton } from "antd";
 interface CarouselItemProps {
   loading: boolean;
   handleImageLoad: () => void;
+  imageUrl: string;
 }
 
 const CarouselItem: React.FC<CarouselItemProps> = ({
   loading,
   handleImageLoad,
+  imageUrl,
 }) => {
   return (
-    <div className="bg-[#364d79] text-white flex items-center justify-center w-full h-[300px] 2xl:h-[468px]">
+    <div className="flex items-center justify-center w-full h-full">
       {loading && <Skeleton.Image className="w-full h-full" />}
       <img
-        src="https://placehold.co/300x300"
+        src={imageUrl}
         className={`w-full h-full object-cover ${loading ? "hidden" : ""}`}
         onLoad={handleImageLoad}
         alt="carousel slide"
