@@ -44,25 +44,18 @@ const AttendanceRoom: React.FC = () => {
     const fetchAttendanceRoom = async () => {
       if (roomId) {
         try {
-          const roomData: any = await GetAttendanceRoom(roomId);
-          // Check if the response is ok and convert to JSON
-          if (roomData.ok) {
-            const jsonData = await roomData.json(); // Convert response to JSON
-            setAttendanceRoom(jsonData.data);
-            console.log("Fetched attendance room data:", jsonData);
-          } else {
-            console.error("Error fetching attendance room:", roomData.statusText);
-          }
+          const roomData = await GetAttendanceRoom(roomId);
+          setAttendanceRoom(roomData.data);
+          console.log("Fetched attendance room data:", roomData);
         } catch (error) {
           console.error("Error fetching attendance room:", error);
         }
       }
     };
-  
+
     fetchAttendanceRoom();
     console.log("attRoom :", attendanceRoom);
   }, [roomId, subjectId, locationLat, locationLon]);
-  
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
