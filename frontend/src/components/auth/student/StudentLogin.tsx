@@ -1,39 +1,49 @@
 import React, { useEffect, useState } from "react";
 import liff from "@line/liff";
 import { ArrowRight } from "lucide-react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom"; // เพิ่ม useNavigate สำหรับการเปลี่ยนหน้า
+import { GetAttendanceRoom } from "../../../services/api";
 
 const StudentLogin: React.FC = () => {
   const LIFF_ID = "2006252489-XlDxGl4V"; // LIFF ID ของคุณ
   const [profile, setProfile] = useState<any>(null);
-
+  const navigate = useNavigate(); // ใช้ useNavigate เพื่อเปลี่ยนหน้า
   const { subject_id, room_id } = useParams<{
     subject_id: string;
     room_id: string;
   }>();
 
   useEffect(() => {
-    // ตรวจสอบว่า subject_id และ room_id ถูกต้องหรือไม่
-    console.log("Subject ID:", subject_id);
-    console.log("Room ID:", room_id);
+    const initialize = async () => {
+      if (subject_id && room_id) {
+        // เรียกใช้ GetAttendanceRoom เพื่อตรวจสอบว่า room_id มีอยู่ในฐานข้อมูลหรือไม่
+        const result = await GetAttendanceRoom(room_id);
 
-    // เก็บค่า subject_id และ room_id ลงใน localStorage
-    if (subject_id && room_id) {
-      localStorage.setItem("subject_id", subject_id);
-      localStorage.setItem("room_id", room_id);
-    }
+        if (!result.status) {
+          // ถ้าไม่พบ room_id ให้เปลี่ยนไปที่หน้า PAGE NOT FOUND
+          navigate("/page-not-found");
+          return;
+        }
 
-    // Initialize LIFF SDK
-    liff
-      .init({ liffId: LIFF_ID })
-      .then(() => {
-        console.log("LIFF initialized successfully");
-      })
-      .catch((err) => {
-        console.error("LIFF Initialization failed", err);
-        alert("Failed to initialize LINE login. Please try again.");
-      });
-  }, []);
+        // ถ้าพบ room_id และ subject_id เก็บค่าใน localStorage
+        localStorage.setItem("subject_id", subject_id);
+        localStorage.setItem("room_id", room_id);
+      }
+
+      // Initialize LIFF SDK
+      liff
+        .init({ liffId: LIFF_ID })
+        .then(() => {
+          console.log("LIFF initialized successfully");
+        })
+        .catch((err) => {
+          console.error("LIFF Initialization failed", err);
+          alert("Failed to initialize LINE login. Please try again.");
+        });
+    };
+
+    initialize();
+  }, [room_id, subject_id, navigate]);
 
   const handleLineLogin = () => {
     if (!liff.isLoggedIn()) {
