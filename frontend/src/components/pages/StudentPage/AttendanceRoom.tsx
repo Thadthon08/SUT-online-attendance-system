@@ -44,8 +44,8 @@ const AttendanceRoom: React.FC = () => {
     const fetchAttendanceRoom = async () => {
       if (roomId) {
         try {
-          const roomData = await GetAttendanceRoom(roomId);
-          setAttendanceRoom(roomData ? roomData.data : null);
+          const roomData: any = await GetAttendanceRoom(roomId);
+          setAttendanceRoom(roomData);
           console.log("Fetched attendance room data:", roomData);
         } catch (error) {
           console.error("Error fetching attendance room:", error);
