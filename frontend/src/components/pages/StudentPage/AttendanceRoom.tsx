@@ -3,25 +3,7 @@ import { AttendanceRoom as Attendance } from "../../../interface/IAttendanceRoom
 import {
   CreateAttendanceByStudent,
   GetAttendanceRoom,
-} from "../../../services/api"; // Assuming you have this API function
-
-// Haversine formula to calculate the distance between two points
-// const haversine = (lat1: number, lon1: number, lat2: number, lon2: number) => {
-//   const R = 6371; // Earth radius in kilometers
-//   const toRad = (x: number) => (x * Math.PI) / 180;
-
-//   const dLat = toRad(lat2 - lat1);
-//   const dLon = toRad(lon2 - lon1);
-//   const a =
-//     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-//     Math.cos(toRad(lat1)) *
-//       Math.cos(toRad(lat2)) *
-//       Math.sin(dLon / 2) *
-//       Math.sin(dLon / 2);
-//   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-//   return R * c; // Distance in kilometers
-// };
+} from "../../../services/api";
 
 const AttendanceRoom: React.FC = () => {
   const [subjectId, setSubjectId] = useState<string | null>(null);
@@ -36,7 +18,6 @@ const AttendanceRoom: React.FC = () => {
   const [locationLon, setLocationLon] = useState<number>(0);
 
   useEffect(() => {
-    // Retrieve subject_id and room_id from localStorage
     const storedSubjectId = localStorage.getItem("subject_id");
     const storedRoomId = localStorage.getItem("room_id");
 
@@ -61,17 +42,19 @@ const AttendanceRoom: React.FC = () => {
 
   useEffect(() => {
     const fetchAttendanceRoom = async () => {
-      try {
-        const roomData = await GetAttendanceRoom(roomId);
-        setAttendanceRoom(roomData ? roomData.data : null);
-      } catch (error) {
-        console.error("Error fetching attendance room:", error);
+      if (roomId) {
+        try {
+          const roomData = await GetAttendanceRoom(roomId);
+          setAttendanceRoom(roomData ? roomData.data : null);
+          console.log("Fetched attendance room data:", roomData);
+        } catch (error) {
+          console.error("Error fetching attendance room:", error);
+        }
       }
-
-      fetchAttendanceRoom();
-      console.log(attendanceRoom);
     };
-  }, [subjectId, roomId, locationLat, locationLon]);
+
+    fetchAttendanceRoom();
+  }, [roomId, subjectId, locationLat, locationLon]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
