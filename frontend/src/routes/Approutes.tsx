@@ -49,7 +49,6 @@ const PrivateRouteForStudent = () => {
 
   return isSignedForStudent ? (
     <>
-      <NavbarStudent /> {/* Show student layout */}
       <Outlet /> {/* Render child components if signed in */}
     </>
   ) : (
