@@ -1,0 +1,8 @@
+# Ignore Go executable files
+/myproject.exe
+
+# Ignore other OS-specific executables
+*.exe
+*.out
+*.o
+

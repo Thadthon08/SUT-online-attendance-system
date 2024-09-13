@@ -5,5 +5,5 @@ type Subject struct {
 	SubjectName string           `json:"subject_name"`
 	SubjectPic  string           `json:"subject_pic"`
 	Teachers    []Teacher        `gorm:"many2many:teacher_subjects;foreignKey:SubjectID;joinForeignKey:SubjectID;References:TeacherID;joinReferences:TeacherID" json:"teachers"`
-	Rooms       []AttendanceRoom `json:"rooms"`
+	Rooms       []AttendanceRoom `gorm:"foreignKey:SubjectID;references:SubjectID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"rooms"`
 }
