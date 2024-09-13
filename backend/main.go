@@ -32,7 +32,7 @@ func main() {
 
     r.POST("/attendance", controllers.CreateAttendanceRoom)
     r.GET("/attendance/room/:id", controllers.GetAttendanceRoom)
-    r.GET("/attendance/room/subject/:id", controllers.GetAttendanceRoomBySubjectID)
+    r.GET("/attendance/room/subject/:id", controllers.GetRoomDetailsBySubjectID)
 	r.POST("/attendance/student", controllers.CreateAttendance)
 
     r.GET("/attendance_rooms/:id/students", controllers.GetStudentsByAttendanceRoomID)

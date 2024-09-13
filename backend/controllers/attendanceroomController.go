@@ -39,31 +39,29 @@ func CreateAttendanceRoom(c *gin.Context) {
 	})
 }
 
-func GetAttendanceRoomBySubjectID(c *gin.Context) {
+func GetRoomDetailsBySubjectID(c *gin.Context) {
 	subjectID := c.Param("id")
 
-	var attendanceRoom models.AttendanceRoom
+	var attendanceRooms []models.AttendanceRoom // ใช้ slice ของ AttendanceRoom เพื่อเก็บข้อมูลทั้งหมด
 
+	// Query เพื่อดึงข้อมูลของ attendance_rooms ที่มี subject_id ตรงกับที่ระบุ
 	if err := config.DB.
-		Preload("Subject"). 
-		Preload("Attendances"). 
-		Preload("Attendances.Room"). 
-		Preload("Attendances.Room.Subject").
-		First(&attendanceRoom, "subject_id = ?", subjectID).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			c.JSON(http.StatusNotFound, gin.H{"status": "error", "message": "AttendanceRoom not found"})
+		Preload("Subject"). // โหลดข้อมูล Subject ที่เกี่ยวข้อง
+		Where("subject_id = ?", subjectID). // กรองตาม subject_id
+		Find(&attendanceRooms).Error; err != nil { // เก็บผลลัพธ์ใน attendanceRooms
+		if err == gorm.ErrRecordNotFound {
+			c.JSON(http.StatusNotFound, gin.H{"status": "error", "message": "Rooms not found"})
 		} else {
-			c.JSON(http.StatusInternalServerError, gin.H{"status": "error", "message": "Failed to retrieve AttendanceRoom"})
+			c.JSON(http.StatusInternalServerError, gin.H{"status": "error", "message": "Failed to retrieve room details"})
 		}
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"status": "success",
-		"data":   attendanceRoom,
+		"data":   attendanceRooms,
 	})
 }
-
 
 func GetAttendanceRoom(c *gin.Context) {
 	id := c.Param("id")
