@@ -4,10 +4,7 @@ import (
 	"myproject/config"
 	"myproject/controllers"
 	"os" // เพิ่มเพื่อใช้งาน Environment Variables
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
 	"github.com/gin-gonic/gin"
 )
 
@@ -41,7 +38,6 @@ func main() {
 
     r.GET("/attendance_rooms/:id/students", controllers.GetStudentsByAttendanceRoomID)
 
-    r.POST("/attendance", controllers.CreateAttendanceRoom)
 
     // Protected routes
     // auth := r.Group("/auth")

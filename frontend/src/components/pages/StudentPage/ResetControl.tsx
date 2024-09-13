@@ -3,7 +3,7 @@ import { useMap } from "react-leaflet";
 import L from "leaflet";
 
 const ResetControl = ({ resetPosition }: { resetPosition: () => void }) => {
-  const map = useMap(); 
+  const map = useMap();
   useEffect(() => {
     const control = new L.Control({ position: "topright" });
 
@@ -19,6 +19,7 @@ const ResetControl = ({ resetPosition }: { resetPosition: () => void }) => {
 
       div.onclick = () => {
         resetPosition();
+        console.log(location);
       };
 
       return div;
