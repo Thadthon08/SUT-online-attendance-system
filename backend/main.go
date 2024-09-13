@@ -36,6 +36,9 @@ func main() {
 	//Atendancestudent
 	r.POST("/attendance/student", controllers.CreateAttendance)
 
+    r.GET("/attendance_rooms/:id/students", controllers.GetStudentsByAttendanceRoomID)
+
+
     // Protected routes
     // auth := r.Group("/auth")
     // auth.Use(middleware.AuthMiddleware())
