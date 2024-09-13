@@ -13,9 +13,9 @@ import DLayout from "../components/layout/Menu";
 import SubjectDetail from "../components/pages/SubjectDetail";
 import CreateRoom from "../components/pages/CreateRoom";
 import ScanQRForAttendance from "../components/pages/ScanQRForAttendance";
-import NavbarStudent from "../components/layout/StudentLayout/Navbar";
 import StudentLogin from "../components/auth/student/StudentLogin";
 import AttendanceRoom from "../components/pages/StudentPage/AttendanceRoom";
+import RoomAttHistory from "../components/pages/RoomHistory";
 
 // Function to check if the student is logged in based on codeVerifier
 const isStudentLoggedIn = () => {
@@ -73,6 +73,7 @@ export default function AppRoutes() {
           <Route path="/subject/:subject_id" element={<SubjectDetail />} />
           <Route path="/create-room/:subject_id" element={<CreateRoom />} />
           <Route path="/attendance" element={<ScanQRForAttendance />} />
+          <Route path="/room-history/:subject_id" element={<RoomAttHistory />} />
         </Route>
 
         {/* Routes for students */}

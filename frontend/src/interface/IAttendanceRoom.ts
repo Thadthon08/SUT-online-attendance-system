@@ -1,5 +1,5 @@
-
 export interface AttendanceRoom {
+  room_id: number; // Updated to match the backend model
   subject_id: string;
   room_name: string;
   start_time: string;

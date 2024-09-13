@@ -1,0 +1,53 @@
+.room-att-history {
+  padding: 20px;
+  background-color: #f7f9fc; /* Light background color */
+  text-align: center; /* Center the content inside */
+}
+
+h1 {
+  color: #ff6f00; /* Orange color for the header */
+  margin-bottom: 20px;
+  font-size: 2.5rem; /* Larger font size */
+  font-weight: bold; /* Bold text */
+}
+
+.attendance-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.attendance-table th,
+.attendance-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd; /* Light border for table rows */
+}
+
+.attendance-table th {
+  background-color: #ff6f00; /* Orange background for header */
+  color: #fff; /* White text for header */
+  font-weight: bold;
+}
+
+.attendance-table tr:nth-child(even) {
+  background-color: #f2f2f2; /* Alternating row colors */
+}
+
+.attendance-table tr:hover {
+  background-color: #e0e0e0; /* Highlight row on hover */
+}
+
+.ant-btn-primary {
+  background-color: #ff6f00; /* Orange button color */
+  border-color: #ff6f00; /* Orange border color */
+}
+
+.ant-btn-primary:hover {
+  background-color: #e65c00; /* Darker orange on hover */
+  border-color: #e65c00; /* Darker orange border on hover */
+}
+
+.ant-spin-text {
+  color: #ff6f00; /* Orange color for loading spinner text */
+}

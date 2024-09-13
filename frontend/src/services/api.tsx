@@ -2,6 +2,7 @@ import { AttendanceRoom } from "../interface/IAttendanceRoom";
 import { AttendanceBystudent } from "../interface/IAttendance";
 import { LoginInterface } from "../interface/ILogin";
 import { LoginResponseInterface } from "../interface/ILoginRespon";
+import { AttendanceRoomResponse } from "../interface/IAttendanceRoomresponse";
 
 // const apiURL = "https://sut-online-attendance-system.onrender.com";
 const apiURL = "http://localhost:8080";
@@ -136,6 +137,51 @@ async function GetAttendanceRoom(roomId: string) {
     return { status: false, message: "An unexpected error occurred" };
   }
 }
+async function GetStudentsByRoomId(roomId: string): Promise<{ status: boolean; data?: AttendanceRoomResponse; message?: string }> {
+  const requestOptions = {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  };
+
+  try {
+    const response = await fetch(`${apiURL}/attendance_rooms/${roomId}/students`, requestOptions);
+
+    if (response.ok) {
+      const data: AttendanceRoomResponse = await response.json();
+      return { status: true, data };
+    } else {
+      const error = await response.json();
+      return { status: false, message: error.message || "Failed to fetch data" };
+    }
+  } catch (error) {
+    console.error("Fetch error:", error);
+    return { status: false, message: "An unexpected error occurred" };
+  }
+}
+async function GetAttendanceRoomBySubjectID(subjectId: string) {
+  const requestOptions = {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  };
+
+  try {
+    const response = await fetch(`${apiURL}/attendance/subjectroom/${subjectId}`, requestOptions);
+
+    if (response.ok) {
+      const data = await response.json();
+      return { status: true, data };
+    } else {
+      const error = await response.json();
+      return {
+        status: false,
+        message: error.message || "Failed to fetch data",
+      };
+    }
+  } catch (error) {
+    console.error("Fetch error:", error);
+    return { status: false, message: "An unexpected error occurred" };
+  }
+}
 
 export {
   SignIn,
@@ -144,4 +190,6 @@ export {
   CreateAttendance,
   CreateAttendanceByStudent,
   GetAttendanceRoom,
+  GetStudentsByRoomId,
+  GetAttendanceRoomBySubjectID,
 };
