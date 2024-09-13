@@ -1,14 +1,20 @@
+// src/pages/AttendanceRoom.tsx
 import React, { useEffect, useState } from "react";
 import { AttendanceRoom as Attendance } from "../../../interface/IAttendanceRoom";
 import {
   CreateAttendanceByStudent,
   GetAttendanceRoom,
 } from "../../../services/api";
-import { showErrorNotification, showSuccessNotification } from '../../../utils/notifications';
+import {
+  showErrorNotification,
+  showSuccessNotification,
+} from "../../../utils/notifications";
+import AttendanceForm from "./AttendanceForm";
+import MapComponent from "./MapComponent";
 
 const AttendanceRoom: React.FC = () => {
   const [subjectId, setSubjectId] = useState<string | null>(null);
-  const [roomId, setRoomId] = useState<any | null>(null);
+  const [roomId, setRoomId] = useState<string | null>(null);
   const [attendanceRoom, setAttendanceRoom] = useState<Attendance | null>(null);
   const [distance, setDistance] = useState<number | null>(null);
 
@@ -19,14 +25,7 @@ const AttendanceRoom: React.FC = () => {
   const [locationLat, setLocationLat] = useState<number>();
   const [locationLon, setLocationLon] = useState<number>();
 
-  useEffect(() => {
-    const storedSubjectId = localStorage.getItem("subject_id");
-    const storedRoomId = localStorage.getItem("room_id");
-
-    setSubjectId(storedSubjectId);
-    setRoomId(storedRoomId);
-
-    // Get geolocation
+  const resetPosition = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -34,12 +33,23 @@ const AttendanceRoom: React.FC = () => {
           setLocationLon(position.coords.longitude);
         },
         (error) => {
-          console.error("Error getting geolocation:", error);
+          console.error("Error resetting position:", error);
         }
       );
     } else {
       console.error("Geolocation is not supported by this browser.");
     }
+  };
+
+  useEffect(() => {
+    const storedSubjectId = localStorage.getItem("subject_id");
+    const storedRoomId = localStorage.getItem("room_id");
+
+    setSubjectId(storedSubjectId);
+    setRoomId(storedRoomId);
+
+    // Get initial geolocation
+    resetPosition();
   }, []);
 
   useEffect(() => {
@@ -56,24 +66,19 @@ const AttendanceRoom: React.FC = () => {
     };
 
     fetchAttendanceRoom();
-  }, [roomId, subjectId]);
+  }, [roomId]);
 
   useEffect(() => {
-    if (attendanceRoom) {
-      const roomLat = attendanceRoom.location_lat;
-      const roomLon = attendanceRoom.location_lon;
+    if (attendanceRoom && locationLat && locationLon) {
+      const currentDistance = calculateDistance(
+        locationLat,
+        locationLon,
+        attendanceRoom.location_lat,
+        attendanceRoom.location_lon
+      );
 
-      if (locationLat && locationLon) {
-        const currentDistance = calculateDistance(
-          locationLat,
-          locationLon,
-          roomLat,
-          roomLon
-        );
-
-        setDistance(currentDistance);
-        console.log("Calculated Distance: ", currentDistance);
-      }
+      setDistance(currentDistance);
+      console.log("Calculated Distance: ", currentDistance);
     }
   }, [attendanceRoom, locationLat, locationLon]);
 
@@ -99,41 +104,40 @@ const AttendanceRoom: React.FC = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-  
-    if (attendanceRoom) {
-      const roomLat = attendanceRoom.location_lat;
-      const roomLon = attendanceRoom.location_lon;
-  
-      if (locationLat && locationLon) {
-        const currentDistance = calculateDistance(
-          locationLat,
-          locationLon,
-          roomLat,
-          roomLon
+
+    if (attendanceRoom && locationLat && locationLon) {
+      const currentDistance = calculateDistance(
+        locationLat,
+        locationLon,
+        attendanceRoom.location_lat,
+        attendanceRoom.location_lon
+      );
+
+      setDistance(currentDistance);
+
+      if (currentDistance > 1) {
+        showErrorNotification(
+          "ระยะเกินกำหนด",
+          `ระยะทางที่คุณอยู่คือ ${currentDistance.toFixed(2)} กม.`
         );
-  
-        setDistance(currentDistance);
-  
-        if (currentDistance > 1) {
-          // Show error notification if distance is greater than 1 km
-          showErrorNotification("ระยะเกินกำหนด", `ระยะทางที่คุณอยู่คือ ${currentDistance.toFixed(2)} กม.`);
-          return; // Exit if the distance is too great
-        } else {
-          // Show success notification if distance is within 1 km
-          showSuccessNotification("ลงชื่อสำเร็จ", `ระยะทางที่คุณอยู่คือ ${currentDistance.toFixed(2)} กม.`);
-        }
+        return;
+      } else {
+        showSuccessNotification(
+          "ลงชื่อสำเร็จ",
+          `ระยะทางที่คุณอยู่คือ ${currentDistance.toFixed(2)} กม.`
+        );
       }
     }
-  
+
     const data: any = {
       student_id: studentId,
       first_name: firstname,
       last_name: lastname,
-      room_id: parseInt(roomId),
+      room_id: parseInt(roomId as string),
       location_lat: locationLat,
       location_lon: locationLon,
     };
-  
+
     try {
       const result = await CreateAttendanceByStudent(data);
       if (result.status) {
@@ -145,7 +149,7 @@ const AttendanceRoom: React.FC = () => {
       console.error("Network error:", error);
     }
   };
-  
+
   return (
     <div className="p-8 bg-white shadow-lg rounded-lg max-w-md mx-auto mt-20">
       <h1 className="text-2xl font-bold text-center mb-4">Attendance Room</h1>
@@ -162,62 +166,29 @@ const AttendanceRoom: React.FC = () => {
               <strong>Distance to Room:</strong> {distance.toFixed(2)} km
             </p>
           )}
+          {locationLat && locationLon && (
+            <MapComponent
+              locationLat={locationLat}
+              locationLon={locationLon}
+              attendanceRoom={attendanceRoom}
+              resetPosition={resetPosition}
+            />
+          )}
         </div>
       ) : (
         <p className="text-lg text-center text-red-500">
           Missing subject or room information.
         </p>
       )}
-      <form onSubmit={handleSubmit} className="mt-8">
-        <div className="mb-4">
-          <label
-            htmlFor="student_id"
-            className="block text-lg font-medium mb-2"
-          >
-            Student ID
-          </label>
-          <input
-            id="student_id"
-            type="text"
-            value={studentId}
-            onChange={(e) => setStudentId(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="firstname" className="block text-lg font-medium mb-2">
-            First Name
-          </label>
-          <input
-            id="firstname"
-            type="text"
-            value={firstname}
-            onChange={(e) => setFirstname(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="lastname" className="block text-lg font-medium mb-2">
-            Last Name
-          </label>
-          <input
-            id="lastname"
-            type="text"
-            value={lastname}
-            onChange={(e) => setLastname(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded"
-            required
-          />
-        </div>
-        <button
-          type="submit"
-          className="w-full py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          Submit
-        </button>
-      </form>
+      <AttendanceForm
+        studentId={studentId}
+        firstname={firstname}
+        lastname={lastname}
+        onStudentIdChange={(e) => setStudentId(e.target.value)}
+        onFirstnameChange={(e) => setFirstname(e.target.value)}
+        onLastnameChange={(e) => setLastname(e.target.value)}
+        onSubmit={handleSubmit}
+      />
     </div>
   );
 };
