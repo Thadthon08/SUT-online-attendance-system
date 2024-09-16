@@ -52,7 +52,7 @@ const RoomList: React.FC = () => {
     {
       title: "Action",
       key: "action",
-      render: (text: any, record: AttendanceRoom) => (
+      render: (_text: any, record: AttendanceRoom) => (
         <Button onClick={() => handleViewDetails(record.room_id)}>
           View Details
         </Button>
