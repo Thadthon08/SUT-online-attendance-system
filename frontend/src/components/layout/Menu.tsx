@@ -2,37 +2,35 @@ import { Box, Drawer, DrawerContent, useDisclosure } from "@chakra-ui/react";
 import SidebarContent from "./SidebarContent";
 import MobileNav from "./MobileNav";
 import { Outlet } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function DLayout() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { user } = useAuth();
 
-  function removeQuotes(str: any) {
-    return str ? str.replace(/"/g, "") : "";
-  }
+  const teacherId: string = user?.teacher_id ?? "";
 
-  const teacherId =
-    removeQuotes(localStorage.getItem("teacher_id")) ?? undefined;
   return (
     <Box minH="100vh" bg={"rgb(242, 101, 34)"}>
       <SidebarContent
-        onClose={() => onClose}
+        onClose={onClose}
         display={{ base: "none", md: "block" }}
-        teacherId={teacherId.toString()}
+        teacherId={teacherId}
       />
       <Drawer
         autoFocus={false}
         isOpen={isOpen}
         placement="left"
-        onClose={onClose}
+        onClose={onClose} // Correct event handler for Drawer close
         returnFocusOnClose={false}
-        onOverlayClick={onClose}
+        onOverlayClick={onClose} // Correct event handler for overlay click
         size="full"
       >
         <DrawerContent>
           <SidebarContent onClose={onClose} teacherId={teacherId} />
         </DrawerContent>
       </Drawer>
-      {/* mobilenav */}
+      {/* Mobile navigation */}
       <MobileNav onOpen={onOpen} />
       <Box ml={{ base: 0, md: "300px" }} bg={"rgb(243, 246, 255)"} h={"100vh"}>
         <Outlet />

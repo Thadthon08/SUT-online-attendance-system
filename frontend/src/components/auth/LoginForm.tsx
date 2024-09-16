@@ -16,7 +16,7 @@ const LoginForm: React.FC = () => {
   const onFinish = async (values: LoginInterface) => {
     try {
       const res: LoginResponseInterface = await SignIn(values);
-      if (res.token.token) {
+      if (res.token.access_token) {
         context.signIn(res);
         showSuccessNotification(
           "Login Successful",

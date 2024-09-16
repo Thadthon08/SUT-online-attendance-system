@@ -1,9 +1,19 @@
-import { createContext, useState, ReactNode, useContext } from "react";
-import { LoginResponseInterface } from "../interface/ILoginRespon";
+import {
+  createContext,
+  useState,
+  ReactNode,
+  useContext,
+  useEffect,
+} from "react";
+import {
+  LoginResponseInterface,
+  UserResponse,
+} from "../interface/ILoginRespon";
 
 interface AuthContextData {
   isSigned: boolean;
-  signIn(token: LoginResponseInterface): void;
+  user: UserResponse | null;
+  signIn(response: LoginResponseInterface): void;
   signOut(): void;
 }
 
@@ -14,34 +24,64 @@ interface AuthProviderProps {
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [isSigned, setIsSigned] = useState(() => {
-    const token = localStorage.getItem("token");
+  const [isSigned, setIsSigned] = useState<boolean>(() => {
+    const token = sessionStorage.getItem("access_token");
     return !!token;
   });
-  function signIn(token: LoginResponseInterface) {
-    localStorage.setItem("teacher_id", JSON.stringify(token.token.teacher_id));
-    localStorage.setItem("firstname", JSON.stringify(token.token.firstname));
-    localStorage.setItem("lastname", JSON.stringify(token.token.lastname));
-    localStorage.setItem(
-      "phone_number",
-      JSON.stringify(token.token.phone_number)
-    );
-    localStorage.setItem(
-      "profile_pic",
-      JSON.stringify(token.token.profile_pic)
-    );
-    localStorage.setItem("email", JSON.stringify(token.token.email));
-    localStorage.setItem("token", JSON.stringify(token.token.token));
+
+  const [user, setUser] = useState<UserResponse | null>(() => {
+    const storedUser = sessionStorage.getItem("user");
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
+
+  useEffect(() => {
+    const token = sessionStorage.getItem("access_token");
+    const tokenExpiry = sessionStorage.getItem("token_expiry");
+
+    if (token && tokenExpiry) {
+      const currentTime = Date.now();
+      const expiryTime = parseInt(tokenExpiry, 10);
+
+      if (currentTime >= expiryTime) {
+        signOut();
+      } else {
+        const remainingTime = expiryTime - currentTime;
+        setTimeout(() => {
+          signOut();
+        }, remainingTime);
+      }
+    } else {
+      signOut();
+    }
+  }, []);
+
+  function signIn(response: LoginResponseInterface) {
+    const { access_token, expires_in } = response.token;
+    const userData = response.user;
+
+    sessionStorage.setItem("access_token", access_token);
+    sessionStorage.setItem("user", JSON.stringify(userData));
+    setUser(userData);
     setIsSigned(true);
+
+    const tokenExpiry = Date.now() + expires_in * 1000;
+    sessionStorage.setItem("token_expiry", tokenExpiry.toString());
+
+    setTimeout(() => {
+      signOut();
+    }, expires_in * 1000);
   }
 
   function signOut() {
-    localStorage.clear();
+    sessionStorage.removeItem("access_token");
+    sessionStorage.removeItem("user");
+    sessionStorage.removeItem("token_expiry");
+    setUser(null);
     setIsSigned(false);
   }
 
   return (
-    <AuthContext.Provider value={{ isSigned, signIn, signOut }}>
+    <AuthContext.Provider value={{ isSigned, user, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   );
