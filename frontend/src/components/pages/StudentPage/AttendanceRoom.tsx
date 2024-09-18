@@ -13,6 +13,7 @@ import {
 import AttendanceForm from "./AttendanceForm";
 import MapComponent from "./MapComponent";
 import "./attendanceRoom.css";
+import liff from "@line/liff";
 
 const AttendanceRoom: React.FC = () => {
   const [subjectId, setSubjectId] = useState<string | null>(null);
@@ -50,6 +51,18 @@ const AttendanceRoom: React.FC = () => {
 
     setSubjectId(storedSubjectId);
     setRoomId(storedRoomId);
+
+    liff.init({ liffId: "2006252489-XlDxGl4V" }, () => {
+      if (liff.isLoggedIn()) {
+        liff.getProfile().then((profile) => {
+          localStorage.setItem("user_id", profile.userId);
+          localStorage.setItem("user_name", profile.displayName);
+          console.log("User ID:");
+        });
+      } else {
+        liff.login();
+      }
+    });
 
     // ตรวจสอบสถานะการลงชื่อ
     const attendanceChecked = localStorage.getItem(

@@ -1,81 +1,42 @@
 import React, { useEffect, useState } from "react";
 import liff from "@line/liff";
 import { ArrowRight } from "lucide-react";
-import { useParams, useNavigate } from "react-router-dom"; // เพิ่ม useNavigate สำหรับการเปลี่ยนหน้า
+import { useParams, useNavigate } from "react-router-dom";
 import { GetAttendanceRoom } from "../../../services/api";
 
 const StudentLogin: React.FC = () => {
-  const LIFF_ID = "2006252489-XlDxGl4V"; // LIFF ID ของคุณ
-  const [profile, setProfile] = useState<any>(null);
-  const navigate = useNavigate(); // ใช้ useNavigate เพื่อเปลี่ยนหน้า
+  const [profile] = useState<any>(null);
+  const navigate = useNavigate();
   const { subject_id, room_id } = useParams<{
     subject_id: string;
     room_id: string;
   }>();
 
+  liff.init({ liffId: "2006252489-XlDxGl4V" }, () => {
+    if (liff.isLoggedIn()) {
+      console.log("User is logged in");
+    } else {
+      liff.login();
+    }
+  });
+
   useEffect(() => {
     const initialize = async () => {
       if (subject_id && room_id) {
-        // เรียกใช้ GetAttendanceRoom เพื่อตรวจสอบว่า room_id มีอยู่ในฐานข้อมูลหรือไม่
         const result = await GetAttendanceRoom(room_id);
 
         if (!result.status) {
-          // ถ้าไม่พบ room_id ให้เปลี่ยนไปที่หน้า PAGE NOT FOUND
           navigate("/page-not-found");
           return;
         }
 
-        // ถ้าพบ room_id และ subject_id เก็บค่าใน localStorage
         localStorage.setItem("subject_id", subject_id);
         localStorage.setItem("room_id", room_id);
       }
-
-      // Initialize LIFF SDK
-      liff
-        .init({ liffId: LIFF_ID })
-        .then(() => {
-          console.log("LIFF initialized successfully");
-        })
-        .catch((err) => {
-          console.error("LIFF Initialization failed", err);
-          alert("Failed to initialize LINE login. Please try again.");
-        });
     };
 
     initialize();
   }, [room_id, subject_id, navigate]);
-
-  const handleLineLogin = () => {
-    if (!liff.isLoggedIn()) {
-      try {
-        liff.login();
-      } catch (error) {
-        console.error("Error logging in with LINE:", error);
-        alert(
-          "Login failed. Please check your network connection and try again."
-        );
-      }
-    } else {
-      fetchUserProfile(); // ถ้าล็อกอินแล้ว ให้ดึงข้อมูลโปรไฟล์ผู้ใช้
-    }
-  };
-
-  const fetchUserProfile = async () => {
-    if (liff.isLoggedIn()) {
-      try {
-        const profile = await liff.getProfile();
-        console.log(profile);
-        const accessToken = liff.getAccessToken();
-        if (accessToken) {
-          localStorage.setItem("line_access_token", accessToken);
-          setProfile(profile);
-        }
-      } catch (error) {
-        console.error("Error fetching profile:", error);
-        alert("Unable to fetch profile information. Please try again.");
-      }
-    }
-  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-400 via-blue-500 to-purple-600">
@@ -114,7 +75,6 @@ const StudentLogin: React.FC = () => {
             Log in to access your student dashboard
           </p>
           <button
-            onClick={handleLineLogin} // ฟังก์ชัน Login
             className="group relative w-full py-3 px-5 bg-green-500 text-white rounded-full shadow-lg hover:bg-green-600 transition-all duration-300 ease-in-out overflow-hidden"
             aria-label="Login with LINE"
           >
