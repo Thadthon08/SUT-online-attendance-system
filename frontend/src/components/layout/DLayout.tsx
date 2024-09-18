@@ -8,17 +8,21 @@ import {
 import SidebarContent from "./SidebarContent";
 import MobileNav from "./MobileNav";
 import { Outlet } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function DLayout() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { user } = useAuth(); 
 
-  const teacherId = localStorage.getItem("teacher_id")?.replace(/"/g, "") || "";
+  const teacherId = user?.teacher_id || "";
 
   return (
     <Box minH="100vh" bg={"rgb(242, 101, 34)"}>
+      {/* Sidebar for desktop view */}
       <Box display={{ base: "none", md: "block" }}>
         <SidebarContent onClose={onClose} teacherId={teacherId} />
       </Box>
+      {/* Drawer for mobile view */}
       <Drawer
         isOpen={isOpen}
         placement="left"
@@ -32,6 +36,7 @@ export default function DLayout() {
           <SidebarContent onClose={onClose} teacherId={teacherId} />
         </DrawerContent>
       </Drawer>
+      {/* Main content area */}
       <Box ml={{ base: 0, md: 60 }} p="4" bg={"gray.100"} h={"100vh"}>
         <MobileNav onOpen={onOpen} />
         <Outlet />

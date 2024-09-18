@@ -18,42 +18,39 @@ import AttendanceRoom from "../components/pages/StudentPage/AttendanceRoom";
 import RoomAttHistory from "../components/pages/RoomHistory";
 import RoomList from "../components/pages/RoomList";
 
-// Function to check if the student is logged in based on codeVerifier
 const isStudentLoggedIn = () => {
-  // Retrieve the LIFF login temporary data from localStorage
   const liffLoginTmp = localStorage.getItem(
     "LIFF_STORE:2006252489-XlDxGl4V:loginTmp"
   );
 
-  if (!liffLoginTmp) return false; // Return false if login data is not available
+  if (!liffLoginTmp) return false; 
 
   try {
-    const loginData = JSON.parse(liffLoginTmp); // Parse the login data
-    const codeVerifier = loginData?.codeVerifier; // Safely extract codeVerifier
+    const loginData = JSON.parse(liffLoginTmp);
+    const codeVerifier = loginData?.codeVerifier;
 
-    // Check if the codeVerifier exists and is valid
-    return !!codeVerifier; // Return true if codeVerifier exists; otherwise false
+    return !!codeVerifier; 
   } catch (error) {
     console.error("Failed to parse LIFF login temporary data:", error);
-    return false; // Return false in case of any parsing errors
+    return false; 
   }
 };
 
-// Private route for teachers
+
 const PrivateRoute = ({ isSigned }: { isSigned: boolean }) => {
   return isSigned ? <DLayout /> : <Navigate to="/login" />;
 };
 
-// Private route for students
+
 const PrivateRouteForStudent = () => {
-  const isSignedForStudent = isStudentLoggedIn(); // Check if student is logged in
+  const isSignedForStudent = isStudentLoggedIn(); 
 
   return isSignedForStudent ? (
     <>
-      <Outlet /> {/* Render child components if signed in */}
+      <Outlet />
     </>
   ) : (
-    <Navigate to="/student/login" replace /> // Redirect to student login page if not signed in
+    <Navigate to="/student/login" replace /> 
   );
 };
 

@@ -1,15 +1,19 @@
-
-
 export interface LoginResponseInterface {
-  token: Token;
+  token: TokenResponse; 
+  user: UserResponse; 
 }
 
-export interface Token {
+export interface TokenResponse {
+  access_token: string; 
+  token_type: string; 
+  expires_in: number; 
+}
+
+export interface UserResponse {
   email: string;
   firstname: string;
   teacher_id: string;
   lastname: string;
   phone_number: string;
   profile_pic: string;
-  token: string;
 }

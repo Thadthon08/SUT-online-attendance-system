@@ -13,27 +13,34 @@ import { Link } from "react-router-dom";
 import { getSubjectsByTid } from "../../services/api";
 import { Subject } from "../../interface/ITeacherSubject";
 import CarouselComponent from "../layout/Carousel";
+import { useAuth } from "../../contexts/AuthContext"; // Import the useAuth hook
 
 export default function Dashboard() {
+  const { user } = useAuth(); // Use useAuth to get user data
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const teacherId = localStorage.getItem("teacher_id")?.replace(/"/g, "") || "";
+  const teacherId = user?.teacher_id || ""; // Get teacherId from user context
 
   useEffect(() => {
     const fetchSubjects = async () => {
       try {
+        setLoading(true); // Set loading state to true before fetching data
         const data = await getSubjectsByTid({ teacher_id: teacherId });
         setSubjects(data);
         console.log(data);
       } catch (error: any) {
-        setError(error.message);
+        setError(
+          error.message || "Failed to fetch subjects. Please try again."
+        );
       } finally {
-        setLoading(false);
+        setLoading(false); // Set loading state to false after fetching data
       }
     };
 
-    fetchSubjects();
+    if (teacherId) {
+      fetchSubjects();
+    }
   }, [teacherId]);
 
   return (
@@ -45,7 +52,7 @@ export default function Dashboard() {
           className="no-copy-no-select"
           mt={6}
         >
-          {loading || error ? (
+          {loading ? (
             <Grid
               templateColumns={{
                 base: "1fr",
@@ -60,6 +67,10 @@ export default function Dashboard() {
                 </GridItem>
               ))}
             </Grid>
+          ) : error ? (
+            <Text color="red.500" textAlign="center">
+              {error}
+            </Text>
           ) : (
             <Grid
               templateColumns={{

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { GetStudentsByRoomId } from "../../services/api";
 import { Student } from "../../interface/IAttendanceRoomresponse";
-import { Spin, Alert, Button, Table } from 'antd';
-import { writeFile, utils } from 'xlsx';
-import './RoomAttHistory.css';
+import { Spin, Alert, Button, Table } from "antd";
+import { writeFile, utils } from "xlsx";
+import "./RoomAttHistory.css";
 
 const RoomAttHistory: React.FC = () => {
-  const [roomId, setRoomId] = useState<string>("110");
+  const [roomId] = useState<string>("110");
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -30,13 +30,15 @@ const RoomAttHistory: React.FC = () => {
   }, [roomId]);
 
   const handleExport = () => {
-    const worksheet = utils.json_to_sheet(students.map(student => ({
-      "Student ID": student.student_id,
-      "First Name": student.first_name,
-      "Last Name": student.last_name,
-      "Latitude": student.location_lat,
-      "Longitude": student.location_lon,
-    })));
+    const worksheet = utils.json_to_sheet(
+      students.map((student) => ({
+        "Student ID": student.student_id,
+        "First Name": student.first_name,
+        "Last Name": student.last_name,
+        Latitude: student.location_lat,
+        Longitude: student.location_lon,
+      }))
+    );
     const workbook = utils.book_new();
     utils.book_append_sheet(workbook, worksheet, "Students");
 
@@ -64,7 +66,12 @@ const RoomAttHistory: React.FC = () => {
       ) : error ? (
         <Alert message="Error" description={error} type="error" showIcon />
       ) : (
-        <Table columns={columns} dataSource={students} rowKey="student_id" className="attendance-table" />
+        <Table
+          columns={columns}
+          dataSource={students}
+          rowKey="student_id"
+          className="attendance-table"
+        />
       )}
     </div>
   );

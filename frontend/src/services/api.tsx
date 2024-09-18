@@ -4,8 +4,25 @@ import { LoginInterface } from "../interface/ILogin";
 import { LoginResponseInterface } from "../interface/ILoginRespon";
 import { AttendanceRoomResponse } from "../interface/IAttendanceRoomresponse";
 
+<<<<<<< HEAD
 // const apiURL = "http://localhost:8080";
 const apiURL = "https://sut-online-attendance-system.onrender.com";
+=======
+const apiURL = "https://sut-online-attendance-system.onrender.com";
+// const apiURL = "http://localhost:8080";
+
+function getAuthToken() {
+  return sessionStorage.getItem("access_token") || "";
+}
+
+function getAuthHeaders() {
+  const token = getAuthToken();
+  return {
+    "Content-Type": "application/json",
+    Authorization: token,
+  };
+}
+>>>>>>> 0265a45e6c42001e32aad2fd7064939232b66d55
 
 async function SignIn(login: LoginInterface): Promise<LoginResponseInterface> {
   const response = await fetch(`${apiURL}/login`, {
@@ -16,87 +33,80 @@ async function SignIn(login: LoginInterface): Promise<LoginResponseInterface> {
     body: JSON.stringify(login),
   });
 
-  const data = await response.json();
+  if (!response.ok) {
+    throw new Error("Failed to login.");
+  }
 
-  return data;
+  return response.json();
 }
 
 async function getSubjectsByTid({ teacher_id }: { teacher_id: string }) {
   try {
     const response = await fetch(`${apiURL}/teachers/${teacher_id}/subjects`, {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: getAuthHeaders(),
     });
 
     if (!response.ok) {
       throw new Error(`Error: ${response.statusText}`);
     }
 
-    const data = await response.json();
-
-    return data;
+    return response.json();
   } catch (error) {
     console.error("Failed to fetch subjects", error);
     throw error;
   }
 }
+
 async function getSubjectsByid({ subject_id }: { subject_id: string }) {
   try {
     const response = await fetch(`${apiURL}/subjects/${subject_id}`, {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: getAuthHeaders(),
     });
 
     if (!response.ok) {
       throw new Error(`Error: ${response.statusText}`);
     }
 
-    const data = await response.json();
-
-    return data;
+    return response.json();
   } catch (error) {
-    console.error("Failed to fetch subjects", error);
+    console.error("Failed to fetch subject details", error);
     throw error;
   }
 }
-async function CreateAttendance(data: AttendanceRoom) {
-  const requestOptions = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  };
 
+// Create Attendance Room
+async function CreateAttendance(data: AttendanceRoom) {
   try {
-    const response = await fetch(`${apiURL}/attendance`, requestOptions);
+    const response = await fetch(`${apiURL}/attendance`, {
+      method: "POST",
+      headers: getAuthHeaders(),
+      body: JSON.stringify(data),
+    });
+
     const res = await response.json();
 
-    if (res.status === "success") {
+    if (response.ok) {
       return { status: true, message: res.message, data: res.data };
     } else {
       return { status: false, message: res.error };
     }
   } catch (error: any) {
+    console.error("Error creating attendance:", error);
     return { status: false, message: error.message || "An error occurred" };
   }
 }
-async function CreateAttendanceByStudent(data: AttendanceBystudent) {
-  const requestOptions = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  };
 
+// Create Attendance for a Student
+async function CreateAttendanceByStudent(data: AttendanceBystudent) {
   try {
-    const response = await fetch(
-      `${apiURL}/attendance/student`,
-      requestOptions
-    );
+    const response = await fetch(`${apiURL}/attendance/student`, {
+      method: "POST",
+      headers: getAuthHeaders(),
+      body: JSON.stringify(data),
+    });
+
     const res = await response.json();
 
     if (response.ok) {
@@ -105,21 +115,75 @@ async function CreateAttendanceByStudent(data: AttendanceBystudent) {
       return { status: false, message: res.message };
     }
   } catch (error) {
-    console.error("Fetch error:", error);
+    console.error("Error creating attendance for student:", error);
     return { status: false, message: "An unexpected error occurred" };
   }
 }
-//GetAttendanceRoom
-async function GetAttendanceRoom(roomId: string) {
-  const requestOptions = {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-  };
 
+// Get Attendance Room by ID
+async function GetAttendanceRoom(roomId: string) {
+  try {
+    const response = await fetch(`${apiURL}/attendance/room/${roomId}`, {
+      method: "GET",
+      headers: getAuthHeaders(),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return { status: true, data };
+    } else {
+      const error = await response.json();
+      return {
+        status: false,
+        message: error.message || "Failed to fetch data",
+      };
+    }
+  } catch (error) {
+    console.error("Error fetching attendance room:", error);
+    return { status: false, message: "An unexpected error occurred" };
+  }
+}
+
+// Get Students by Attendance Room ID
+async function GetStudentsByRoomId(roomId: string): Promise<{
+  status: boolean;
+  data?: AttendanceRoomResponse;
+  message?: string;
+}> {
   try {
     const response = await fetch(
-      `${apiURL}/attendance/room/${roomId}`,
-      requestOptions
+      `${apiURL}/attendance_rooms/${roomId}/students`,
+      {
+        method: "GET",
+        headers: getAuthHeaders(),
+      }
+    );
+
+    if (response.ok) {
+      const data: AttendanceRoomResponse = await response.json();
+      return { status: true, data };
+    } else {
+      const error = await response.json();
+      return {
+        status: false,
+        message: error.message || "Failed to fetch data",
+      };
+    }
+  } catch (error) {
+    console.error("Error fetching students by room ID:", error);
+    return { status: false, message: "An unexpected error occurred" };
+  }
+}
+
+// Get Attendance Room by Subject ID
+async function GetAttendanceRoomBySubjectID(subjectId: string) {
+  try {
+    const response = await fetch(
+      `${apiURL}/attendance/room/subject/${subjectId}`,
+      {
+        method: "GET",
+        headers: getAuthHeaders(),
+      }
     );
 
     if (response.ok) {
@@ -133,6 +197,7 @@ async function GetAttendanceRoom(roomId: string) {
       };
     }
   } catch (error) {
+<<<<<<< HEAD
     console.error("Fetch error:", error);
     return { status: false, message: "An unexpected error occurred" };
   }
@@ -179,6 +244,9 @@ async function GetAttendanceRoomBySubjectID(subject_id: string) {
     }
   } catch (error) {
     console.error("Fetch error:", error);
+=======
+    console.error("Error fetching attendance room by subject ID:", error);
+>>>>>>> 0265a45e6c42001e32aad2fd7064939232b66d55
     return { status: false, message: "An unexpected error occurred" };
   }
 }

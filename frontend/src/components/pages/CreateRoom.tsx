@@ -1,4 +1,4 @@
-import { Layout, Typography  } from "antd";
+import { Layout, Typography } from "antd";
 import CreateRoomForm from "../layout/CreateRoomForm";
 
 const { Header, Content } = Layout;
@@ -7,7 +7,6 @@ const { Title } = Typography;
 export default function CreateRoom() {
   return (
     <Layout style={{ minHeight: "100vh", backgroundColor: "#f0f2f5" }}>
-      {/* Header Section */}
       <Header
         style={{
           background: "#000000",

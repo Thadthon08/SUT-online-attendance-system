@@ -21,20 +21,7 @@ interface MobileProps extends FlexProps {
 }
 
 const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
-  const { signOut } = useAuth();
-
-  function removeQuotes(str: any) {
-    return str ? str.replace(/"/g, "") : "";
-  }
-
-  const user = {
-    id: removeQuotes(localStorage.getItem("teacher_id")),
-    firstname: removeQuotes(localStorage.getItem("firstname")),
-    lastname: removeQuotes(localStorage.getItem("lastname")),
-    email: removeQuotes(localStorage.getItem("email")),
-    phone_number: removeQuotes(localStorage.getItem("phone_number")),
-    profile_pic: removeQuotes(localStorage.getItem("profile_pic")),
-  };
+  const { user, signOut } = useAuth(); // Use useAuth hook to get user data and signOut function
 
   return (
     <Flex
@@ -76,7 +63,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                 <Avatar
                   size={"sm"}
                   src={
-                    user.profile_pic
+                    user?.profile_pic
                       ? user.profile_pic
                       : "https://www.gravatar.com/avatar/000?d=mp"
                   }
@@ -88,9 +75,11 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                   ml="2"
                 >
                   <Text fontSize="sm" color={"white"}>
-                    {user.firstname} {user.lastname}
+                    {user?.firstname} {user?.lastname}
                   </Text>
-                  <Text fontSize="xs">{user.email}</Text>
+                  <Text fontSize="xs" color={"white"}>
+                    {user?.email}
+                  </Text>
                 </VStack>
                 <Box display={{ base: "none", md: "flex" }}>
                   <FiChevronDown />

@@ -21,6 +21,7 @@
     "framer-motion": "^11.3.19",
     "google-map-react": "^2.2.1",
     "html-to-image": "^1.11.11",
+    "jwt-decode": "^4.0.0",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.438.0",
     "moment": "^2.30.1",
