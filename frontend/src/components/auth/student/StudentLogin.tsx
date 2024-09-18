@@ -66,8 +66,13 @@ const StudentLogin: React.FC = () => {
         const profile = await liff.getProfile();
         console.log(profile);
         const accessToken = liff.getAccessToken();
+
+        const { displayName, userId } = profile;
+
         if (accessToken) {
           localStorage.setItem("line_access_token", accessToken);
+          localStorage.setItem("line_display_name", displayName);
+          localStorage.setItem("line_user_id", userId);
           setProfile(profile);
         }
       } catch (error) {
