@@ -56,29 +56,38 @@ const StudentLogin: React.FC = () => {
         );
       }
     } else {
-      fetchUserProfile(); // ถ้าล็อกอินแล้ว ให้ดึงข้อมูลโปรไฟล์ผู้ใช้
+      fetchUserProfile();
     }
   };
 
   const fetchUserProfile = async () => {
     if (liff.isLoggedIn()) {
+      console.log("User is logged in.");
       try {
         const profile = await liff.getProfile();
-        console.log(profile);
-        const accessToken = liff.getAccessToken();
+        console.log("Profile fetched:", profile); // ตรวจสอบโปรไฟล์ที่ดึงมาได้
 
-        const { displayName, userId } = profile;
+        const accessToken = liff.getAccessToken();
 
         if (accessToken) {
           localStorage.setItem("line_access_token", accessToken);
-          localStorage.setItem("line_display_name", displayName);
-          localStorage.setItem("line_user_id", userId);
-          setProfile(profile);
         }
+
+        // เก็บชื่อและไอดีใน localStorage
+        localStorage.setItem("line_display_name", profile.displayName);
+        localStorage.setItem("line_user_id", profile.userId);
+
+        // ตรวจสอบว่าข้อมูลถูกบันทึกหรือไม่
+        console.log("Display Name:", localStorage.getItem("line_display_name"));
+        console.log("User ID:", localStorage.getItem("line_user_id"));
+
+        setProfile(profile); // แสดงข้อมูลโปรไฟล์หลังจากดึงสำเร็จ
       } catch (error) {
         console.error("Error fetching profile:", error);
         alert("Unable to fetch profile information. Please try again.");
       }
+    } else {
+      console.log("User is not logged in.");
     }
   };
 
