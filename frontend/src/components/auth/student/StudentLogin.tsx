@@ -6,7 +6,7 @@ import { GetAttendanceRoom } from "../../../services/api";
 
 const StudentLogin: React.FC = () => {
   const LIFF_ID = "2006252489-XlDxGl4V"; // LIFF ID ของคุณ
-  const [profile] = useState<any>(null);
+  const [profile, setProfile] = useState<any>(null);
   const navigate = useNavigate();
   const { subject_id, room_id } = useParams<{
     subject_id: string;
@@ -16,7 +16,6 @@ const StudentLogin: React.FC = () => {
   useEffect(() => {
     const initialize = async () => {
       if (subject_id && room_id) {
-        // เรียกใช้ GetAttendanceRoom เพื่อตรวจสอบว่า room_id มีอยู่ในฐานข้อมูลหรือไม่
         const result = await GetAttendanceRoom(room_id);
 
         if (!result.status) {
@@ -29,35 +28,28 @@ const StudentLogin: React.FC = () => {
       }
 
       // Initialize LIFF SDK
-      liff
-        .init({ liffId: LIFF_ID })
-        .then(() => {
-          console.log("LIFF initialized successfully");
-          if (liff.isLoggedIn()) {
-            const accessToken = liff.getAccessToken();
-            if (accessToken) {
-              localStorage.setItem("line_access_token", accessToken);
-              liff
-                .getProfile()
-                .then((profile) => {
-                  localStorage.setItem("line_user_id", profile.userId);
-                  localStorage.setItem(
-                    "line_display_name",
-                    profile.displayName
-                  );
-                })
-                .catch((err) => {
-                  console.error("Failed to get profile", err);
-                });
-            }
+      try {
+        await liff.init({ liffId: LIFF_ID });
+        console.log("LIFF initialized successfully");
+
+        if (liff.isLoggedIn()) {
+          const accessToken = liff.getAccessToken();
+          if (accessToken) {
+            localStorage.setItem("line_access_token", accessToken);
+            const userProfile = await liff.getProfile();
+            setProfile(userProfile);
+            localStorage.setItem("line_user_id", userProfile.userId);
+            localStorage.setItem("line_display_name", userProfile.displayName);
           } else {
-            localStorage.setItem("line_access_token", "");
+            console.error("Access token is not available.");
           }
-        })
-        .catch((err) => {
-          console.error("LIFF Initialization failed", err);
-          alert("Failed to initialize LINE login. Please try again.");
-        });
+        } else {
+          liff.login();
+        }
+      } catch (err) {
+        console.error("LIFF Initialization failed", err);
+        alert("Failed to initialize LINE login. Please try again.");
+      }
     };
 
     initialize();
