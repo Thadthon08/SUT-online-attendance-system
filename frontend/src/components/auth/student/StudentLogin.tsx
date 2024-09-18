@@ -34,9 +34,16 @@ const StudentLogin: React.FC = () => {
         .then(() => {
           console.log("LIFF initialized successfully");
           if (liff.isLoggedIn()) {
-            fetchUserProfile(); // ถ้าล็อกอินอยู่แล้ว ให้เรียก fetchUserProfile
+            const accessToken = liff.getAccessToken();
+            if (accessToken) {
+              localStorage.setItem("line_access_token", accessToken);
+              const context = liff.getContext();
+              if (context && context.userId) {
+                localStorage.setItem("line_user_id", context.userId);
+              }
+            }
           } else {
-            handleLineLogin(); // ถ้ายังไม่ล็อกอิน ให้เรียก handleLineLogin
+            localStorage.setItem("line_access_token", "");
           }
         })
         .catch((err) => {
@@ -59,37 +66,7 @@ const StudentLogin: React.FC = () => {
         );
       }
     } else {
-      fetchUserProfile();
-    }
-  };
-
-  const fetchUserProfile = async () => {
-    if (liff.isLoggedIn()) {
-      console.log("User is logged in.");
-      try {
-        const profile = await liff.getProfile();
-        console.log("Profile fetched:", profile);
-
-        const accessToken = liff.getAccessToken();
-        if (accessToken) {
-          localStorage.setItem("line_access_token", accessToken);
-        }
-
-        // เก็บชื่อและไอดีใน localStorage
-        localStorage.setItem("line_display_name", profile.displayName);
-        localStorage.setItem("line_user_id", profile.userId);
-
-        // ตรวจสอบว่าข้อมูลถูกบันทึกหรือไม่
-        console.log("Display Name:", localStorage.getItem("line_display_name"));
-        console.log("User ID:", localStorage.getItem("line_user_id"));
-
-        setProfile(profile); // แสดงข้อมูลโปรไฟล์หลังจากดึงสำเร็จ
-      } catch (error) {
-        console.error("Error fetching profile:", error);
-        alert("Unable to fetch profile information. Please try again.");
-      }
-    } else {
-      console.log("User is not logged in.");
+      console.log("Already logged in with LINE");
     }
   };
 
