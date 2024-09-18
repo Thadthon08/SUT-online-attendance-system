@@ -11,7 +11,7 @@ import {
 } from "../../../utils/notifications";
 import AttendanceForm from "./AttendanceForm";
 import MapComponent from "./MapComponent";
-import "./AttendanceRoom.css";
+import "./attendanceRoom.css";
 
 const AttendanceRoom: React.FC = () => {
   const [subjectId, setSubjectId] = useState<string | null>(null);
