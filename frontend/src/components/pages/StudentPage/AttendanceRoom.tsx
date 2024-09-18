@@ -54,7 +54,7 @@ const AttendanceRoom: React.FC = () => {
 
     // ตรวจสอบสถานะการลงชื่อ
     if (attendanceChecked) {
-      navigate("/student/attendance-success"); // ถ้าลงชื่อแล้ว ให้ไปที่หน้า success
+      navigate("/student/checkin"); // ถ้าลงชื่อแล้ว ให้ไปที่หน้า success
     }
 
     // Get initial geolocation
@@ -151,7 +151,7 @@ const AttendanceRoom: React.FC = () => {
           `ระยะทางที่คุณอยู่คือ ${currentDistance.toFixed(2)} กม.`
         );
         localStorage.setItem("attendance_checked", "true"); // บันทึกสถานะการลงชื่อ
-        navigate("/student/attendance-success");
+        navigate("/student/checkin");
       }
     }
 
