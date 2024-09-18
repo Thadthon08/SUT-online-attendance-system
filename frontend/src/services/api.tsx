@@ -4,10 +4,7 @@ import { LoginInterface } from "../interface/ILogin";
 import { LoginResponseInterface } from "../interface/ILoginRespon";
 import { AttendanceRoomResponse } from "../interface/IAttendanceRoomresponse";
 
-<<<<<<< HEAD
 // const apiURL = "http://localhost:8080";
-const apiURL = "https://sut-online-attendance-system.onrender.com";
-=======
 const apiURL = "https://sut-online-attendance-system.onrender.com";
 // const apiURL = "http://localhost:8080";
 
@@ -22,7 +19,6 @@ function getAuthHeaders() {
     Authorization: token,
   };
 }
->>>>>>> 0265a45e6c42001e32aad2fd7064939232b66d55
 
 async function SignIn(login: LoginInterface): Promise<LoginResponseInterface> {
   const response = await fetch(`${apiURL}/login`, {
@@ -145,78 +141,36 @@ async function GetAttendanceRoom(roomId: string) {
 }
 
 // Get Students by Attendance Room ID
-async function GetStudentsByRoomId(roomId: string): Promise<{
+
+// Get Attendance Room by Subject ID
+
+async function GetStudentsByRoomId(
+  roomId: string
+): Promise<{
   status: boolean;
   data?: AttendanceRoomResponse;
   message?: string;
 }> {
-  try {
-    const response = await fetch(
-      `${apiURL}/attendance_rooms/${roomId}/students`,
-      {
-        method: "GET",
-        headers: getAuthHeaders(),
-      }
-    );
-
-    if (response.ok) {
-      const data: AttendanceRoomResponse = await response.json();
-      return { status: true, data };
-    } else {
-      const error = await response.json();
-      return {
-        status: false,
-        message: error.message || "Failed to fetch data",
-      };
-    }
-  } catch (error) {
-    console.error("Error fetching students by room ID:", error);
-    return { status: false, message: "An unexpected error occurred" };
-  }
-}
-
-// Get Attendance Room by Subject ID
-async function GetAttendanceRoomBySubjectID(subjectId: string) {
-  try {
-    const response = await fetch(
-      `${apiURL}/attendance/room/subject/${subjectId}`,
-      {
-        method: "GET",
-        headers: getAuthHeaders(),
-      }
-    );
-
-    if (response.ok) {
-      const data = await response.json();
-      return { status: true, data };
-    } else {
-      const error = await response.json();
-      return {
-        status: false,
-        message: error.message || "Failed to fetch data",
-      };
-    }
-  } catch (error) {
-<<<<<<< HEAD
-    console.error("Fetch error:", error);
-    return { status: false, message: "An unexpected error occurred" };
-  }
-}
-async function GetStudentsByRoomId(roomId: string): Promise<{ status: boolean; data?: AttendanceRoomResponse; message?: string }> {
   const requestOptions = {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   };
 
   try {
-    const response = await fetch(`${apiURL}/attendance_rooms/${roomId}/students`, requestOptions);
+    const response = await fetch(
+      `${apiURL}/attendance_rooms/${roomId}/students`,
+      requestOptions
+    );
 
     if (response.ok) {
       const data: AttendanceRoomResponse = await response.json();
       return { status: true, data };
     } else {
       const error = await response.json();
-      return { status: false, message: error.message || "Failed to fetch data" };
+      return {
+        status: false,
+        message: error.message || "Failed to fetch data",
+      };
     }
   } catch (error) {
     console.error("Fetch error:", error);
@@ -230,7 +184,10 @@ async function GetAttendanceRoomBySubjectID(subject_id: string) {
   };
 
   try {
-    const response = await fetch(`${apiURL}/attendance/room/subject/${subject_id}`, requestOptions);
+    const response = await fetch(
+      `${apiURL}/attendance/room/subject/${subject_id}`,
+      requestOptions
+    );
 
     if (response.ok) {
       const data = await response.json();
@@ -244,9 +201,6 @@ async function GetAttendanceRoomBySubjectID(subject_id: string) {
     }
   } catch (error) {
     console.error("Fetch error:", error);
-=======
-    console.error("Error fetching attendance room by subject ID:", error);
->>>>>>> 0265a45e6c42001e32aad2fd7064939232b66d55
     return { status: false, message: "An unexpected error occurred" };
   }
 }
