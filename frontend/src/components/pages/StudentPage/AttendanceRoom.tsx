@@ -21,7 +21,7 @@ const AttendanceRoom: React.FC = () => {
   const [roomId, setRoomId] = useState<string | null>(null);
   const [attendanceRoom, setAttendanceRoom] = useState<Attendance | null>(null);
   const [distance, setDistance] = useState<number | null>(null);
-  const [profile, setProfile] = useState<any>(null);
+  const [ setProfile] = useState<any>(null);
 
   // Form state
   const [studentId, setStudentId] = useState("");
