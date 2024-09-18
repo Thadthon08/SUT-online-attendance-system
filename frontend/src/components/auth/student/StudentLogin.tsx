@@ -26,35 +26,6 @@ const StudentLogin: React.FC = () => {
         localStorage.setItem("subject_id", subject_id);
         localStorage.setItem("room_id", room_id);
       }
-
-      // Initialize LIFF SDK
-      try {
-        await liff.init({ liffId: LIFF_ID });
-        console.log("LIFF initialized successfully");
-
-        if (liff.isLoggedIn()) {
-          const accessToken = liff.getAccessToken();
-          if (accessToken) {
-            localStorage.setItem("line_access_token", accessToken);
-            const userProfile = await liff.getProfile();
-            setProfile(userProfile);
-
-            // ดึง Line ID
-            const lineId = userProfile.userId;
-            console.log("LINE ID:", lineId);
-
-            localStorage.setItem("line_user_id", userProfile.userId);
-            localStorage.setItem("line_display_name", userProfile.displayName);
-          } else {
-            console.error("Access token is not available.");
-          }
-        } else {
-          liff.login();
-        }
-      } catch (err) {
-        console.error("LIFF Initialization failed", err);
-        alert("Failed to initialize LINE login. Please try again.");
-      }
     };
 
     initialize();

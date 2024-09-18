@@ -13,12 +13,15 @@ import {
 import AttendanceForm from "./AttendanceForm";
 import MapComponent from "./MapComponent";
 import "./attendanceRoom.css";
+import liff from "@line/liff"; // Import LIFF SDK
 
 const AttendanceRoom: React.FC = () => {
+  const LIFF_ID = "2006252489-XlDxGl4V"; // Replace with your LIFF ID
   const [subjectId, setSubjectId] = useState<string | null>(null);
   const [roomId, setRoomId] = useState<string | null>(null);
   const [attendanceRoom, setAttendanceRoom] = useState<Attendance | null>(null);
   const [distance, setDistance] = useState<number | null>(null);
+  const [profile, setProfile] = useState<any>(null);
 
   // Form state
   const [studentId, setStudentId] = useState("");
@@ -45,21 +48,48 @@ const AttendanceRoom: React.FC = () => {
   };
 
   useEffect(() => {
+    const initializeLiff = async () => {
+      try {
+        await liff.init({ liffId: LIFF_ID });
+        console.log("LIFF initialized successfully");
+
+        if (liff.isLoggedIn()) {
+          const accessToken = liff.getAccessToken();
+          if (accessToken) {
+            localStorage.setItem("line_access_token", accessToken);
+            const userProfile = await liff.getProfile();
+            setProfile(userProfile);
+            console.log("LINE ID:", userProfile.userId);
+            localStorage.setItem("line_user_id", userProfile.userId);
+            localStorage.setItem("line_display_name", userProfile.displayName);
+          } else {
+            console.error("Access token is not available.");
+          }
+        } else {
+          liff.login();
+        }
+      } catch (err) {
+        console.error("LIFF Initialization failed", err);
+        alert("Failed to initialize LINE login. Please try again.");
+      }
+    };
+
     const storedSubjectId = localStorage.getItem("subject_id");
     const storedRoomId = localStorage.getItem("room_id");
-    
+
     setSubjectId(storedSubjectId);
     setRoomId(storedRoomId);
 
-    // ตรวจสอบสถานะการลงชื่อ
-    const attendanceChecked = localStorage.getItem(`attendance_checked_${storedRoomId}`);
+    const attendanceChecked = localStorage.getItem(
+      `attendance_checked_${storedRoomId}`
+    );
     if (attendanceChecked) {
-      navigate("/student/checkin"); // ถ้าลงชื่อแล้ว ให้ไปที่หน้า success
+      navigate("/student/checkin");
     }
 
-    // Get initial geolocation
     resetPosition();
-  }, []);
+    initializeLiff();
+  }, [navigate]);
 
   useEffect(() => {
     const fetchAttendanceRoom = async () => {
@@ -74,15 +104,8 @@ const AttendanceRoom: React.FC = () => {
       }
     };
 
-    fetchAttendanceRoom();
-  }, [roomId]);
-
-  useEffect(() => {
-    // เช็คว่าถ้า roomId เปลี่ยน จะต้องล้างสถานะการลงชื่อ
-    const currentRoomId = localStorage.getItem("room_id");
-    if (roomId !== currentRoomId) {
-      localStorage.removeItem(`attendance_checked_${currentRoomId}`);
-      localStorage.setItem("room_id", roomId || ""); // Update roomId in localStorage
+    if (roomId) {
+      fetchAttendanceRoom();
     }
   }, [roomId]);
 
@@ -94,7 +117,6 @@ const AttendanceRoom: React.FC = () => {
         attendanceRoom.location_lat,
         attendanceRoom.location_lon
       );
-
       setDistance(currentDistance);
       console.log("Calculated Distance: ", currentDistance);
     }
@@ -106,7 +128,7 @@ const AttendanceRoom: React.FC = () => {
     lat2: number,
     lon2: number
   ) => {
-    const R = 6371; // Radius of the earth in km
+    const R = 6371;
     const dLat = (lat2 - lat1) * (Math.PI / 180);
     const dLon = (lon2 - lon1) * (Math.PI / 180);
     const a =
@@ -116,49 +138,17 @@ const AttendanceRoom: React.FC = () => {
         Math.sin(dLon / 2) *
         Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = R * c; // Distance in km
-    return distance;
+    return R * c;
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const attendanceChecked = localStorage.getItem(`attendance_checked_${roomId}`);
-    if (attendanceChecked) {
-      showErrorNotification("Error", "คุณได้ลงชื่อไปแล้ว");
-      return;
-    }
-
-    if (attendanceRoom && locationLat && locationLon) {
-      const currentDistance = calculateDistance(
-        locationLat,
-        locationLon,
-        attendanceRoom.location_lat,
-        attendanceRoom.location_lon
-      );
-
-      setDistance(currentDistance);
-
-      if (currentDistance > 1) {
-        showErrorNotification(
-          "ระยะเกินกำหนด",
-          `ระยะทางที่คุณอยู่คือ ${currentDistance.toFixed(2)} กม.`
-        );
-        return;
-      } else {
-        showSuccessNotification(
-          "ลงชื่อสำเร็จ",
-          `ระยะทางที่คุณอยู่คือ ${currentDistance.toFixed(2)} กม.`
-        );
-        localStorage.setItem(`attendance_checked_${roomId}`, "true"); // บันทึกสถานะการลงชื่อ
-        navigate("/student/checkin");
-      }
-    }
-
     if (!roomId || !subjectId) {
       showErrorNotification("Error", "กรุณาสแกน QR Code ใหม่อีกครั้ง");
       return;
     }
+
     if (!locationLat || !locationLon) {
       showErrorNotification(
         "ไม่สามารถระบุตำแหน่งของคุณได้",
@@ -167,7 +157,16 @@ const AttendanceRoom: React.FC = () => {
       return;
     }
 
-    const data: any = {
+    const currentDistance = distance || 0;
+    if (currentDistance > 1) {
+      showErrorNotification(
+        "ระยะเกินกำหนด",
+        `ระยะทางที่คุณอยู่คือ ${currentDistance.toFixed(2)} กม.`
+      );
+      return;
+    }
+
+    const data = {
       student_id: studentId,
       first_name: firstname,
       last_name: lastname,
@@ -179,7 +178,12 @@ const AttendanceRoom: React.FC = () => {
     try {
       const result = await CreateAttendanceByStudent(data);
       if (result.status) {
-        console.log("Attendance created successfully:", result.message);
+        showSuccessNotification(
+          "ลงชื่อสำเร็จ",
+          `ระยะทางที่คุณอยู่คือ ${currentDistance.toFixed(2)} กม.`
+        );
+        localStorage.setItem(`attendance_checked_${roomId}`, "true");
+        navigate("/student/checkin");
       } else {
         console.error("Error creating attendance:", result.message);
       }
@@ -195,11 +199,10 @@ const AttendanceRoom: React.FC = () => {
           เช็คชื่อเข้าห้องเรียน
         </h1>
         {subjectId && roomId ? (
-          <div>
+          <>
             <p className="text-md text-center">
               <strong>รหัสวิชา:</strong> {subjectId}
             </p>
-
             {distance !== null && (
               <p className="text-sm text-center">
                 <strong>Distance to Room:</strong>{" "}
@@ -225,7 +228,7 @@ const AttendanceRoom: React.FC = () => {
                 />
               </Flex>
             )}
-          </div>
+          </>
         ) : (
           <p className="text-lg text-center text-red-500 text-sm">
             กรุณาสแกน QR Code ใหม่อีกครั้ง
