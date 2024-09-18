@@ -54,7 +54,7 @@ const AttendanceRoom: React.FC = () => {
 
     // ตรวจสอบสถานะการลงชื่อ
     if (attendanceChecked) {
-      navigate("/student/checkin"); // ถ้าลงชื่อแล้ว ให้ไปที่หน้า success
+      navigate("/student/attendance-success"); // ถ้าลงชื่อแล้ว ให้ไปที่หน้า success
     }
 
     // Get initial geolocation
@@ -75,6 +75,14 @@ const AttendanceRoom: React.FC = () => {
     };
 
     fetchAttendanceRoom();
+  }, [roomId]);
+
+  useEffect(() => {
+    // เช็คว่าถ้า roomId เปลี่ยน จะต้องล้างสถานะการลงชื่อ
+    const currentRoomId = localStorage.getItem("room_id");
+    if (roomId !== currentRoomId) {
+      localStorage.removeItem("attendance_checked");
+    }
   }, [roomId]);
 
   useEffect(() => {
@@ -143,7 +151,7 @@ const AttendanceRoom: React.FC = () => {
           `ระยะทางที่คุณอยู่คือ ${currentDistance.toFixed(2)} กม.`
         );
         localStorage.setItem("attendance_checked", "true"); // บันทึกสถานะการลงชื่อ
-        navigate("/student/checkin");
+        navigate("/student/attendance-success");
       }
     }
 
