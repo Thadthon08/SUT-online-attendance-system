@@ -37,10 +37,18 @@ const StudentLogin: React.FC = () => {
             const accessToken = liff.getAccessToken();
             if (accessToken) {
               localStorage.setItem("line_access_token", accessToken);
-              const context = liff.getContext();
-              if (context && context.userId) {
-                localStorage.setItem("line_user_id", context.userId);
-              }
+              liff
+                .getProfile()
+                .then((profile) => {
+                  localStorage.setItem("line_user_id", profile.userId);
+                  localStorage.setItem(
+                    "line_display_name",
+                    profile.displayName
+                  );
+                })
+                .catch((err) => {
+                  console.error("Failed to get profile", err);
+                });
             }
           } else {
             localStorage.setItem("line_access_token", "");
