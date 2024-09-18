@@ -5,8 +5,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { GetAttendanceRoom } from "../../../services/api";
 
 const StudentLogin: React.FC = () => {
-  const LIFF_ID = "2006252489-XlDxGl4V"; // LIFF ID ของคุณ
-  const [profile, setProfile] = useState<any>(null);
+  const [profile] = useState<any>(null);
   const navigate = useNavigate();
   const { subject_id, room_id } = useParams<{
     subject_id: string;
