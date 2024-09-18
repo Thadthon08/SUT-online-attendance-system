@@ -11,6 +11,7 @@ import {
 } from "../../../utils/notifications";
 import AttendanceForm from "./AttendanceForm";
 import MapComponent from "./MapComponent";
+import "./AttendanceRoom.css";
 
 const AttendanceRoom: React.FC = () => {
   const [subjectId, setSubjectId] = useState<string | null>(null);
@@ -151,7 +152,7 @@ const AttendanceRoom: React.FC = () => {
   };
 
   return (
-    <div className="p-8 bg-white shadow-lg rounded-lg max-w-md mx-auto mt-20">
+    <div className="p-8 bg-org shadow-lg rounded-lg max-w-md mx-auto mt-20">
       <h1 className="text-2xl font-bold text-center mb-4">Attendance Room</h1>
       {subjectId && roomId ? (
         <div>
