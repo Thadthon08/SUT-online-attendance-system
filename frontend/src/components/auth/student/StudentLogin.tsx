@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import liff from "@line/liff";
 import { ArrowRight } from "lucide-react";
-import { useParams, useNavigate } from "react-router-dom"; // เพิ่ม useNavigate สำหรับการเปลี่ยนหน้า
+import { useParams, useNavigate } from "react-router-dom";
 import { GetAttendanceRoom } from "../../../services/api";
 
 const StudentLogin: React.FC = () => {
   const LIFF_ID = "2006252489-XlDxGl4V"; // LIFF ID ของคุณ
   const [profile, setProfile] = useState<any>(null);
-  const navigate = useNavigate(); // ใช้ useNavigate เพื่อเปลี่ยนหน้า
+  const navigate = useNavigate();
   const { subject_id, room_id } = useParams<{
     subject_id: string;
     room_id: string;
@@ -20,12 +20,10 @@ const StudentLogin: React.FC = () => {
         const result = await GetAttendanceRoom(room_id);
 
         if (!result.status) {
-          // ถ้าไม่พบ room_id ให้เปลี่ยนไปที่หน้า PAGE NOT FOUND
           navigate("/page-not-found");
           return;
         }
 
-        // ถ้าพบ room_id และ subject_id เก็บค่าใน localStorage
         localStorage.setItem("subject_id", subject_id);
         localStorage.setItem("room_id", room_id);
       }
@@ -35,6 +33,11 @@ const StudentLogin: React.FC = () => {
         .init({ liffId: LIFF_ID })
         .then(() => {
           console.log("LIFF initialized successfully");
+          if (liff.isLoggedIn()) {
+            fetchUserProfile(); // ถ้าล็อกอินอยู่แล้ว ให้เรียก fetchUserProfile
+          } else {
+            handleLineLogin(); // ถ้ายังไม่ล็อกอิน ให้เรียก handleLineLogin
+          }
         })
         .catch((err) => {
           console.error("LIFF Initialization failed", err);
@@ -65,10 +68,9 @@ const StudentLogin: React.FC = () => {
       console.log("User is logged in.");
       try {
         const profile = await liff.getProfile();
-        console.log("Profile fetched:", profile); // ตรวจสอบโปรไฟล์ที่ดึงมาได้
+        console.log("Profile fetched:", profile);
 
         const accessToken = liff.getAccessToken();
-
         if (accessToken) {
           localStorage.setItem("line_access_token", accessToken);
         }
@@ -128,7 +130,7 @@ const StudentLogin: React.FC = () => {
             Log in to access your student dashboard
           </p>
           <button
-            onClick={handleLineLogin} // ฟังก์ชัน Login
+            onClick={handleLineLogin}
             className="group relative w-full py-3 px-5 bg-green-500 text-white rounded-full shadow-lg hover:bg-green-600 transition-all duration-300 ease-in-out overflow-hidden"
             aria-label="Login with LINE"
           >
