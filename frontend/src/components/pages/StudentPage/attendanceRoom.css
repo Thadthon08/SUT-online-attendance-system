@@ -1,3 +1,43 @@
+.container-custom {
+  background-image: url(//elearning2.sut.ac.th/pluginfile.php/1/theme_suranaree/night_mainbgimg/1722512027/night_bg_sut_lg.jpg) !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-position: center center !important;
+  transition: background-position 0.5s ease !important;
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.w-custom {
+  width: 300px !important;
+}
+.text-custom {
+  font-size: 11px;
+}
 .bg-org {
-  background-image: linear-gradient(-60deg, #ff5858 0%, #f09819 100%);
+  background-color: #ff6600 !important;
+}
+
+.bg-org:hover {
+  background-color: #f56512 !important;
+}
+
+@media (max-width: 1200px) {
+  body {
+    background-position: left center !important;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    background-position: center left 20% !important;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    background-position: center left 20% !important;
+  }
 }

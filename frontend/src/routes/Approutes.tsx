@@ -23,34 +23,32 @@ const isStudentLoggedIn = () => {
     "LIFF_STORE:2006252489-XlDxGl4V:loginTmp"
   );
 
-  if (!liffLoginTmp) return false; 
+  if (!liffLoginTmp) return false;
 
   try {
     const loginData = JSON.parse(liffLoginTmp);
     const codeVerifier = loginData?.codeVerifier;
 
-    return !!codeVerifier; 
+    return !!codeVerifier;
   } catch (error) {
     console.error("Failed to parse LIFF login temporary data:", error);
-    return false; 
+    return false;
   }
 };
-
 
 const PrivateRoute = ({ isSigned }: { isSigned: boolean }) => {
   return isSigned ? <DLayout /> : <Navigate to="/login" />;
 };
 
-
 const PrivateRouteForStudent = () => {
-  const isSignedForStudent = isStudentLoggedIn(); 
+  const isSignedForStudent = isStudentLoggedIn();
 
   return isSignedForStudent ? (
     <>
       <Outlet />
     </>
   ) : (
-    <Navigate to="/student/login" replace /> 
+    <Navigate to="/student/login" replace />
   );
 };
 
@@ -72,14 +70,18 @@ export default function AppRoutes() {
           <Route path="/create-room/:subject_id" element={<CreateRoom />} />
           <Route path="/attendance" element={<ScanQRForAttendance />} />
           <Route path="/room-history/:room_id" element={<RoomAttHistory />} />
-          <Route path="/attendance/room/subject/:subject_id" element={<RoomList />} />
-          
+          <Route
+            path="/attendance/room/subject/:subject_id"
+            element={<RoomList />}
+          />
         </Route>
 
         {/* Routes for students */}
         <Route element={<PrivateRouteForStudent />}>
           <Route path="/student/login/callback" element={<AttendanceRoom />} />
           <Route path="/student/line" element={<AttendanceRoom />} />
+          <Route path="/test" element={<AttendanceRoom />} />
+          <Route path="/student/checkin" element={<AttendanceRoom />} />
         </Route>
 
         {/* Public routes */}
@@ -90,7 +92,6 @@ export default function AppRoutes() {
             path="/attendance/student/:subject_id/:room_id"
             element={<StudentLogin />}
           />
-          {/* Add other public routes here */}
         </Route>
 
         {/* Route for handling 404 */}

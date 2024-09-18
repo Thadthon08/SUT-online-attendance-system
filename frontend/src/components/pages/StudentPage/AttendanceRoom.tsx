@@ -1,5 +1,6 @@
-// src/pages/AttendanceRoom.tsx
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Alert, Flex, Spin } from "antd";
 import { AttendanceRoom as Attendance } from "../../../interface/IAttendanceRoom";
 import {
   CreateAttendanceByStudent,
@@ -25,6 +26,7 @@ const AttendanceRoom: React.FC = () => {
   const [lastname, setLastname] = useState("");
   const [locationLat, setLocationLat] = useState<number>();
   const [locationLon, setLocationLon] = useState<number>();
+  const navigate = useNavigate();
 
   const resetPosition = () => {
     if (navigator.geolocation) {
@@ -127,7 +129,20 @@ const AttendanceRoom: React.FC = () => {
           "ลงชื่อสำเร็จ",
           `ระยะทางที่คุณอยู่คือ ${currentDistance.toFixed(2)} กม.`
         );
+        navigate("/student/checkin");
       }
+    }
+
+    if (!roomId || !subjectId) {
+      showErrorNotification("Error", "กรุณาสแกน QR Code ใหม่อีกครั้ง");
+      return;
+    }
+    if (!locationLat || !locationLon) {
+      showErrorNotification(
+        "ไม่สามารถระบุตำแหน่งของคุณได้",
+        "กรุณาอนุญาตให้เข้าถึงตำแหน่งของคุณ"
+      );
+      return;
     }
 
     const data: any = {
@@ -152,44 +167,58 @@ const AttendanceRoom: React.FC = () => {
   };
 
   return (
-    <div className="p-8 bg-org shadow-lg rounded-lg max-w-md mx-auto mt-20">
-      <h1 className="text-2xl font-bold text-center mb-4">Attendance Room</h1>
-      {subjectId && roomId ? (
-        <div>
-          <p className="text-lg text-center">
-            <strong>Subject ID:</strong> {subjectId}
-          </p>
-          <p className="text-lg text-center">
-            <strong>Room ID:</strong> {roomId}
-          </p>
-          {distance !== null && (
-            <p className="text-lg text-center">
-              <strong>Distance to Room:</strong> {distance.toFixed(2)} km
+    <div className="h-screen w-screen container-custom">
+      <div className="p-8 bg-white shadow-lg rounded-sm w-custom">
+        <h1 className="text-xl font-bold text-center mb-4 text-black font-medium">
+          เช็คชื่อเข้าห้องเรียน
+        </h1>
+        {subjectId && roomId ? (
+          <div>
+            <p className="text-md text-center">
+              <strong>รหัสวิชา:</strong> {subjectId}
             </p>
-          )}
-          {locationLat && locationLon && (
-            <MapComponent
-              locationLat={locationLat}
-              locationLon={locationLon}
-              attendanceRoom={attendanceRoom}
-              resetPosition={resetPosition}
-            />
-          )}
-        </div>
-      ) : (
-        <p className="text-lg text-center text-red-500">
-          Missing subject or room information.
-        </p>
-      )}
-      <AttendanceForm
-        studentId={studentId}
-        firstname={firstname}
-        lastname={lastname}
-        onStudentIdChange={(e) => setStudentId(e.target.value)}
-        onFirstnameChange={(e) => setFirstname(e.target.value)}
-        onLastnameChange={(e) => setLastname(e.target.value)}
-        onSubmit={handleSubmit}
-      />
+
+            {distance !== null && (
+              <p className="text-sm text-center">
+                <strong>Distance to Room:</strong>{" "}
+                <span className="text-red-500 font-bold">
+                  {distance.toFixed(2)} km
+                </span>
+              </p>
+            )}
+            {locationLat && locationLon ? (
+              <MapComponent
+                locationLat={locationLat}
+                locationLon={locationLon}
+                attendanceRoom={attendanceRoom}
+                resetPosition={resetPosition}
+              />
+            ) : (
+              <Flex className="mt-1" gap="middle" vertical>
+                <Alert
+                  message="Location not found"
+                  description="กรุณาอนุญาตให้เข้าถึงตำแหน่งของคุณ"
+                  type="error"
+                  className="text-custom"
+                />
+              </Flex>
+            )}
+          </div>
+        ) : (
+          <p className="text-lg text-center text-red-500 text-sm">
+            กรุณาสแกน QR Code ใหม่อีกครั้ง
+          </p>
+        )}
+        <AttendanceForm
+          studentId={studentId}
+          firstname={firstname}
+          lastname={lastname}
+          onStudentIdChange={(e) => setStudentId(e.target.value)}
+          onFirstnameChange={(e) => setFirstname(e.target.value)}
+          onLastnameChange={(e) => setLastname(e.target.value)}
+          onSubmit={handleSubmit}
+        />
+      </div>
     </div>
   );
 };

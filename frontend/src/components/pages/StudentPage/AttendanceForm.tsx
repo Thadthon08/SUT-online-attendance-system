@@ -20,12 +20,10 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({
   onSubmit,
 }) => {
   return (
-    <form onSubmit={onSubmit} className="mt-8">
-      <div className="mb-4">
-        <label htmlFor="student_id" className="block text-lg font-medium mb-2">
-          Student ID
-        </label>
+    <form onSubmit={onSubmit} className="mt-5">
+      <div className="mb-2">
         <input
+          placeholder="รหัสนักศึกษา"
           id="student_id"
           type="text"
           value={studentId}
@@ -34,11 +32,9 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({
           required
         />
       </div>
-      <div className="mb-4">
-        <label htmlFor="firstname" className="block text-lg font-medium mb-2">
-          First Name
-        </label>
+      <div className="mb-2">
         <input
+          placeholder="ชื่อ"
           id="firstname"
           type="text"
           value={firstname}
@@ -47,11 +43,9 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({
           required
         />
       </div>
-      <div className="mb-4">
-        <label htmlFor="lastname" className="block text-lg font-medium mb-2">
-          Last Name
-        </label>
+      <div className="mb-2">
         <input
+          placeholder="นามสกุล"
           id="lastname"
           type="text"
           value={lastname}
@@ -60,10 +54,7 @@ const AttendanceForm: React.FC<AttendanceFormProps> = ({
           required
         />
       </div>
-      <button
-        type="submit"
-        className="w-full py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-      >
+      <button type="submit" className="w-full py-2 bg-org text-white rounded ">
         Submit
       </button>
     </form>
