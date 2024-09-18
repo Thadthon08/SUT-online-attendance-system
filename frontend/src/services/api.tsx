@@ -144,16 +144,14 @@ async function GetAttendanceRoom(roomId: string) {
 
 // Get Attendance Room by Subject ID
 
-async function GetStudentsByRoomId(
-  roomId: string
-): Promise<{
+async function GetStudentsByRoomId(roomId: string): Promise<{
   status: boolean;
   data?: AttendanceRoomResponse;
   message?: string;
 }> {
   const requestOptions = {
     method: "GET",
-    headers: { "Content-Type": "application/json" },
+    headers: getAuthHeaders(),
   };
 
   try {
@@ -180,7 +178,7 @@ async function GetStudentsByRoomId(
 async function GetAttendanceRoomBySubjectID(subject_id: string) {
   const requestOptions = {
     method: "GET",
-    headers: { "Content-Type": "application/json" },
+    headers: getAuthHeaders(),
   };
 
   try {

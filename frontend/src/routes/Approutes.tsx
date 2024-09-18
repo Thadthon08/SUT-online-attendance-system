@@ -71,7 +71,7 @@ export default function AppRoutes() {
           <Route path="/subject/:subject_id" element={<SubjectDetail />} />
           <Route path="/create-room/:subject_id" element={<CreateRoom />} />
           <Route path="/attendance" element={<ScanQRForAttendance />} />
-          <Route path="/room-history/:subject_id" element={<RoomAttHistory />} />
+          <Route path="/room-history/:room_id" element={<RoomAttHistory />} />
           <Route path="/attendance/room/subject/:subject_id" element={<RoomList />} />
           
         </Route>

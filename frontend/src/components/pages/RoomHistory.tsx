@@ -4,30 +4,36 @@ import { Student } from "../../interface/IAttendanceRoomresponse";
 import { Spin, Alert, Button, Table } from "antd";
 import { writeFile, utils } from "xlsx";
 import "./RoomAttHistory.css";
+import { useParams } from "react-router-dom";
 
 const RoomAttHistory: React.FC = () => {
-  const [roomId] = useState<string>("110");
+  // const [roomId] = useState<string>("110");
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { room_id } = useParams<{ room_id: any }>();
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const result = await GetStudentsByRoomId(roomId);
+      if (room_id) {
+        const result = await GetStudentsByRoomId(room_id);
 
-      if (result.status && result.data) {
-        setStudents(result.data.students);
-        setError(null);
+        if (result.status && result.data) {
+          setStudents(result.data.students);
+          setError(null);
+        } else {
+          setError(result.message || "Failed to fetch students");
+        }
       } else {
-        setError(result.message || "Failed to fetch students");
+        setError("Room ID is undefined");
       }
 
       setLoading(false);
     };
 
     fetchData();
-  }, [roomId]);
+  }, [room_id]);
 
   const handleExport = () => {
     const worksheet = utils.json_to_sheet(
@@ -42,7 +48,7 @@ const RoomAttHistory: React.FC = () => {
     const workbook = utils.book_new();
     utils.book_append_sheet(workbook, worksheet, "Students");
 
-    writeFile(workbook, `Attendance_Room_${roomId}.xlsx`);
+    writeFile(workbook, `Attendance_Room_${room_id}.xlsx`);
   };
 
   const columns = [
@@ -55,7 +61,7 @@ const RoomAttHistory: React.FC = () => {
 
   return (
     <div className="room-att-history">
-      <h1>Attendance for Room {roomId}</h1>
+      <h1>Attendance for Room {room_id}</h1>
 
       <Button onClick={handleExport} type="primary" className="export-button">
         Export to Excel
