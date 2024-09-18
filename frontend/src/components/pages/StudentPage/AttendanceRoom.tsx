@@ -143,7 +143,7 @@ const AttendanceRoom: React.FC = () => {
           `ระยะทางที่คุณอยู่คือ ${currentDistance.toFixed(2)} กม.`
         );
         localStorage.setItem("attendance_checked", "true"); // บันทึกสถานะการลงชื่อ
-        navigate("/student/attendance-success");
+        navigate("/student/checkin");
       }
     }
 
