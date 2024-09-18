@@ -17,6 +17,7 @@ import StudentLogin from "../components/auth/student/StudentLogin";
 import AttendanceRoom from "../components/pages/StudentPage/AttendanceRoom";
 import RoomAttHistory from "../components/pages/RoomHistory";
 import RoomList from "../components/pages/RoomList";
+import AttendanceSuccess from "../components/pages/StudentPage/AttendanceSuccess";
 
 const isStudentLoggedIn = () => {
   const liffLoginTmp = localStorage.getItem(
@@ -81,7 +82,7 @@ export default function AppRoutes() {
           <Route path="/student/login/callback" element={<AttendanceRoom />} />
           <Route path="/student/line" element={<AttendanceRoom />} />
           <Route path="/test" element={<AttendanceRoom />} />
-          <Route path="/student/checkin" element={<AttendanceRoom />} />
+          <Route path="/student/checkin" element={<AttendanceSuccess />} />
         </Route>
 
         {/* Public routes */}

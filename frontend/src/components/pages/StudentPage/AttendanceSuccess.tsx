@@ -8,3 +8,5 @@ const AttendanceSuccess: React.FC = () => {
     </div>
   );
 };
+
+export default AttendanceSuccess;

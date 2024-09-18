@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Alert, Flex, Spin } from "antd";
+import { Alert, Flex } from "antd";
 import { AttendanceRoom as Attendance } from "../../../interface/IAttendanceRoom";
 import {
   CreateAttendanceByStudent,
@@ -47,9 +47,15 @@ const AttendanceRoom: React.FC = () => {
   useEffect(() => {
     const storedSubjectId = localStorage.getItem("subject_id");
     const storedRoomId = localStorage.getItem("room_id");
+    const attendanceChecked = localStorage.getItem("attendance_checked");
 
     setSubjectId(storedSubjectId);
     setRoomId(storedRoomId);
+
+    // ตรวจสอบสถานะการลงชื่อ
+    if (attendanceChecked) {
+      navigate("/student/attendance-success"); // ถ้าลงชื่อแล้ว ให้ไปที่หน้า success
+    }
 
     // Get initial geolocation
     resetPosition();
@@ -108,6 +114,13 @@ const AttendanceRoom: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    // ตรวจสอบสถานะการลงชื่อ
+    const attendanceChecked = localStorage.getItem("attendance_checked");
+    if (attendanceChecked) {
+      showErrorNotification("Error", "คุณได้ลงชื่อไปแล้ว");
+      return;
+    }
+
     if (attendanceRoom && locationLat && locationLon) {
       const currentDistance = calculateDistance(
         locationLat,
@@ -129,7 +142,8 @@ const AttendanceRoom: React.FC = () => {
           "ลงชื่อสำเร็จ",
           `ระยะทางที่คุณอยู่คือ ${currentDistance.toFixed(2)} กม.`
         );
-        navigate("/student/checkin");
+        localStorage.setItem("attendance_checked", "true"); // บันทึกสถานะการลงชื่อ
+        navigate("/student/attendance-success");
       }
     }
 
