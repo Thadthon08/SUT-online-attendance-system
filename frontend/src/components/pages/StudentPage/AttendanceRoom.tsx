@@ -47,12 +47,12 @@ const AttendanceRoom: React.FC = () => {
   useEffect(() => {
     const storedSubjectId = localStorage.getItem("subject_id");
     const storedRoomId = localStorage.getItem("room_id");
-    const attendanceChecked = localStorage.getItem("attendance_checked");
-
+    
     setSubjectId(storedSubjectId);
     setRoomId(storedRoomId);
 
     // ตรวจสอบสถานะการลงชื่อ
+    const attendanceChecked = localStorage.getItem(`attendance_checked_${storedRoomId}`);
     if (attendanceChecked) {
       navigate("/student/checkin"); // ถ้าลงชื่อแล้ว ให้ไปที่หน้า success
     }
@@ -81,7 +81,8 @@ const AttendanceRoom: React.FC = () => {
     // เช็คว่าถ้า roomId เปลี่ยน จะต้องล้างสถานะการลงชื่อ
     const currentRoomId = localStorage.getItem("room_id");
     if (roomId !== currentRoomId) {
-      localStorage.removeItem("attendance_checked");
+      localStorage.removeItem(`attendance_checked_${currentRoomId}`);
+      localStorage.setItem("room_id", roomId || ""); // Update roomId in localStorage
     }
   }, [roomId]);
 
@@ -122,8 +123,7 @@ const AttendanceRoom: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // ตรวจสอบสถานะการลงชื่อ
-    const attendanceChecked = localStorage.getItem("attendance_checked");
+    const attendanceChecked = localStorage.getItem(`attendance_checked_${roomId}`);
     if (attendanceChecked) {
       showErrorNotification("Error", "คุณได้ลงชื่อไปแล้ว");
       return;
@@ -150,7 +150,7 @@ const AttendanceRoom: React.FC = () => {
           "ลงชื่อสำเร็จ",
           `ระยะทางที่คุณอยู่คือ ${currentDistance.toFixed(2)} กม.`
         );
-        localStorage.setItem("attendance_checked", "true"); // บันทึกสถานะการลงชื่อ
+        localStorage.setItem(`attendance_checked_${roomId}`, "true"); // บันทึกสถานะการลงชื่อ
         navigate("/student/checkin");
       }
     }
