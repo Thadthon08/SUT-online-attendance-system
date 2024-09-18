@@ -21,7 +21,7 @@ const AttendanceRoom: React.FC = () => {
   const [roomId, setRoomId] = useState<string | null>(null);
   const [attendanceRoom, setAttendanceRoom] = useState<Attendance | null>(null);
   const [distance, setDistance] = useState<number | null>(null);
-  const [ setProfile] = useState<any>(null);
+  const [setProfile] = useState<any>(null);
 
   // Form state
   const [studentId, setStudentId] = useState("");
@@ -50,7 +50,7 @@ const AttendanceRoom: React.FC = () => {
   useEffect(() => {
     const initializeLiff = async () => {
       try {
-        await liff.init({ liffId: LIFF_ID });
+        await liff.init({ liffId: "2006252489-XlDxGl4V" });
         console.log("LIFF initialized successfully");
 
         if (liff.isLoggedIn()) {
