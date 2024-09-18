@@ -52,13 +52,8 @@ const RoomList: React.FC = () => {
     {
       title: "Action",
       key: "action",
-<<<<<<< HEAD
-      render: (text: any, record: AttendanceRoom) => (
-        <Button onClick={() => handleViewDetails(record.room_id ?? 0)}>
-=======
       render: (_text: any, record: AttendanceRoom) => (
-        <Button onClick={() => handleViewDetails(record.room_id)}>
->>>>>>> 0265a45e6c42001e32aad2fd7064939232b66d55
+        <Button onClick={() => record.room_id !== undefined && handleViewDetails(record.room_id)}>
           View Details
         </Button>
       ),
