@@ -1,51 +1,51 @@
 import React, { useEffect, useState } from "react";
 import { Table, Button, Spin, Alert } from "antd";
-import { useNavigate } from "react-router-dom"; // For navigation
-import { GetAttendanceRoomBySubjectID } from "../../services/api"; // Import your API function
-
-interface AttendanceRoom {
-  room_id: number;
-  subject_id: string;
-  room_name: string;
-  start_time: string;
-  end_time: string;
-  location_lat: number;
-  location_lon: number;
-}
+import { useNavigate, useParams } from "react-router-dom";
+import { GetAttendanceRoomBySubjectID } from "../../services/api";
+import { AttendanceRoom } from "../../interface/IAttendanceRoom";
 
 const RoomList: React.FC = () => {
   const [rooms, setRooms] = useState<AttendanceRoom[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate(); // Use useNavigate for navigation
+  const navigate = useNavigate();
+  const { subject_id } = useParams<{ subject_id: string }>();
 
   useEffect(() => {
     const fetchRooms = async () => {
       setLoading(true);
       try {
-        const result = await GetAttendanceRoomBySubjectID("subject_id"); // Fetch with an empty ID initially if needed
-        console.log(result);
-        if (result.status && result.data) {
-          setRooms(result.data); // Assuming result.data is an array of AttendanceRoom
-          setError(null);
+        if (subject_id) {
+          const result = await GetAttendanceRoomBySubjectID(subject_id);
+          console.log("API Response:", result.data.data); // Log to inspect response
+          
+          setRooms(result.data.data);
+          console.log(rooms);
         } else {
-          setError(result.message || "Failed to fetch rooms");
+          setError("Subject ID is missing");
         }
       } catch (err) {
+        console.error("Fetch error:", err); // Log the error
         setError("An unexpected error occurred");
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchRooms();
-  }, []);
+  }, [subject_id]); // Trigger fetch when subject_id changes
+  
 
   const handleViewDetails = (roomId: number) => {
-    navigate(`/room-attendance/${roomId}`); // Navigate to RoomAttHistory with roomId
+    if (roomId) {
+      navigate(`/room-history/${roomId}`);
+    } else {
+      console.error("Room ID is undefined or invalid");
+    }
   };
 
   const columns = [
+    { title: "Room ID", dataIndex: "room_id", key: "room_id" },
     { title: "Room Name", dataIndex: "room_name", key: "room_name" },
     { title: "Start Time", dataIndex: "start_time", key: "start_time" },
     { title: "End Time", dataIndex: "end_time", key: "end_time" },
@@ -53,7 +53,7 @@ const RoomList: React.FC = () => {
       title: "Action",
       key: "action",
       render: (text: any, record: AttendanceRoom) => (
-        <Button onClick={() => handleViewDetails(record.room_id)}>
+        <Button onClick={() => handleViewDetails(record.room_id ?? 0)}>
           View Details
         </Button>
       ),
@@ -68,7 +68,11 @@ const RoomList: React.FC = () => {
       ) : error ? (
         <Alert message="Error" description={error} type="error" showIcon />
       ) : (
-        <Table columns={columns} dataSource={rooms} rowKey="room_id" />
+        <Table 
+          columns={columns} 
+          dataSource={rooms} 
+          rowKey={(rooms) => (rooms.room_id ? rooms.room_id.toString() : 'default-key')} 
+        />
       )}
     </div>
   );

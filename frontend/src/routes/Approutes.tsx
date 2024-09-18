@@ -16,6 +16,7 @@ import ScanQRForAttendance from "../components/pages/ScanQRForAttendance";
 import StudentLogin from "../components/auth/student/StudentLogin";
 import AttendanceRoom from "../components/pages/StudentPage/AttendanceRoom";
 import RoomAttHistory from "../components/pages/RoomHistory";
+import RoomList from "../components/pages/RoomList";
 
 // Function to check if the student is logged in based on codeVerifier
 const isStudentLoggedIn = () => {
@@ -74,6 +75,8 @@ export default function AppRoutes() {
           <Route path="/create-room/:subject_id" element={<CreateRoom />} />
           <Route path="/attendance" element={<ScanQRForAttendance />} />
           <Route path="/room-history/:subject_id" element={<RoomAttHistory />} />
+          <Route path="/attendance/room/subject/:subject_id" element={<RoomList />} />
+          
         </Route>
 
         {/* Routes for students */}

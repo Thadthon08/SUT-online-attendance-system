@@ -4,8 +4,8 @@ import { LoginInterface } from "../interface/ILogin";
 import { LoginResponseInterface } from "../interface/ILoginRespon";
 import { AttendanceRoomResponse } from "../interface/IAttendanceRoomresponse";
 
-// const apiURL = "https://sut-online-attendance-system.onrender.com";
-const apiURL = "http://localhost:8080";
+// const apiURL = "http://localhost:8080";
+const apiURL = "https://sut-online-attendance-system.onrender.com";
 
 async function SignIn(login: LoginInterface): Promise<LoginResponseInterface> {
   const response = await fetch(`${apiURL}/login`, {
@@ -158,14 +158,14 @@ async function GetStudentsByRoomId(roomId: string): Promise<{ status: boolean; d
     return { status: false, message: "An unexpected error occurred" };
   }
 }
-async function GetAttendanceRoomBySubjectID(subjectId: string) {
+async function GetAttendanceRoomBySubjectID(subject_id: string) {
   const requestOptions = {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   };
 
   try {
-    const response = await fetch(`${apiURL}/attendance/subjectroom/${subjectId}`, requestOptions);
+    const response = await fetch(`${apiURL}/attendance/room/subject/${subject_id}`, requestOptions);
 
     if (response.ok) {
       const data = await response.json();

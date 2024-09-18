@@ -54,7 +54,7 @@ const SubjectDetail: React.FC = () => {
               icon={<FaChalkboardTeacher size="3rem" color="white" />}
             />
             <ActionGridItem
-              onClick={() => navigate(`/room-history/${subject_id}`)}
+              onClick={() => navigate(`/attendance/room/subject/${subject_id}`)}
               text="View Attendance History"
               icon={<FaHistory size="3rem" color="white" />}
             />
