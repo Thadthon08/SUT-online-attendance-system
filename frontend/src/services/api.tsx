@@ -153,7 +153,8 @@ async function GetStudentsByRoomId(
 }> {
   const requestOptions = {
     method: "GET",
-    headers: { "Content-Type": "application/json" },
+    headers: getAuthHeaders(),   
+
   };
 
   try {
@@ -180,7 +181,7 @@ async function GetStudentsByRoomId(
 async function GetAttendanceRoomBySubjectID(subject_id: string) {
   const requestOptions = {
     method: "GET",
-    headers: { "Content-Type": "application/json" },
+    headers: getAuthHeaders(),   
   };
 
   try {
