@@ -38,6 +38,11 @@ const StudentLogin: React.FC = () => {
             localStorage.setItem("line_access_token", accessToken);
             const userProfile = await liff.getProfile();
             setProfile(userProfile);
+
+            // ดึง Line ID
+            const lineId = userProfile.userId;
+            console.log("LINE ID:", lineId);
+
             localStorage.setItem("line_user_id", userProfile.userId);
             localStorage.setItem("line_display_name", userProfile.displayName);
           } else {
