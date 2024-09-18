@@ -16,7 +16,6 @@ import "./attendanceRoom.css";
 import liff from "@line/liff"; // Import LIFF SDK
 
 const AttendanceRoom: React.FC = () => {
-  const LIFF_ID = "2006252489-XlDxGl4V"; // Replace with your LIFF ID
   const [subjectId, setSubjectId] = useState<string | null>(null);
   const [roomId, setRoomId] = useState<string | null>(null);
   const [attendanceRoom, setAttendanceRoom] = useState<Attendance | null>(null);
