@@ -132,17 +132,17 @@ const CreateRoomForm: React.FC = () => {
         boxShadow: "0px 8px 10px 1px rgba(0,0,0,0.5)",
         border: "0.35rem solid #000000",
         width: "100%",
-        maxWidth: "800px",
+        maxWidth: "600px", // ปรับขนาดให้เล็กลง
       }}
     >
       <Title
-        level={3}
+        level={2}
         style={{ textAlign: "center", marginBottom: "30px", color: "#000000" }}
       >
-        Check-In Room Details
+        สร้างห้องสำหรับเช็คชื่อ
       </Title>
       <Form form={form} layout="vertical" onFinish={onFinish}>
-        <Row gutter={[16, 16]}>
+        <Row>
           <Col span={24}>
             <Form.Item
               name="subjectName"
@@ -229,9 +229,10 @@ const CreateRoomForm: React.FC = () => {
                 type="primary"
                 htmlType="submit"
                 block
-                style={{ height: "40px", fontSize: "16px" }}
+                style={{ backgroundColor: "#F26522", border: "none" }}
+                className="h-10 text-lg font-bold text-white"
               >
-                Create Room
+                สร้างห้อง
               </Button>
             </Form.Item>
           </Col>

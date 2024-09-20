@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Alert, Flex } from "antd";
+import { Alert, Spin } from "antd";
 import { AttendanceRoom as Attendance } from "../../../interface/IAttendanceRoom";
 import {
   CreateAttendanceByStudent,
@@ -208,7 +208,7 @@ const AttendanceRoom: React.FC = () => {
   return (
     <div className="h-screen w-screen container-custom">
       <div className="p-8 bg-white shadow-lg rounded-sm w-custom">
-        <h1 className="text-xl font-bold text-center mb-4 text-black font-medium">
+        <h1 className="text-xl font-bold text-center mb-4 text-black ">
           เช็คชื่อเข้าห้องเรียน
         </h1>
         {subjectId && roomId ? (
@@ -233,18 +233,13 @@ const AttendanceRoom: React.FC = () => {
                 resetPosition={resetPosition}
               />
             ) : (
-              <Flex className="mt-1" gap="middle" vertical>
-                <Alert
-                  message="Location not found"
-                  description="กรุณาอนุญาตให้เข้าถึงตำแหน่งของคุณ"
-                  type="error"
-                  className="text-custom"
-                />
-              </Flex>
+              <Spin tip="กำลังดึงข้อมูลพิกัดที่อยู่ปัจจุบัน กรุณารอสักครู่...">
+                <Alert style={{ height: "150px" }} type="info" />
+              </Spin>
             )}
           </div>
         ) : (
-          <p className="text-lg text-center text-red-500 text-sm">
+          <p className=" text-center text-red-500 text-sm">
             กรุณาสแกน QR Code ใหม่อีกครั้ง
           </p>
         )}
