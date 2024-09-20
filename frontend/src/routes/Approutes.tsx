@@ -20,21 +20,13 @@ import RoomList from "../components/pages/RoomList";
 import AttendanceSuccess from "../components/pages/StudentPage/AttendanceSuccess";
 
 const isStudentLoggedIn = () => {
-  const liffLoginTmp = localStorage.getItem(
-    "LIFF_STORE:2006252489-XlDxGl4V:loginTmp"
+  const accessToken = localStorage.getItem(
+    "LIFF_STORE:2006252489-XlDxGl4V:accessToken"
   );
 
-  if (!liffLoginTmp) return false;
+  if (!accessToken) return false;
 
-  try {
-    const loginData = JSON.parse(liffLoginTmp);
-    const codeVerifier = loginData?.codeVerifier;
-
-    return !!codeVerifier;
-  } catch (error) {
-    console.error("Failed to parse LIFF login temporary data:", error);
-    return false;
-  }
+  return !!accessToken;
 };
 
 const PrivateRoute = ({ isSigned }: { isSigned: boolean }) => {

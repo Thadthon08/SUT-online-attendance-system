@@ -12,17 +12,12 @@ const StudentLogin: React.FC = () => {
     room_id: string;
   }>();
 
-  // แก้ไขการเขียนฟังก์ชัน LoginLine
+  // แก้ไขฟังก์ชัน LoginLine
   const LoginLine = () => {
     liff.init(
       { liffId: "2006252489-XlDxGl4V" },
       () => {
-        if (liff.isLoggedIn()) {
-          console.log("User is logged in");
-          // หากล็อกอินแล้วคุณสามารถนำไปทำอะไรต่อ เช่นดึงข้อมูลโปรไฟล์
-        } else {
-          liff.login();
-        }
+        liff.login(); // บังคับให้ผู้ใช้ไปหน้า Login ของ LINE ทุกครั้ง
       },
       (err) => {
         console.error("LIFF Initialization failed", err);
