@@ -5,7 +5,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { GetAttendanceRoom } from "../../../services/api";
 
 const StudentLogin: React.FC = () => {
-  const [profile, setProfile] = useState<any>(null);
+  const [profile] = useState<any>(null);
   const navigate = useNavigate();
   const { subject_id, room_id } = useParams<{
     subject_id: string;
