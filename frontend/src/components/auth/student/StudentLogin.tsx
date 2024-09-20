@@ -5,20 +5,30 @@ import { useParams, useNavigate } from "react-router-dom";
 import { GetAttendanceRoom } from "../../../services/api";
 
 const StudentLogin: React.FC = () => {
-  const [profile] = useState<any>(null);
+  const [profile, setProfile] = useState<any>(null);
   const navigate = useNavigate();
   const { subject_id, room_id } = useParams<{
     subject_id: string;
     room_id: string;
   }>();
 
-  liff.init({ liffId: "2006252489-XlDxGl4V" }, () => {
-    if (liff.isLoggedIn()) {
-      console.log("User is logged in");
-    } else {
-      liff.login();
-    }
-  });
+  // แก้ไขการเขียนฟังก์ชัน LoginLine
+  const LoginLine = () => {
+    liff.init(
+      { liffId: "2006252489-XlDxGl4V" },
+      () => {
+        if (liff.isLoggedIn()) {
+          console.log("User is logged in");
+          // หากล็อกอินแล้วคุณสามารถนำไปทำอะไรต่อ เช่นดึงข้อมูลโปรไฟล์
+        } else {
+          liff.login();
+        }
+      },
+      (err) => {
+        console.error("LIFF Initialization failed", err);
+      }
+    );
+  };
 
   useEffect(() => {
     const initialize = async () => {
@@ -75,6 +85,7 @@ const StudentLogin: React.FC = () => {
             Log in to access your student dashboard
           </p>
           <button
+            onClick={LoginLine} // เรียกฟังก์ชัน LoginLine เมื่อคลิกปุ่ม
             className="group relative w-full py-3 px-5 bg-green-500 text-white rounded-full shadow-lg hover:bg-green-600 transition-all duration-300 ease-in-out overflow-hidden"
             aria-label="Login with LINE"
           >
