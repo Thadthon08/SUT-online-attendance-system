@@ -75,7 +75,14 @@ const CreateRoomForm: React.FC = () => {
       );
       return;
     }
-
+  
+    // คำนวณระยะเวลา
+    const duration = values.endTime.diff(values.createdTime);
+    const minutes = Math.floor(duration / 60000); // คำนวณนาที
+    const seconds = Math.floor((duration % 60000) / 1000); // คำนวณวินาที
+  
+    console.log(`Duration: ${minutes} นาที, ${seconds} วินาที`); // แสดงระยะเวลาใน console
+  
     const attendanceData: AttendanceRoom = {
       subject_id: values.subjectID,
       room_name: values.roomName,
@@ -84,15 +91,15 @@ const CreateRoomForm: React.FC = () => {
       location_lat: location.latitude,
       location_lon: location.longitude,
     };
-
+  
     try {
       const result = await CreateAttendance(attendanceData);
       if (result.status) {
         showSuccessNotification("สร้างห้องเช็คชื่อสำเร็จ", result.message);
         navigate(
-          `/attendance?subject_id=${subject_id}&room_id=${result.data.room_id}`
-        );
-
+          `/attendance?subject_id=${subject_id}&room_id=${result.data.room_id}&duration=${minutes}m${seconds}s`
+        );  
+  
         console.log(result.data);
       } else {
         showErrorNotification("เกิดข้อผิดพลาด", result.message);

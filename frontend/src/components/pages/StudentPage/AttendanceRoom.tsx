@@ -163,6 +163,12 @@ const AttendanceRoom: React.FC = () => {
         );
         return;
       } else {
+        showSuccessNotification(
+          "ลงชื่อสำเร็จ",
+          `ระยะทางที่คุณอยู่คือ ${currentDistance.toFixed(2)} กม.`
+        );
+        localStorage.setItem(`attendance_checked_${roomId}`, "true"); // บันทึกสถานะการลงชื่อ
+        navigate("/student/checkin");
       }
     }
 
@@ -191,17 +197,9 @@ const AttendanceRoom: React.FC = () => {
     try {
       const result = await CreateAttendanceByStudent(data);
       if (result.status) {
-        showSuccessNotification(
-          "ลงชื่อสำเร็จ",
-          `คุณ ${firstname} ${lastname} ได้ลงชื่อเข้าห้องเรียนแล้ว`
-        );
-        localStorage.setItem(`attendance_checked_${roomId}`, "true"); // บันทึกสถานะการลงชื่อ
-        navigate("/student/checkin");
+        console.log("Attendance created successfully:", result.message);
       } else {
-         showErrorNotification(
-           "เกิดข้อผิดพลาด",
-            result.message || "ไม่สามารถลงชื่อได้ในขณะนี้"
-         );
+        console.error("Error creating attendance:", result.message);
       }
     } catch (error) {
       console.error("Network error:", error);
