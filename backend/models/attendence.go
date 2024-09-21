@@ -7,6 +7,7 @@ type Attendance struct {
 	StudentID    string         `json:"student_id"`
 	FirstName    string         `json:"first_name"`
 	LastName     string         `json:"last_name"`
+	LineID       string         `json:"line_id"`
 	LocationLat  float64        `json:"location_lat"`
 	LocationLon  float64        `json:"location_lon"`
 }

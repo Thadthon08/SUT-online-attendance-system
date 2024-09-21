@@ -191,6 +191,7 @@ const AttendanceRoom: React.FC = () => {
       room_id: parseInt(roomId as string),
       location_lat: locationLat,
       location_lon: locationLon,
+      line_id: localStorage.getItem("user_id") || "",
     };
 
     try {

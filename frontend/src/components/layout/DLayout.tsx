@@ -12,7 +12,7 @@ import { useAuth } from "../../contexts/AuthContext";
 
 export default function DLayout() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { user } = useAuth(); 
+  const { user } = useAuth();
 
   const teacherId = user?.teacher_id || "";
 
