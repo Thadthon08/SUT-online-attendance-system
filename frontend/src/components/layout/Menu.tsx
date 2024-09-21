@@ -11,7 +11,7 @@ export default function DLayout() {
   const teacherId: string = user?.teacher_id ?? "";
 
   return (
-    <Box minH="100vh" bg={"rgb(242, 101, 34)"}>
+    <Box minH="100vh">
       <SidebarContent
         onClose={onClose}
         display={{ base: "none", md: "block" }}
@@ -32,7 +32,7 @@ export default function DLayout() {
       </Drawer>
       {/* Mobile navigation */}
       <MobileNav onOpen={onOpen} />
-      <Box ml={{ base: 0, md: "300px" }} bg={"rgb(243, 246, 255)"} h={"100vh"}>
+      <Box ml={{ base: 0, md: "350px" }} p={{ base: 0, md: "10px" }}>
         <Outlet />
       </Box>
     </Box>

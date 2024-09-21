@@ -15,13 +15,13 @@ export default function CarouselComponent() {
     "https://www.sut.ac.th/images/upload/banner/1251/1251/banner.jpg",
     "https://www.sut.ac.th/images/upload/banner/1261/1261/banner.jpg",
     "https://www.sut.ac.th/images/upload/banner/1245/1245/banner.jpg",
-    "https://www.sut.ac.th/images/upload/banner/1234/1234/banner.jpg"
+    "https://www.sut.ac.th/images/upload/banner/1234/1234/banner.jpg",
   ];
 
   return (
     <>
       <AnnouncementBar />
-      <Carousel arrows infinite={false}>
+      <Carousel arrows infinite={false} autoplay>
         {imageUrls.map((url, index) => (
           <CarouselItem
             key={index}

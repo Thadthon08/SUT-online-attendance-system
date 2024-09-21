@@ -5,6 +5,7 @@ import { Spin, Alert, Button, Table } from "antd";
 import { writeFile, utils } from "xlsx";
 import "./RoomAttHistory.css";
 import { useParams } from "react-router-dom";
+import { Box, Container, Text } from "@chakra-ui/react";
 
 const RoomAttHistory: React.FC = () => {
   // const [roomId] = useState<string>("110");
@@ -60,26 +61,50 @@ const RoomAttHistory: React.FC = () => {
   ];
 
   return (
-    <div className="room-att-history">
-      <h1>Attendance for Room {room_id}</h1>
-
-      <Button onClick={handleExport} type="primary" className="export-button">
-        Export to Excel
-      </Button>
-
-      {loading ? (
-        <Spin tip="Loading..." />
-      ) : error ? (
-        <Alert message="Error" description={error} type="error" showIcon />
-      ) : (
-        <Table
-          columns={columns}
-          dataSource={students}
-          rowKey="student_id"
-          className="attendance-table"
-        />
-      )}
-    </div>
+    <Box p={4}>
+      <Container
+        maxW={{ base: "100%", md: "container.lg" }}
+        className="no-copy-no-select"
+        mt={6}
+      >
+        <Box
+          border={"1px solid rgba(69, 69, 71,0.2)"}
+          bg={"white"}
+          mb={5}
+          display={"flex"}
+          alignItems={"center"}
+          p={5}
+        >
+          <Text fontWeight={"bold"} fontSize={"1.5rem"}>
+            Student Attendance Records
+          </Text>
+        </Box>
+        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <Button onClick={handleExport} type="primary">
+            Export to Excel
+          </Button>
+        </div>
+        <Box
+          border={"1px solid rgba(69, 69, 71,0.2)"}
+          p={0}
+          bg={"white"}
+          mt={5}
+        >
+          {loading ? (
+            <Spin tip="Loading..." />
+          ) : error ? (
+            <Alert message="Error" description={error} type="error" showIcon />
+          ) : (
+            <Table
+              bordered
+              columns={columns}
+              dataSource={students}
+              rowKey="student_id"
+            />
+          )}
+        </Box>
+      </Container>
+    </Box>
   );
 };
 

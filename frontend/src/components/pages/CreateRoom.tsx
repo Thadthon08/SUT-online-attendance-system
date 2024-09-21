@@ -1,39 +1,31 @@
-import { Layout, Typography } from "antd";
 import CreateRoomForm from "../layout/CreateRoomForm";
-
-const { Header, Content } = Layout;
-const { Title } = Typography;
+import { Box, Container, Text } from "@chakra-ui/react";
 
 export default function CreateRoom() {
   return (
-    <Layout style={{ minHeight: "100vh", backgroundColor: "#f0f2f5" }}>
-      <Header
-        style={{
-          background: "#000000",
-          padding: "0 20px",
-          display: "flex",
-          alignItems: "center",
-        }}
+    <Box p={4}>
+      <Container
+        maxW={{ base: "100%", md: "container.lg" }}
+        className="no-copy-no-select"
+        mt={6}
       >
-        <Title
-          level={2}
-          style={{ color: "white", lineHeight: "64px", margin: 0 }}
+        <Box
+          height={90}
+          border={"1px solid rgba(69, 69, 71,0.2)"}
+          bg={"white"}
+          mb={5}
+          display={"flex"}
+          alignItems={"center"}
+          p={5}
         >
-          Create Check-In Room
-        </Title>
-      </Header>
-
-      {/* Content Section */}
-      <Content
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: "40px",
-        }}
-      >
-        <CreateRoomForm />
-      </Content>
-    </Layout>
+          <Text fontWeight={"bold"} fontSize={{ base: "1.2rem", md: "1.4rem" }}>
+            Create Attendance Check
+          </Text>
+        </Box>
+        <Box border={"1px solid rgba(69, 69, 71,0.2)"} bg={"white"}>
+          <CreateRoomForm />
+        </Box>
+      </Container>
+    </Box>
   );
 }

@@ -3,6 +3,7 @@ import { Table, Button, Spin, Alert } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import { GetAttendanceRoomBySubjectID } from "../../services/api";
 import { AttendanceRoom } from "../../interface/IAttendanceRoom";
+import { Box, Container, Text } from "@chakra-ui/react";
 
 const RoomList: React.FC = () => {
   const [rooms, setRooms] = useState<AttendanceRoom[]>([]);
@@ -18,7 +19,7 @@ const RoomList: React.FC = () => {
         if (subject_id) {
           const result = await GetAttendanceRoomBySubjectID(subject_id);
           console.log("API Response:", result.data.data); // Log to inspect response
-          
+
           setRooms(result.data.data);
           console.log(rooms);
         } else {
@@ -31,10 +32,9 @@ const RoomList: React.FC = () => {
         setLoading(false);
       }
     };
-  
+
     fetchRooms();
   }, [subject_id]); // Trigger fetch when subject_id changes
-  
 
   const handleViewDetails = (roomId: number) => {
     if (roomId) {
@@ -53,7 +53,11 @@ const RoomList: React.FC = () => {
       title: "Action",
       key: "action",
       render: (_text: any, record: AttendanceRoom) => (
-        <Button onClick={() => record.room_id !== undefined && handleViewDetails(record.room_id)}>
+        <Button
+          onClick={() =>
+            record.room_id !== undefined && handleViewDetails(record.room_id)
+          }
+        >
           View Details
         </Button>
       ),
@@ -61,20 +65,42 @@ const RoomList: React.FC = () => {
   ];
 
   return (
-    <div style={{ padding: "20px", textAlign: "center" }}>
-      <h1>Room List</h1>
-      {loading ? (
-        <Spin tip="Loading..." />
-      ) : error ? (
-        <Alert message="Error" description={error} type="error" showIcon />
-      ) : (
-        <Table 
-          columns={columns} 
-          dataSource={rooms} 
-          rowKey={(rooms) => (rooms.room_id ? rooms.room_id.toString() : 'default-key')} 
-        />
-      )}
-    </div>
+    <Box p={4}>
+      <Container
+        maxW={{ base: "100%", md: "container.lg" }}
+        className="no-copy-no-select"
+        mt={6}
+      >
+        <Box
+          border={"1px solid rgba(69, 69, 71,0.2)"}
+          bg={"white"}
+          mb={5}
+          display={"flex"}
+          alignItems={"center"}
+          p={5}
+        >
+          <Text fontWeight={"bold"} fontSize={"1.5rem"}>
+            List of All Classrooms
+          </Text>
+        </Box>
+        <Box border={"1px solid rgba(69, 69, 71,0.2)"} p={0} bg={"white"}>
+          {loading ? (
+            <Spin tip="Loading..." />
+          ) : error ? (
+            <Alert message="Error" description={error} type="error" showIcon />
+          ) : (
+            <Table
+              bordered
+              columns={columns}
+              dataSource={rooms}
+              rowKey={(rooms) =>
+                rooms.room_id ? rooms.room_id.toString() : "default-key"
+              }
+            />
+          )}
+        </Box>
+      </Container>
+    </Box>
   );
 };
 

@@ -4,7 +4,6 @@ import {
   Input,
   Button,
   DatePicker,
-  Typography,
   Card,
   Row,
   Col,
@@ -32,8 +31,6 @@ dayjs.extend(customParseFormat);
 dayjs.extend(localeData);
 dayjs.extend(utc);
 dayjs.extend(timezone);
-
-const { Title } = Typography;
 
 const CreateRoomForm: React.FC = () => {
   const { subject_id = "" } = useParams<{ subject_id: string }>();
@@ -75,14 +72,13 @@ const CreateRoomForm: React.FC = () => {
       );
       return;
     }
-  
-    // คำนวณระยะเวลา
+
     const duration = values.endTime.diff(values.createdTime);
-    const minutes = Math.floor(duration / 60000); // คำนวณนาที
-    const seconds = Math.floor((duration % 60000) / 1000); // คำนวณวินาที
-  
-    console.log(`Duration: ${minutes} นาที, ${seconds} วินาที`); // แสดงระยะเวลาใน console
-  
+    const minutes = Math.floor(duration / 60000);
+    const seconds = Math.floor((duration % 60000) / 1000);
+
+    console.log(`Duration: ${minutes} นาที, ${seconds} วินาที`);
+
     const attendanceData: AttendanceRoom = {
       subject_id: values.subjectID,
       room_name: values.roomName,
@@ -91,15 +87,15 @@ const CreateRoomForm: React.FC = () => {
       location_lat: location.latitude,
       location_lon: location.longitude,
     };
-  
+
     try {
       const result = await CreateAttendance(attendanceData);
       if (result.status) {
         showSuccessNotification("สร้างห้องเช็คชื่อสำเร็จ", result.message);
         navigate(
           `/attendance?subject_id=${subject_id}&room_id=${result.data.room_id}&duration=${minutes}m${seconds}s`
-        );  
-  
+        );
+
         console.log(result.data);
       } else {
         showErrorNotification("เกิดข้อผิดพลาด", result.message);
@@ -133,23 +129,12 @@ const CreateRoomForm: React.FC = () => {
   return (
     <Card
       style={{
-        margin: "50px auto",
-        padding: "20px",
-        borderRadius: "10px",
-        boxShadow: "0px 8px 10px 1px rgba(0,0,0,0.5)",
-        border: "0.35rem solid #000000",
         width: "100%",
-        maxWidth: "600px", // ปรับขนาดให้เล็กลง
+        border: "none",
       }}
     >
-      <Title
-        level={2}
-        style={{ textAlign: "center", marginBottom: "30px", color: "#000000" }}
-      >
-        สร้างห้องสำหรับเช็คชื่อ
-      </Title>
       <Form form={form} layout="vertical" onFinish={onFinish}>
-        <Row>
+        <Row justify="space-between">
           <Col span={24}>
             <Form.Item
               name="subjectName"
@@ -180,7 +165,7 @@ const CreateRoomForm: React.FC = () => {
               />
             </Form.Item>
           </Col>
-          <Col xs={24} sm={24} md={12}>
+          <Col xs={24} sm={24} md={11}>
             <Form.Item
               name="createdTime"
               label="เวลาเริ่มเช็คชื่อ"
@@ -202,7 +187,7 @@ const CreateRoomForm: React.FC = () => {
               />
             </Form.Item>
           </Col>
-          <Col xs={24} sm={24} md={12}>
+          <Col xs={24} sm={24} md={11}>
             <Form.Item
               name="endTime"
               label="เวลาสิ้นสุดเช็คชื่อ"

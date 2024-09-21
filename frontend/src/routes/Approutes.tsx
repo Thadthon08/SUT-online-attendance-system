@@ -10,7 +10,6 @@ import Login from "../components/auth/Login";
 import Error from "../components/pages/PageNotFound";
 import Dashboard from "../components/pages/Dashboard";
 import DLayout from "../components/layout/Menu";
-import SubjectDetail from "../components/pages/SubjectDetail";
 import CreateRoom from "../components/pages/CreateRoom";
 import ScanQRForAttendance from "../components/pages/ScanQRForAttendance";
 import StudentLogin from "../components/auth/student/StudentLogin";
@@ -59,7 +58,6 @@ export default function AppRoutes() {
         {/* Routes for teachers */}
         <Route element={<PrivateRoute isSigned={isSigned} />}>
           <Route path="/" element={<Dashboard />} />
-          <Route path="/subject/:subject_id" element={<SubjectDetail />} />
           <Route path="/create-room/:subject_id" element={<CreateRoom />} />
           <Route path="/attendance" element={<ScanQRForAttendance />} />
           <Route path="/room-history/:room_id" element={<RoomAttHistory />} />

@@ -44,10 +44,10 @@ h1 {
 }
 
 .ant-btn-primary:hover {
-  background-color: #e65c00; /* Darker orange on hover */
-  border-color: #e65c00; /* Darker orange border on hover */
+  background-color: #e65c00 !important;
+  border-color: #e65c00 !important;
 }
 
 .ant-spin-text {
-  color: #ff6f00; /* Orange color for loading spinner text */
+  color: #ff6f00;
 }

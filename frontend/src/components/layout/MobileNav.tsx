@@ -31,6 +31,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
       alignItems="center"
       bg={"rgb(242, 101, 34)"}
       justifyContent={{ base: "space-between", md: "flex-end" }}
+      display={{ base: "flex", md: "none" }}
       {...rest}
     >
       <IconButton

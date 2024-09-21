@@ -1,4 +1,3 @@
-import  { useEffect, useState } from "react";
 import {
   Box,
   CloseButton,
@@ -7,10 +6,13 @@ import {
   BoxProps,
   Skeleton,
   VStack,
+  Divider,
 } from "@chakra-ui/react";
+import { Avatar } from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
 import NavItem from "./NavItem";
 import { LuGraduationCap } from "react-icons/lu";
+import { useEffect, useState } from "react";
 import { getSubjectsByTid } from "../../services/api";
 import { Subject } from "../../interface/ITeacherSubject";
 
@@ -25,6 +27,19 @@ const SidebarContent = ({ onClose, teacherId, ...rest }: SidebarProps) => {
   const [error, setError] = useState<string | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
+
+  // Parsing the user data from sessionStorage
+  const userDataString = sessionStorage.getItem("user");
+  let userData = { firstname: "", lastname: "", profile_pic: "" };
+  if (userDataString) {
+    try {
+      userData = JSON.parse(userDataString);
+    } catch (error) {
+      console.error("Error parsing user data", error);
+    }
+  }
+
+  const { firstname, lastname, profile_pic } = userData;
 
   useEffect(() => {
     const fetchSubjects = async () => {
@@ -46,18 +61,19 @@ const SidebarContent = ({ onClose, teacherId, ...rest }: SidebarProps) => {
       transition="3s ease"
       bg={"white"}
       boxShadow={{ base: "none", md: "xl" }}
-      w={{ base: "full", md: "300px" }}
+      w={{ base: "full", md: "350px" }}
       pos="fixed"
       h="full"
-      className="no-copy-no-select"
+      overflowY="auto"
+      p={4}
       {...rest}
     >
-      <Flex h="20" alignItems="center" justifyContent="space-between">
+      <Flex mt={6} justify={"center"} position={"relative"} left={"17px"}>
         <img
-          src={window.location.origin + "/assets/SUT_logo_v_en_bl.png"}
+          src={window.location.origin + "/assets/SUT_logo_v_en_or.png"}
           alt="logo"
-          width={90}
-          className="object-cover mx-auto  md:mx-auto mt-2 cursor-pointer"
+          width={120}
+          className="cursor-pointer"
           onClick={() => navigate("/")}
         />
         <CloseButton
@@ -65,44 +81,75 @@ const SidebarContent = ({ onClose, teacherId, ...rest }: SidebarProps) => {
           position={"absolute"}
           right={4}
           fontSize={"2xl"}
-          outline={"1px solid black"}
+          outline={"none"}
           onClick={onClose}
         />
       </Flex>
+
+      <VStack spacing={4} align="center">
+        <Divider
+          orientation="horizontal"
+          my={5}
+          borderWidth="2px"
+          borderColor={"gray.400"}
+        />
+
+        <Avatar
+          alt="Profile Picture"
+          src={
+            profile_pic && profile_pic.startsWith("http")
+              ? profile_pic
+              : "https://i.pinimg.com/474x/2e/f7/d0/2ef7d01dc60a235ffdb2069e024c0735.jpg"
+          }
+          size={100}
+        />
+        <Text
+          fontWeight="bold"
+          fontSize="lg"
+          textAlign="center"
+          mt={2}
+          color="gray.800"
+        >
+          {firstname} {lastname}
+        </Text>
+      </VStack>
+
       <Text
-        fontWeight="bolder"
+        fontWeight="bold"
         marginTop={8}
         marginLeft={4}
         marginBottom={5}
-        fontSize={"2xl"}
+        fontSize="lg"
+        letterSpacing="wider" // Added spacing to make it feel modern
+        color="#f26a2e" // Match the logo color for branding consistency
       >
-        วิชาที่สอน
+        COURSES
       </Text>
+
+      {/* Courses List */}
       <VStack spacing={4} align="start" px={4}>
         {loading || error
           ? Array.from({ length: 5 }).map((_, index) => (
               <Skeleton key={index} height="20px" width="full" />
             ))
           : subjects.map((subject) => {
-              const href = `/subject/${subject.subject_id}`;
-              const isActive =
-                location.pathname.includes(`/subject/${subject.subject_id}`) ||
-                location.pathname.includes(
-                  `/create-room/${subject.subject_id}`
-                );
+              const href = `/create-room/${subject.subject_id}`;
+              const isActive = location.pathname.includes(
+                `/create-room/${subject.subject_id}`
+              );
 
               return (
                 <NavItem
                   key={subject.subject_id}
-                  fontSize={"0.9rem"}
-                  fontWeight={"medium"}
+                  fontSize="sm"
+                  fontWeight="small"
                   icon={LuGraduationCap}
                   href={href}
-                  bg={isActive ? "black" : "transparent"}
-                  transition={"all 0.3s ease"}
-                  color={isActive ? "white" : "inherit"}
+                  bg={isActive ? "gray.800" : "transparent"}
+                  transition="all 0.3s ease"
+                  color={isActive ? "white" : "gray.800"} // Softened colors
                   _hover={{
-                    bg: "black",
+                    bg: "gray.800",
                     color: "white",
                   }}
                 >

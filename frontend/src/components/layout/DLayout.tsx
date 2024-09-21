@@ -17,8 +17,7 @@ export default function DLayout() {
   const teacherId = user?.teacher_id || "";
 
   return (
-    <Box minH="100vh" bg={"rgb(242, 101, 34)"}>
-      {/* Sidebar for desktop view */}
+    <Box>
       <Box display={{ base: "none", md: "block" }}>
         <SidebarContent onClose={onClose} teacherId={teacherId} />
       </Box>
@@ -37,7 +36,7 @@ export default function DLayout() {
         </DrawerContent>
       </Drawer>
       {/* Main content area */}
-      <Box ml={{ base: 0, md: 60 }} p="4" bg={"gray.100"} h={"100vh"}>
+      <Box ml={{ base: 0, md: 60 }} p="9">
         <MobileNav onOpen={onOpen} />
         <Outlet />
       </Box>
