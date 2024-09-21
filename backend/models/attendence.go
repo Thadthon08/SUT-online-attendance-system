@@ -1,5 +1,6 @@
 package models
 
+import "time"
 type Attendance struct {
 	AttendanceID int            `gorm:"primaryKey;autoIncrement" json:"attendance_id"`
 	RoomID       int            `json:"room_id"`
@@ -10,4 +11,5 @@ type Attendance struct {
 	LineID       string         `json:"line_id"`
 	LocationLat  float64        `json:"location_lat"`
 	LocationLon  float64        `json:"location_lon"`
+	CreatedAt    time.Time      `json:"created_at"`
 }

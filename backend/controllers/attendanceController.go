@@ -4,35 +4,11 @@ import (
 	"myproject/config"
 	"myproject/models"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
-
-// func CreateAttendance(c *gin.Context) {
-// 	var attendance models.Attendance
-// 	if err := c.ShouldBindJSON(&attendance); err != nil {
-// 		c.JSON(http.StatusBadRequest, gin.H{"status": "error", "message": err.Error()})
-// 		return
-// 	}
-
-// 	var room models.AttendanceRoom
-// 	if err := config.DB.First(&room, "room_id = ?", attendance.RoomID).Error; err != nil {
-// 		c.JSON(http.StatusNotFound, gin.H{"status": "error", "message": "Room not found"})
-// 		return
-// 	}
-
-// 	if err := config.DB.Create(&attendance).Error; err != nil {
-// 		c.JSON(http.StatusInternalServerError, gin.H{"status": "error", "message": err.Error()})
-// 		return
-// 	}
-
-// 	c.JSON(http.StatusOK, gin.H{
-// 		"status":  "success",
-// 		"message": "Attendance record has been created",
-// 		"data":    attendance,
-// 	})
-// }
 
 func CreateAttendance(c *gin.Context) {
 	var attendance models.Attendance
@@ -47,6 +23,16 @@ func CreateAttendance(c *gin.Context) {
 	var room models.AttendanceRoom
 	if err := config.DB.First(&room, "room_id = ?", attendance.RoomID).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"status": "error", "message": "Room not found"})
+		return
+	}
+
+	// ตรวจสอบว่าเวลาปัจจุบันเลยเวลาสิ้นสุดของห้องหรือยัง
+	currentTime := time.Now()
+	if currentTime.After(room.EndTime) {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  "error",
+			"message": "หมดเวลาเช็คชื่อแล้ว",
+		})
 		return
 	}
 
@@ -65,6 +51,9 @@ func CreateAttendance(c *gin.Context) {
 		return
 	}
 
+	// ตั้งค่าเวลาเช็คชื่อ (CreatedAt)
+	attendance.CreatedAt = currentTime
+
 	// หากยังไม่มีการเช็คชื่อในห้องนี้มาก่อน ก็สร้าง record ใหม่
 	if err := config.DB.Create(&attendance).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"status": "error", "message": err.Error()})
@@ -78,7 +67,6 @@ func CreateAttendance(c *gin.Context) {
 		"data":    attendance,
 	})
 }
-
 
 
 func GetAttendance(c *gin.Context) {
