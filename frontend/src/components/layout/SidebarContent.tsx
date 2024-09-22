@@ -7,6 +7,7 @@ import {
   Skeleton,
   VStack,
   Divider,
+  Button,
 } from "@chakra-ui/react";
 import { Avatar } from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -15,6 +16,8 @@ import { LuGraduationCap } from "react-icons/lu";
 import { useEffect, useState } from "react";
 import { getSubjectsByTid } from "../../services/api";
 import { Subject } from "../../interface/ITeacherSubject";
+import { LogOut } from "lucide-react";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface SidebarProps extends BoxProps {
   onClose: () => void;
@@ -27,8 +30,8 @@ const SidebarContent = ({ onClose, teacherId, ...rest }: SidebarProps) => {
   const [error, setError] = useState<string | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
+  const { signOut } = useAuth();
 
-  // Parsing the user data from sessionStorage
   const userDataString = sessionStorage.getItem("user");
   let userData = { firstname: "", lastname: "", profile_pic: "" };
   if (userDataString) {
@@ -112,6 +115,9 @@ const SidebarContent = ({ onClose, teacherId, ...rest }: SidebarProps) => {
         >
           {firstname} {lastname}
         </Text>
+        <Button leftIcon={<LogOut />} colorScheme="orange" onClick={signOut}>
+          Logout
+        </Button>
       </VStack>
 
       <Text
