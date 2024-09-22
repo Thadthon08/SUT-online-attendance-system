@@ -101,7 +101,7 @@ export default function Dashboard() {
                 <Box
                   bg="white"
                   borderRadius="md"
-                  shadow="md"
+                  shadow="xl"
                   _hover={{
                     shadow: "lg",
                     transform: "scale(1.05)",
@@ -118,10 +118,10 @@ export default function Dashboard() {
                     objectFit="cover"
                   />
                   <Box p={4}>
-                    <Text fontSize="xl" fontWeight="bold">
+                    <Text fontSize="lg" fontWeight="bold">
                       {subject_name}
                     </Text>
-                    <Text mt={2}>Subject ID: {subject_id}</Text>
+                    <Text mt={2}>รหัสวิชา: {subject_id}</Text>
                     <Box
                       mt={4}
                       borderTop="1px solid"

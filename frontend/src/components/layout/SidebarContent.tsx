@@ -90,8 +90,8 @@ const SidebarContent = ({ onClose, teacherId, ...rest }: SidebarProps) => {
         <Divider
           orientation="horizontal"
           my={5}
-          borderWidth="2px"
-          borderColor={"gray.400"}
+          borderWidth="1px"
+          borderColor={"rgba(69, 69, 71,0.2)"}
         />
 
         <Avatar
@@ -120,8 +120,8 @@ const SidebarContent = ({ onClose, teacherId, ...rest }: SidebarProps) => {
         marginLeft={4}
         marginBottom={5}
         fontSize="lg"
-        letterSpacing="wider" // Added spacing to make it feel modern
-        color="#f26a2e" // Match the logo color for branding consistency
+        letterSpacing="wider"
+        color="#f26a2e"
       >
         COURSES
       </Text>
