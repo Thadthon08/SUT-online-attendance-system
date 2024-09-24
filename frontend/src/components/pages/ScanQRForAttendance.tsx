@@ -1,21 +1,30 @@
 import { useState, useRef, useEffect } from "react";
 import QRCode from "react-qr-code";
 import { toPng } from "html-to-image";
-import dayjs, { Dayjs } from "dayjs"; // Import Dayjs for date calculations
-import duration from "dayjs/plugin/duration"; // Import Dayjs duration plugin
-import utc from "dayjs/plugin/utc"; // Import UTC plugin to handle time zones correctly
+import dayjs, { Dayjs } from "dayjs";
+import duration from "dayjs/plugin/duration";
+import utc from "dayjs/plugin/utc";
 import "./QrCodeGenerator.css";
-import { Box, Container, Text, Kbd, Divider } from "@chakra-ui/react";
+import {
+  Box,
+  Container,
+  Text,
+  Kbd,
+  Divider,
+  Button,
+  useToast,
+} from "@chakra-ui/react";
 
-// Extend dayjs to use the duration and utc plugins
 dayjs.extend(duration);
 dayjs.extend(utc);
 
 function QrCodeGenerator(): JSX.Element {
   const [url, setUrl] = useState<string>("");
-  const [endTime, setEndTime] = useState<Dayjs | null>(null); // Use Dayjs for handling time
-  const [countdown, setCountdown] = useState<string>(""); // State for countdown display
+  const [shortUrl, setShortUrl] = useState<string>(""); // Short URL หลังจากแปลงแล้ว
+  const [endTime, setEndTime] = useState<Dayjs | null>(null);
+  const [countdown, setCountdown] = useState<string>("");
   const qrCodeRef = useRef<HTMLDivElement | null>(null);
+  const toast = useToast();
 
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
@@ -23,13 +32,12 @@ function QrCodeGenerator(): JSX.Element {
     const roomIdFromQuery = queryParams.get("room_id");
     const durationFromQuery = queryParams.get("duration");
 
-    // Set URL for QR code
     if (subjectIdFromQuery && roomIdFromQuery) {
       const attendanceUrl = `https://sut-online-attendance-system.vercel.app/attendance/student/${subjectIdFromQuery}/${roomIdFromQuery}`;
       setUrl(attendanceUrl);
+      shortenUrl(attendanceUrl);
     }
 
-    // Calculate end time from duration
     if (durationFromQuery) {
       const durationMatch = durationFromQuery.match(/(\d+)m(\d+)s/);
       if (durationMatch) {
@@ -37,12 +45,36 @@ function QrCodeGenerator(): JSX.Element {
         const seconds = parseInt(durationMatch[2], 10);
         const totalMilliseconds = (minutes * 60 + seconds) * 1000;
         const calculatedEndTime = dayjs().add(totalMilliseconds, "millisecond");
-        setEndTime(calculatedEndTime); // Set end time
+        setEndTime(calculatedEndTime);
       }
     }
   }, []);
 
-  // Function to calculate the remaining time
+  const shortenUrl = async (longUrl: string) => {
+    try {
+      const response = await fetch(`https://api.tinyurl.com/create`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization:
+            "Bearer XIxIse5fNmAaHNzGNy6HNRiAJNiE7Rp5oWpdew5nHwZmuHs98azMpEPCp5bw",
+        },
+        body: JSON.stringify({
+          url: longUrl,
+          domain: "tiny.one",
+        }),
+      });
+      const data = await response.json();
+      if (data.data) {
+        setShortUrl(data.data.tiny_url);
+      } else {
+        console.error("Error creating short URL:", data);
+      }
+    } catch (error) {
+      console.error("Error shortening URL:", error);
+    }
+  };
+
   const calculateCountdown = (endTime: Dayjs) => {
     const now = dayjs();
     const diff = endTime.diff(now);
@@ -59,7 +91,6 @@ function QrCodeGenerator(): JSX.Element {
     return `${hours}:${minutes}:${seconds}`;
   };
 
-  // Countdown timer effect
   useEffect(() => {
     if (endTime) {
       setCountdown(calculateCountdown(endTime));
@@ -71,7 +102,6 @@ function QrCodeGenerator(): JSX.Element {
     }
   }, [endTime]);
 
-  // Handle QR Code Download
   const handleDownloadQRCode = async () => {
     if (qrCodeRef.current === null) {
       return;
@@ -86,6 +116,27 @@ function QrCodeGenerator(): JSX.Element {
     } catch (error) {
       console.error("Error generating image:", error);
     }
+  };
+
+  const handleCopyToClipboard = () => {
+    const textToCopy = shortUrl || url;
+
+    if (!textToCopy) return;
+
+    navigator.clipboard
+      .writeText(textToCopy)
+      .then(() => {
+        toast({
+          title: "Copied to clipboard",
+          description: "The path has been copied successfully.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+      })
+      .catch((err) => {
+        console.error("Failed to copy text: ", err);
+      });
   };
 
   return (
@@ -110,9 +161,19 @@ function QrCodeGenerator(): JSX.Element {
 
         <Box border={"1px solid rgba(69, 69, 71,0.2)"} p={7} bg={"white"}>
           <div className="qrcode__input-container">
-            <text>
-              <Kbd fontSize={"1.1rem"}>Path: {url}</Kbd>
-            </text>
+            <Text>
+              <Kbd fontSize={"1.1rem"}>Path: {shortUrl ? shortUrl : url}</Kbd>
+            </Text>
+            <Button
+              size={"smaller"}
+              ms={2}
+              p={1}
+              fontSize={"10px"}
+              colorScheme="green"
+              onClick={handleCopyToClipboard}
+            >
+              Copy Path
+            </Button>
           </div>
           <Divider style={{ borderWidth: "1px" }} />
           {url && (
@@ -128,7 +189,7 @@ function QrCodeGenerator(): JSX.Element {
                 <strong>Countdown:</strong> {countdown}
               </p>
               <div className="m-5" ref={qrCodeRef}>
-                <QRCode value={url} size={400} />
+                <QRCode value={shortUrl || url} size={400} />
               </div>
               <button
                 onClick={handleDownloadQRCode}
