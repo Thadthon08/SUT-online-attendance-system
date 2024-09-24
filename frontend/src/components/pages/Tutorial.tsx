@@ -1,20 +1,34 @@
-import { Box, Grid, GridItem, Text, Image, Container, Stack, Button } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
-import { ViewIcon } from "@chakra-ui/icons";
+import React, { useState, useEffect } from "react";
+import { Box, Container, Text } from "@chakra-ui/react";
+import { Spin, Alert } from "antd";
+import { Button } from "@chakra-ui/react";
 
-export default function Tutorial() {
-  const navigate = useNavigate();
+const Tutorial: React.FC = () => {
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  
+  // Example data or tutorial content
+  const tutorialContent = `
+    วิธีการสแกน QR Code แล้วล็อกอินผ่านไลน์:
+    1. คลิกที่ปุ่ม "Scan QR Code" เพื่อเปิดกล้องของคุณ.
+    2. นำกล้องไปสแกน QR Code ที่ได้รับ.
+    3. หลังจากสแกนเสร็จ ระบบจะนำคุณเข้าสู่หน้าล็อกอินผ่านไลน์.
+  `;
+
+  // Simulate loading of tutorial content
+  useEffect(() => {
+    // Simulating an API call or data fetching delay
+    setTimeout(() => {
+      setLoading(false);
+      // If there's an error, you can uncomment the line below to simulate an error
+      // setError("Failed to load tutorial. Please try again.");
+    }, 1000);
+  }, []);
 
   return (
     <Box p={4}>
-      <Container
-        maxW={{ base: "100%", md: "container.lg" }}
-        className="no-copy-no-select"
-        mt={6}
-      >
-        {/* Tutorial Header */}
+      <Container maxW={{ base: "100%", md: "container.lg" }} mt={6}>
         <Box
-          height={90}
           border={"1px solid rgba(69, 69, 71,0.2)"}
           bg={"white"}
           mb={5}
@@ -23,131 +37,31 @@ export default function Tutorial() {
           p={5}
         >
           <Text fontWeight={"bold"} fontSize={"1.5rem"}>
-            How to Log in via LINE Using QR Code
+            วิธีการใช้งาน - สแกนแล้วล็อกอินผ่านไลน์
           </Text>
         </Box>
-
-        {/* Tutorial Content */}
         <Box
-          bg={"white"}
           border={"1px solid rgba(69, 69, 71,0.2)"}
-          p={7}
-          mb={6}
+          p={0}
+          bg={"white"}
+          mt={5}
         >
-          <Text fontSize="lg" mb={4}>
-            Follow these steps to log in to your account via LINE using the QR code:
-          </Text>
-
-          <Grid
-            templateColumns={{ base: "1fr", md: "repeat(2, 1fr)", lg: "repeat(3, 1fr)" }}
-            gap={6}
-          >
-            {/* Step 1 */}
-            <GridItem>
-              <Box
-                bg="white"
-                borderRadius="md"
-                shadow="xl"
-                _hover={{
-                  shadow: "lg",
-                  transform: "scale(1.05)",
-                  backgroundColor: "#f0f0f0",
-                }}
-                transition="0.3s"
-                p={4}
-              >
-                <Image
-                  src="https://via.placeholder.com/150"
-                  alt="Open LINE App"
-                  borderTopRadius="md"
-                  height="150px"
-                  width="100%"
-                  objectFit="cover"
-                />
-                <Text fontSize="lg" fontWeight="bold" mt={3}>
-                  Step 1: Open LINE App
-                </Text>
-                <Text mt={2}>
-                  Open the LINE app on your phone and navigate to the QR code scanner by clicking the "+" icon in the top right corner.
-                </Text>
-              </Box>
-            </GridItem>
-
-            {/* Step 2 */}
-            <GridItem>
-              <Box
-                bg="white"
-                borderRadius="md"
-                shadow="xl"
-                _hover={{
-                  shadow: "lg",
-                  transform: "scale(1.05)",
-                  backgroundColor: "#f0f0f0",
-                }}
-                transition="0.3s"
-                p={4}
-              >
-                <Image
-                  src="https://via.placeholder.com/150"
-                  alt="Scan QR Code"
-                  borderTopRadius="md"
-                  height="150px"
-                  width="100%"
-                  objectFit="cover"
-                />
-                <Text fontSize="lg" fontWeight="bold" mt={3}>
-                  Step 2: Scan the QR Code
-                </Text>
-                <Text mt={2}>
-                  Use the camera on the LINE app to scan the QR code presented on your login page.
-                </Text>
-              </Box>
-            </GridItem>
-
-            {/* Step 3 */}
-            <GridItem>
-              <Box
-                bg="white"
-                borderRadius="md"
-                shadow="xl"
-                _hover={{
-                  shadow: "lg",
-                  transform: "scale(1.05)",
-                  backgroundColor: "#f0f0f0",
-                }}
-                transition="0.3s"
-                p={4}
-              >
-                <Image
-                  src="https://via.placeholder.com/150"
-                  alt="Confirm Login"
-                  borderTopRadius="md"
-                  height="150px"
-                  width="100%"
-                  objectFit="cover"
-                />
-                <Text fontSize="lg" fontWeight="bold" mt={3}>
-                  Step 3: Confirm Login
-                </Text>
-                <Text mt={2}>
-                  After scanning, confirm the login on your LINE app to securely access your account.
-                </Text>
-              </Box>
-            </GridItem>
-          </Grid>
-
-          <Box mt={6} textAlign="center">
-            <Button
-              rightIcon={<ViewIcon />}
-              colorScheme="teal"
-              variant="solid"
-              onClick={() => navigate("/login")}
-            >
-              Go to Login Page
-            </Button>
-          </Box>
+          {loading ? (
+            <Spin tip="Loading tutorial..." />
+          ) : error ? (
+            <Alert message="Error" description={error} type="error" showIcon />
+          ) : (
+            <Box p={5}>
+              <Text whiteSpace="pre-line">{tutorialContent}</Text>
+              <Button mt={4} colorScheme="teal" onClick={() => alert('QR Code Scanner Opened!')}>
+                Scan QR Code
+              </Button>
+            </Box>
+          )}
         </Box>
       </Container>
     </Box>
   );
-}
+};
+
+export default Tutorial;
