@@ -27,7 +27,6 @@ func main() {
 		publicRoutes.GET("/attendance/room/:id", controllers.GetAttendanceRoom)
 		publicRoutes.POST("/attendance/student", controllers.CreateAttendance)
 
-
 	}
 
 	// Protected routes
@@ -37,6 +36,7 @@ func main() {
 		// Teachers
 		protectedRoutes.GET("/teacher", controllers.GetTeacher)
 		protectedRoutes.GET("/teachers/:id/subjects", controllers.GetTeacherSubjects)
+		protectedRoutes.PUT("/teachers/:id",controllers.UpdateTeacher)
 
 		// Subjects
 		protectedRoutes.POST("/subjects", controllers.CreateSubject)
