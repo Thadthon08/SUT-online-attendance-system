@@ -19,7 +19,6 @@ import RoomList from "../components/pages/RoomList";
 import AttendanceSuccess from "../components/pages/StudentPage/AttendanceSuccess";
 import Tutorial from "../components/pages/Tutorial";
 
-
 const isStudentLoggedIn = () => {
   const accessToken = localStorage.getItem(
     "LIFF_STORE:2006252489-XlDxGl4V:accessToken"
@@ -73,13 +72,12 @@ export default function AppRoutes() {
         {/* Routes for students */}
         <Route element={<PrivateRouteForStudent />}>
           <Route path="/student/login/callback" element={<AttendanceRoom />} />
-          <Route path="/test" element={<AttendanceRoom />} />
+          <Route path="/student/line" element={<AttendanceRoom />} />
           <Route path="/student/checkin" element={<AttendanceSuccess />} />
         </Route>
 
         {/* Public routes */}
         <Route element={<PublicRoute isSigned={isSigned} />}>
-          <Route path="/student/line" element={<AttendanceRoom />} />
           <Route path="/login" element={<Login />} />
           <Route path="/student/login" element={<StudentLogin />} />
           <Route

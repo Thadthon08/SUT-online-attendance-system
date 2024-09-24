@@ -169,10 +169,20 @@ const AttendanceRoom: React.FC = () => {
       showErrorNotification("Error", "กรุณาสแกน QR Code ใหม่อีกครั้ง");
       return;
     }
+
     if (!locationLat || !locationLon) {
       showErrorNotification(
         "ไม่สามารถระบุตำแหน่งของคุณได้",
         "กรุณาอนุญาตให้เข้าถึงตำแหน่งของคุณ"
+      );
+      return;
+    }
+
+    const lineId = localStorage.getItem("user_id"); // ตรวจสอบค่า line_id จาก localStorage
+    if (!lineId) {
+      showErrorNotification(
+        "ไม่พบ Line ID",
+        "กรุณาเข้าสู่ระบบ Line เพื่อดำเนินการต่อ"
       );
       return;
     }
@@ -184,7 +194,7 @@ const AttendanceRoom: React.FC = () => {
       room_id: parseInt(roomId as string),
       location_lat: locationLat,
       location_lon: locationLon,
-      line_id: localStorage.getItem("user_id") || "",
+      line_id: lineId, // ใช้ line_id ที่ตรวจสอบได้
     };
 
     try {
