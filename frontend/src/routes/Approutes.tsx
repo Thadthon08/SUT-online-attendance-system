@@ -17,6 +17,8 @@ import AttendanceRoom from "../components/pages/StudentPage/AttendanceRoom";
 import RoomAttHistory from "../components/pages/RoomHistory";
 import RoomList from "../components/pages/RoomList";
 import AttendanceSuccess from "../components/pages/StudentPage/AttendanceSuccess";
+import Tutorial from "../components/pages/Tutorial";
+
 
 const isStudentLoggedIn = () => {
   const accessToken = localStorage.getItem(
@@ -65,6 +67,7 @@ export default function AppRoutes() {
             path="/attendance/room/subject/:subject_id"
             element={<RoomList />}
           />
+          <Route path="/tutorial" element={<Tutorial />} />
         </Route>
 
         {/* Routes for students */}

@@ -18,6 +18,7 @@ import { getSubjectsByTid } from "../../services/api";
 import { Subject } from "../../interface/ITeacherSubject";
 import { LogOut } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
+import { QuestionIcon } from "@chakra-ui/icons";
 
 interface SidebarProps extends BoxProps {
   onClose: () => void;
@@ -115,6 +116,9 @@ const SidebarContent = ({ onClose, teacherId, ...rest }: SidebarProps) => {
         >
           {firstname} {lastname}
         </Text>
+        <Button leftIcon={<QuestionIcon />} colorScheme="orange" onClick={signOut}>
+          การใช้งาน
+        </Button>
         <Button leftIcon={<LogOut />} colorScheme="orange" onClick={signOut}>
           Logout
         </Button>
