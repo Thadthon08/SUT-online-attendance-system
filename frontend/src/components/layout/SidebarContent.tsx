@@ -19,6 +19,7 @@ import { Subject } from "../../interface/ITeacherSubject";
 import { LogOut } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
 import { QuestionIcon } from "@chakra-ui/icons";
+import Tutorial from "../pages/Tutorial";
 
 interface SidebarProps extends BoxProps {
   onClose: () => void;
@@ -44,7 +45,9 @@ const SidebarContent = ({ onClose, teacherId, ...rest }: SidebarProps) => {
   }
 
   const { firstname, lastname, profile_pic } = userData;
-
+  const goToTutorial = () => {
+    navigate("/tutorial"); // This navigates to the Tutorial page
+  };
   useEffect(() => {
     const fetchSubjects = async () => {
       try {
@@ -116,7 +119,7 @@ const SidebarContent = ({ onClose, teacherId, ...rest }: SidebarProps) => {
         >
           {firstname} {lastname}
         </Text>
-        <Button leftIcon={<QuestionIcon />} colorScheme="orange" onClick={signOut}>
+        <Button leftIcon={<QuestionIcon />} colorScheme="orange" onClick={goToTutorial}>
           การใช้งาน
         </Button>
         <Button leftIcon={<LogOut />} colorScheme="orange" onClick={signOut}>
