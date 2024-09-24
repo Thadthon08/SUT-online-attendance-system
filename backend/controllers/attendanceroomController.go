@@ -108,8 +108,7 @@ func GetStudentsByAttendanceRoomID(c *gin.Context) {
 			"student_id":  attendance.StudentID,
 			"first_name":  attendance.FirstName,
 			"last_name":   attendance.LastName,
-			"location_lat": attendance.LocationLat,
-			"location_lon": attendance.LocationLon,
+			"creat_at" : attendance.CreatedAt,
 		})
 	}
 

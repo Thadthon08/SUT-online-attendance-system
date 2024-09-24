@@ -3,12 +3,23 @@ import { GetStudentsByRoomId } from "../../services/api";
 import { Student } from "../../interface/IAttendanceRoomresponse";
 import { Spin, Alert, Button, Table } from "antd";
 import { writeFile, utils } from "xlsx";
-import "./RoomAttHistory.css";
 import { useParams } from "react-router-dom";
 import { Box, Container, Text } from "@chakra-ui/react";
 
+const formatThaiTime = (isoString: string) => {
+  const date = new Date(isoString);
+  return new Intl.DateTimeFormat("th-TH", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+    timeZone: "Asia/Bangkok",
+  }).format(date);
+};
+
 const RoomAttHistory: React.FC = () => {
-  // const [roomId] = useState<string>("110");
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -19,6 +30,7 @@ const RoomAttHistory: React.FC = () => {
       setLoading(true);
       if (room_id) {
         const result = await GetStudentsByRoomId(room_id);
+        console.log(result);
 
         if (result.status && result.data) {
           setStudents(result.data.students);
@@ -42,8 +54,7 @@ const RoomAttHistory: React.FC = () => {
         "Student ID": student.student_id,
         "First Name": student.first_name,
         "Last Name": student.last_name,
-        Latitude: student.location_lat,
-        Longitude: student.location_lon,
+        "Attendance Time": formatThaiTime(student.creat_at), // แปลงเวลาไทยก่อนส่งออก
       }))
     );
     const workbook = utils.book_new();
@@ -56,8 +67,12 @@ const RoomAttHistory: React.FC = () => {
     { title: "Student ID", dataIndex: "student_id", key: "student_id" },
     { title: "First Name", dataIndex: "first_name", key: "first_name" },
     { title: "Last Name", dataIndex: "last_name", key: "last_name" },
-    { title: "Latitude", dataIndex: "location_lat", key: "location_lat" },
-    { title: "Longitude", dataIndex: "location_lon", key: "location_lon" },
+    {
+      title: "Attendance Time",
+      dataIndex: "creat_at",
+      key: "creat_at",
+      render: (text: string) => formatThaiTime(text), // แปลงเวลาไทยในตาราง
+    },
   ];
 
   return (

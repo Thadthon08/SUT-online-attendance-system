@@ -5,6 +5,20 @@ import { GetAttendanceRoomBySubjectID } from "../../services/api";
 import { AttendanceRoom } from "../../interface/IAttendanceRoom";
 import { Box, Container, Text } from "@chakra-ui/react";
 
+// ฟังก์ชันสำหรับแปลง ISO Time เป็นเวลาประเทศไทย
+const formatThaiTime = (isoString: string) => {
+  const date = new Date(isoString);
+  return new Intl.DateTimeFormat("th-TH", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+    timeZone: "Asia/Bangkok",
+  }).format(date);
+};
+
 const RoomList: React.FC = () => {
   const [rooms, setRooms] = useState<AttendanceRoom[]>([]);
   const [loading, setLoading] = useState(true);
@@ -21,7 +35,6 @@ const RoomList: React.FC = () => {
           console.log("API Response:", result.data.data); // Log to inspect response
 
           setRooms(result.data.data);
-          console.log(rooms);
         } else {
           setError("Subject ID is missing");
         }
@@ -47,8 +60,18 @@ const RoomList: React.FC = () => {
   const columns = [
     { title: "Room ID", dataIndex: "room_id", key: "room_id" },
     { title: "Room Name", dataIndex: "room_name", key: "room_name" },
-    { title: "Start Time", dataIndex: "start_time", key: "start_time" },
-    { title: "End Time", dataIndex: "end_time", key: "end_time" },
+    {
+      title: "Start Time",
+      dataIndex: "start_time",
+      key: "start_time",
+      render: (text: string) => formatThaiTime(text), // ใช้ฟังก์ชันแปลงเวลา
+    },
+    {
+      title: "End Time",
+      dataIndex: "end_time",
+      key: "end_time",
+      render: (text: string) => formatThaiTime(text), // ใช้ฟังก์ชันแปลงเวลา
+    },
     {
       title: "Action",
       key: "action",

@@ -5,7 +5,6 @@ import { LoginResponseInterface } from "../interface/ILoginRespon";
 import { AttendanceRoomResponse } from "../interface/IAttendanceRoomresponse";
 
 // const apiURL = "http://localhost:8080";
-// const apiURL = "https://sut-online-attendance-system.onrender.com";
 const apiURL = "https://sut-online-attendance-system.onrender.com";
 
 function getAuthToken() {
