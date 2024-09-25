@@ -1,7 +1,7 @@
 <h1 align="center">Welcome to SUT-online-attendance-system 👋</h1>
 
 
-<p>
+<p align="center">
   <img src="https://img5.pic.in.th/file/secure-sv1/DALLE-2024-09-26-01.13.07---A-visually-appealing-README.md-template-for-a-project-called-SUT-online-attendance-system.-The-template-should-have-the-following-sections-displayed.md.webp" alt="Project Image" />
 </p>
 
