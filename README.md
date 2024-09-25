@@ -31,7 +31,7 @@
 ## Clone the repository
 
 ```
-https://github.com/Thadthon08/SUT-online-attendance-system.git
+git clone https://github.com/Thadthon08/SUT-online-attendance-system.git
 ```
 
 ## Install Frontend
