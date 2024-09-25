@@ -39,11 +39,6 @@ git clone https://github.com/Thadthon08/SUT-online-attendance-system.git
 ```bash
 cd frontend
 npm install
-```
-
-## Usage
-
-```sh
 npm run dev
 ```
 
@@ -52,11 +47,10 @@ npm run dev
 ```
 cd backend
 go mod tidy
-```
-## Usage
-```
 go run main.go
 ```
+
+
 
 ## Author
 
