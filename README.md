@@ -10,6 +10,31 @@
 
 ### ✨ [Demo](https://sut-online-attendance-system.vercel.app/)
 
+## Technologies Used
+
+### Frontend:
+
+- **React (TypeScript)**  
+  ![React](https://img.shields.io/badge/React-20232A?logo=react&logoColor=61DAFB)
+  
+- **Chakra UI**  
+  ![Chakra UI](https://img.shields.io/badge/Chakra_UI-319795?logo=chakra-ui&logoColor=white)
+
+- **Ant Design**  
+  ![Ant Design](https://img.shields.io/badge/Ant_Design-0170FE?logo=ant-design&logoColor=white)
+
+### Backend:
+
+- **Go (Golang)**  
+  ![Go](https://img.shields.io/badge/Go-00ADD8?logo=go&logoColor=white)
+
+- **Gin**  
+  ![Gin](https://img.shields.io/badge/Gin_Gonic-00ADD8?logo=go&logoColor=white)
+
+- **Gorm**  
+  ![Gorm](https://img.shields.io/badge/Gorm-FF4088?logo=go&logoColor=white)
+
+
 ## Clone the repository
 
 ```
