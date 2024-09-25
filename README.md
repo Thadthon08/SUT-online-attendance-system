@@ -44,7 +44,7 @@ npm run dev
 
 ## Backend:
 
-```
+```bash
 cd backend
 go mod tidy
 go run main.go
