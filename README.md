@@ -34,7 +34,7 @@
 git clone https://github.com/Thadthon08/SUT-online-attendance-system.git
 ```
 
-## Install Frontend
+## Frontend:
 
 ```bash
 cd frontend
@@ -47,7 +47,7 @@ npm install
 npm run dev
 ```
 
-## Install Backend
+## Backend:
 
 ```
 cd backend
