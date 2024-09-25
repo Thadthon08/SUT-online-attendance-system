@@ -77,6 +77,11 @@ const RoomList: React.FC = () => {
       key: "action",
       render: (_text: any, record: AttendanceRoom) => (
         <Button
+          type="primary" // 'primary' gives the button a blue default color
+          style={{
+            backgroundColor: "rgb(49, 151, 149)",
+            borderColor: "none",
+          }} // Custom green color
           onClick={() =>
             record.room_id !== undefined && handleViewDetails(record.room_id)
           }
