@@ -10,9 +10,16 @@
 
 ### ✨ [Demo](https://sut-online-attendance-system.vercel.app/)
 
-## Installation
+## Clone the repository
+
+```
+https://github.com/Thadthon08/SUT-online-attendance-system.git
+```
+
+## Install Frontend
 
 ```bash
+cd frontend
 npm install
 ```
 
@@ -20,6 +27,17 @@ npm install
 
 ```sh
 npm run dev
+```
+
+## Install Backend
+
+```
+cd backend
+go mod tidy
+```
+## Usage
+```
+go run main.go
 ```
 
 ## Author
