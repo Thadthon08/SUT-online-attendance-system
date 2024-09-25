@@ -2,6 +2,7 @@
 
 
 <p>
+  <img src="https://img5.pic.in.th/file/secure-sv1/DALLE-2024-09-26-01.13.07---A-visually-appealing-README.md-template-for-a-project-called-SUT-online-attendance-system.-The-template-should-have-the-following-sections-displayed.md.webp" alt="Project Image" />
 </p>
 
 > This project is an online student attendance system designed for educational institutions. The system uses QR codes for students to check in, ensuring quick and easy attendance tracking. In addition to QR code-based check-ins, the system includes a feature to measure the distance between the teacher's device (which creates the room) and the student's device, providing an extra layer of verification to ensure that the student is physically near the classroom during attendance.
