@@ -42,9 +42,10 @@ go run main.go
 
 ## Author
 
-<a href="https://github.com/othneildrew/Best-README-Template/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=othneildrew/Best-README-Template" alt="contrib.rocks image" />
+<a href="https://github.com/Thadthon08/SUT-online-attendance-system/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Thadthon08/SUT-online-attendance-system" alt="contrib.rocks image" />
 </a>
+
 
 
 
