@@ -30,7 +30,7 @@
 
 ## Clone the repository
 
-```
+```bash
 git clone https://github.com/Thadthon08/SUT-online-attendance-system.git
 ```
 
