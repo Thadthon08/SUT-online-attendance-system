@@ -45,12 +45,23 @@ const AttendanceRoom: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    const storedSubjectId = localStorage.getItem("subject_id");
-    const storedRoomId = localStorage.getItem("room_id");
+  useEffect(() => {}, [navigate]);
 
+  useEffect(() => {
+    const queryParams = new URLSearchParams(window.location.search);
+    const storedSubjectId = queryParams.get("subject_id");
+    const storedRoomId = queryParams.get("room_id");
     setSubjectId(storedSubjectId);
     setRoomId(storedRoomId);
+    if (subjectId && roomId) {
+      localStorage.setItem("subject_id", subjectId);
+      localStorage.setItem("room_id", roomId);
+    }
+    // const storedSubjectId = localStorage.getItem("subject_id");
+    // const storedRoomId = localStorage.getItem("room_id");
+
+    // setSubjectId(storedSubjectId);
+    // setRoomId(storedRoomId);
 
     liff.init({ liffId: "2006252489-XlDxGl4V" }, () => {
       if (liff.isLoggedIn()) {

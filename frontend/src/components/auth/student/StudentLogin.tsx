@@ -17,7 +17,9 @@ const StudentLogin: React.FC = () => {
     liff.init(
       { liffId: "2006252489-XlDxGl4V" },
       () => {
-        liff.login(); // บังคับให้ผู้ใช้ไปหน้า Login ของ LINE ทุกครั้ง
+        liff.login({
+          redirectUri: `https://sut-online-attendance-system.vercel.app/student/line?subject_id=${subject_id}&room_id=${room_id}`,
+        });
       },
       (err) => {
         console.error("LIFF Initialization failed", err);
@@ -35,13 +37,13 @@ const StudentLogin: React.FC = () => {
           return;
         }
 
-        localStorage.setItem("subject_id", subject_id);
-        localStorage.setItem("room_id", room_id);
+        // localStorage.setItem("subject_id", subject_id);
+        // localStorage.setItem("room_id", room_id);
       }
     };
 
     initialize();
-  }, [room_id, subject_id, navigate]);
+  }, []);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-400 via-blue-500 to-purple-600">
@@ -80,7 +82,7 @@ const StudentLogin: React.FC = () => {
             Log in to access your student dashboard
           </p>
           <button
-            onClick={LoginLine} // เรียกฟังก์ชัน LoginLine เมื่อคลิกปุ่ม
+            onClick={LoginLine}
             className="group relative w-full py-3 px-5 bg-green-500 text-white rounded-full shadow-lg hover:bg-green-600 transition-all duration-300 ease-in-out overflow-hidden"
             aria-label="Login with LINE"
           >
