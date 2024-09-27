@@ -52,6 +52,12 @@ go mod tidy
 go run main.go
 ```
 
+## Please use the following credentials for testing purposes only:
+```bash
+Teacher ID: B6405526
+Password: 123456
+```
+
 
 
 ## Author
