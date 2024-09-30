@@ -45,33 +45,32 @@ const AttendanceRoom: React.FC = () => {
     }
   };
 
-  useEffect(() => {}, [navigate]);
-
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
     const storedSubjectId = queryParams.get("subject_id");
     const storedRoomId = queryParams.get("room_id");
     setSubjectId(storedSubjectId);
     setRoomId(storedRoomId);
+
+    // บันทึก subject_id และ room_id ลงใน localStorage หากมีค่า
     if (subjectId && roomId) {
       localStorage.setItem("subject_id", subjectId);
       localStorage.setItem("room_id", roomId);
     }
-    // const storedSubjectId = localStorage.getItem("subject_id");
-    // const storedRoomId = localStorage.getItem("room_id");
 
-    // setSubjectId(storedSubjectId);
-    // setRoomId(storedRoomId);
-
-    liff.init({ liffId: "2006252489-XlDxGl4V" }, () => {
-      if (liff.isLoggedIn()) {
+    // ตรวจสอบสถานะการล็อกอินของ LINE
+    liff.init({ liffId: "2006252489-XlDxGl4V" }).then(() => {
+      if (!liff.isLoggedIn()) {
+        // ถ้าไม่ล็อกอิน ให้พาไปหน้า login ของ LINE
+        liff.login({
+          redirectUri: window.location.href, // กลับมาที่หน้านี้หลังจากล็อกอินเสร็จ
+        });
+      } else {
+        // ถ้าล็อกอินแล้ว ดึงข้อมูลโปรไฟล์ผู้ใช้
         liff.getProfile().then((profile) => {
           localStorage.setItem("user_id", profile.userId);
           localStorage.setItem("user_name", profile.displayName);
-          console.log("User ID:");
         });
-      } else {
-        liff.login();
       }
     });
 
@@ -85,7 +84,7 @@ const AttendanceRoom: React.FC = () => {
 
     // Get initial geolocation
     resetPosition();
-  }, []);
+  }, [navigate, subjectId, roomId]);
 
   useEffect(() => {
     const fetchAttendanceRoom = async () => {
