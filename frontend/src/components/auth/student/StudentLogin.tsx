@@ -12,7 +12,6 @@ const StudentLogin: React.FC = () => {
     room_id: string;
   }>();
 
-  // แก้ไขฟังก์ชัน LoginLine
   const LoginLine = () => {
     liff.init(
       { liffId: "2006252489-XlDxGl4V" },
@@ -36,9 +35,6 @@ const StudentLogin: React.FC = () => {
           navigate("/page-not-found");
           return;
         }
-
-        // localStorage.setItem("subject_id", subject_id);
-        // localStorage.setItem("room_id", room_id);
       }
     };
 

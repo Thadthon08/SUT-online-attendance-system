@@ -18,23 +18,15 @@ import RoomAttHistory from "../components/pages/RoomHistory";
 import RoomList from "../components/pages/RoomList";
 import AttendanceSuccess from "../components/pages/StudentPage/AttendanceSuccess";
 import Tutorial from "../components/pages/Tutorial";
+import liff from "@line/liff";
 
 const isStudentLoggedIn = () => {
-  const liffLoginTmp = localStorage.getItem(
-    "LIFF_STORE:2006252489-XlDxGl4V:loginTmp"
-  );
-
-  if (!liffLoginTmp) return false;
-
-  try {
-    const loginData = JSON.parse(liffLoginTmp);
-    const codeVerifier = loginData?.codeVerifier;
-
-    return !!codeVerifier;
-  } catch (error) {
-    console.error("Failed to parse LIFF login temporary data:", error);
-    return false;
+  // ตรวจสอบว่า liff.isLoggedIn() และมี accessToken อยู่หรือไม่
+  if (liff.isLoggedIn()) {
+    const accessToken = liff.getAccessToken();
+    return !!accessToken; // ถ้ามี accessToken หมายถึงล็อกอินแล้ว
   }
+  return false; // ถ้ายังไม่ได้ล็อกอิน
 };
 
 const PrivateRoute = ({ isSigned }: { isSigned: boolean }) => {
@@ -80,12 +72,12 @@ export default function AppRoutes() {
         {/* Routes for students */}
         <Route element={<PrivateRouteForStudent />}>
           <Route path="/student/login/callback" element={<AttendanceRoom />} />
-          <Route path="/student/line" element={<AttendanceRoom />} />
           <Route path="/student/checkin" element={<AttendanceSuccess />} />
         </Route>
 
         {/* Public routes */}
         <Route element={<PublicRoute isSigned={isSigned} />}>
+          <Route path="/student/line" element={<AttendanceRoom />} />
           <Route path="/login" element={<Login />} />
           <Route path="/student/login" element={<StudentLogin />} />
           <Route
