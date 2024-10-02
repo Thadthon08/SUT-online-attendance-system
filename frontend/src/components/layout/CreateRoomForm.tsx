@@ -184,9 +184,11 @@ const CreateRoomForm: React.FC = () => {
                     setStartTime(dayjs().locale("en"));
                   }
                 }}
+                disabled={true} // เพิ่ม disabled ที่นี่
               />
             </Form.Item>
           </Col>
+
           <Col xs={24} sm={24} md={11}>
             <Form.Item
               name="endTime"
