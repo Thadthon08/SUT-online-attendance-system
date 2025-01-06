@@ -33,7 +33,7 @@
 ## Clone the repository
 
 ```bash
-git clone https://github.com/Thadthon08/SUT-online-attendance-system.git](https://github.com/Thadthon08/SUT-online-attendance-systemV1.git
+git clone https://github.com/Thadthon08/SUT-online-attendance-systemV1.git
 ```
 
 ## Frontend:
