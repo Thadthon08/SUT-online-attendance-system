@@ -7,9 +7,9 @@
 
 > This project is an online student attendance system designed for educational institutions. The system uses QR codes for students to check in, ensuring quick and easy attendance tracking. In addition to QR code-based check-ins, the system includes a feature to measure the distance between the teacher's device (which creates the room) and the student's device, providing an extra layer of verification to ensure that the student is physically near the classroom during attendance.
 
-### 🏠 [Homepage](https://sut-online-attendance-system.vercel.app/)
+### 🏠 [Homepage]([https://sut-online-attendance-system.vercel.app/](https://sut-online-attendance-system-v1.vercel.app/))
 
-### ✨ [Demo](https://sut-online-attendance-system.vercel.app/)
+### ✨ [Demo]([https://sut-online-attendance-system.vercel.app/](https://sut-online-attendance-system-v1.vercel.app/))
 
 ## Technologies Used
 
@@ -33,7 +33,7 @@
 ## Clone the repository
 
 ```bash
-git clone https://github.com/Thadthon08/SUT-online-attendance-system.git
+git clone https://github.com/Thadthon08/SUT-online-attendance-system.git](https://github.com/Thadthon08/SUT-online-attendance-systemV1.git
 ```
 
 ## Frontend:
